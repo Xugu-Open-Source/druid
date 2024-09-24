@@ -31,9 +31,9 @@ public class TestTraceFilter extends TestCase {
     public void test_loop() throws Exception {
         DruidDataSource dataSource = new DruidDataSource();
         dataSource.setFilters("stat,trace");
-        dataSource.setUrl("jdbc:mock:");
+        dataSource.setUrl("jdbc:xugu://localhost:5138/SYSTEM?user=SYSDBA&password=SYSDBA");
 
-        JMXUtils.register("com.alibaba.dragoon:type=JdbcTraceManager", JdbcTraceManager.getInstance());
+        JMXUtils.register("com.xugu.cloudjdbc.Driver:type=JdbcTraceManager", JdbcTraceManager.getInstance());
 
         for (int i = 0; i < 1000; ++i) {
             Connection conn = dataSource.getConnection();

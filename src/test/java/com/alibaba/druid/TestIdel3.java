@@ -33,7 +33,7 @@ public class TestIdel3 extends TestCase {
         MockDriver driver = new MockDriver();
 
         final DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setUrl("jdbc:mock:xxx");
+        dataSource.setUrl("jdbc:xugu://localhost:5138/SYSTEM");
         dataSource.setDriver(driver);
         dataSource.setInitialSize(1);
         dataSource.setMaxActive(14);
@@ -143,7 +143,6 @@ public class TestIdel3 extends TestCase {
                 }
             };
         }
-
         for (int i = 0; i < threadCount; ++i) {
             threads[i].start();
         }

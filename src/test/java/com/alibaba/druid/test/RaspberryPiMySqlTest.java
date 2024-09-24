@@ -18,9 +18,9 @@ public class RaspberryPiMySqlTest extends TestCase {
 
     protected void setUp() throws Exception {
         dataSource = new DruidDataSource();
-        dataSource.setUrl("jdbc:mysql://raspberrypi_mysql:3306/druid_test_db?allowMultiQueries=true");
-        dataSource.setUsername("druid_test");
-        dataSource.setPassword("druid_test");
+        dataSource.setUrl("jdbc:xugu://localhost:5138/SYSTEM");
+        dataSource.setUsername("SYSDBA");
+        dataSource.setPassword("SYSDBA");
         dataSource.setValidationQuery("SELECT 1");
         dataSource.setTestOnBorrow(true);
         dataSource.setTestWhileIdle(true);

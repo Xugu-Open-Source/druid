@@ -34,12 +34,12 @@ public class TestSqlServer extends TestCase {
         // password = "ccbuauto";
         // SQL = "SELECT * FROM WP_ORDERS WHERE ID = ?";
 
-        jdbcUrl = "jdbc:jtds:sqlserver://a.b.c.d:1433/druid_db";
-        user = "sa";
-        password = "hello123";
-        SQL = "SELECT * FROM AV_INFO WHERE ID = ?";
+        jdbcUrl = "jdbc:xugu://localhost:5135/SYSTEM";
+        user = "SYSDBA";
+        password = "SYSDBA";
+        SQL = "SELECT * FROM TABLE1 WHERE ID = ?";
 
-        driverClass = "net.sourceforge.jtds.jdbc.Driver";
+        driverClass = "com.xugu.cloudjdbc.Driver";
     }
     public void test_0 () throws Exception {
         Class.forName(driverClass);

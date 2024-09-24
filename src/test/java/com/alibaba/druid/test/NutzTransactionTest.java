@@ -19,10 +19,10 @@ public class NutzTransactionTest extends TestCase {
 
     protected void setUp() throws Exception {
          DruidDataSource dataSource = new DruidDataSource();
-         dataSource.setUrl("jdbc:jtds:sqlserver://192.168.1.105/petstore");
-         dataSource.setUsername("sa");
-         dataSource.setPassword("hello");
-         dataSource.setFilters("log4j");
+         dataSource.setUrl("jdbc:xugu://localhost:5138/SYSTEM");
+         dataSource.setUsername("SYSDBA");
+         dataSource.setPassword("SYSDBA");
+//         dataSource.setFilters("log4j");
 
 //        BasicDataSource dataSource = new BasicDataSource();
 //        dataSource.setDriverClassName("net.sourceforge.jtds.jdbc.Driver");
@@ -47,13 +47,13 @@ public class NutzTransactionTest extends TestCase {
 
                 @Override
                 public void run() {
-                    dao.insert("[test]", Chain.make("name", "1"));
+                    dao.insert("test", Chain.make("name", "1"));
                     throw new RuntimeException();
                 }
             });
         } catch (Exception e) {
         }
-        Assert.assertEquals(0, dao.count("[test]"));
+        Assert.assertEquals(0, dao.count("test"));
     }
 
     void doTran2(final Dao dao) {
@@ -62,14 +62,14 @@ public class NutzTransactionTest extends TestCase {
 
                 @Override
                 public void run() {
-                    dao.insert("[test]", Chain.make("name", "1"));
-                    dao.insert("[test]", Chain.make("name", "111111111111111111111111111111"));
+                    dao.insert("test", Chain.make("name", "1"));
+                    dao.insert("test", Chain.make("name", "111111111111111111111111111111"));
                 }
             });
         } catch (Exception e) {
             // e.printStackTrace();
         }
-        Assert.assertEquals(0, dao.count("[test]"));
+        Assert.assertEquals(0, dao.count("test"));
     }
 
 }

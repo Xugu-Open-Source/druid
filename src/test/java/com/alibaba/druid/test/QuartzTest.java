@@ -31,7 +31,7 @@ public class QuartzTest extends PoolTestCase {
         scheduler.shutdown();
 
 
-        Thread.sleep(1000 * 1000);
+        Thread.sleep(10 * 10);
         super.tearDown();
     }
     

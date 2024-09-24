@@ -27,15 +27,14 @@ import com.alibaba.druid.mock.MockDriver;
 public class DBCPTest extends TestCase {
 
     public void test_max() throws Exception {
-        Class.forName("com.alibaba.druid.mock.MockDriver");
-        
+        Class.forName("com.xugu.cloudjdbc.Driver");
         final BasicDataSource dataSource = new BasicDataSource();
 //        final DruidDataSource dataSource = new DruidDataSource();
         dataSource.setInitialSize(3);
         dataSource.setMaxActive(20);
         dataSource.setMaxIdle(20);
-        dataSource.setDriverClassName("com.alibaba.druid.mock.MockDriver");
-        dataSource.setUrl("jdbc:mock:xxx");
+        dataSource.setDriverClassName("com.xugu.cloudjdbc.Driver");
+        dataSource.setUrl("jdbc:xugu://localhost:5138/SYSTEM");
 
         final int THREAD_COUNT = 200;
         final CountDownLatch endLatch = new CountDownLatch(THREAD_COUNT);
