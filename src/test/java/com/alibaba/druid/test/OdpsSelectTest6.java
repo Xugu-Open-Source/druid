@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 public class OdpsSelectTest6 extends TestCase {
 
     public void test_distribute_by() throws Exception {
-        File file = new File("/Users/wenshao/Downloads/datasafe_base_dev.udf_test.txt");
+        File file = new File("D:\\testData\\TEST.txt");
         String sql = FileUtils.readFileToString(file, "UTF-8");
         
         

@@ -215,6 +215,11 @@
 
 			<dependencies>
 				<dependency>
+					<groupId>com.xugudb</groupId>
+					<artifactId>xugu-jdbc</artifactId>
+					<version>12.3.1</version>
+				</dependency>
+				<dependency>
 					<groupId>com.alibaba</groupId>
 					<artifactId>jconsole</artifactId>
 					<version>1.6.0</version>

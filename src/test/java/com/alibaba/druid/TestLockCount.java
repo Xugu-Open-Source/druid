@@ -19,13 +19,14 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import com.xugu.pool.XgDataSource;
 import org.junit.Assert;
 import junit.framework.TestCase;
 
 public class TestLockCount extends TestCase {
 
     public void test_current() throws Exception {
-        DataSource dataSource = new DataSource();
+        XgDataSource dataSource = new XgDataSource();
 
         final int threadCount = 10;
         final int loopCount = 1000 * 1000 * 1000;
@@ -56,7 +57,7 @@ public class TestLockCount extends TestCase {
         Assert.assertEquals(result, dataSource.getC19());
     }
 
-    private void concurrent(final DataSource dataSource, int threadCount, final int loopCount)
+    private void concurrent(final XgDataSource dataSource, int threadCount, final int loopCount)
                                                                                               throws InterruptedException {
 
         final CountDownLatch startLatch = new CountDownLatch(1);
@@ -89,7 +90,7 @@ public class TestLockCount extends TestCase {
         System.out.println("concurrent end");
     }
 
-    private static class DataSource {
+    private static class XgDataSource {
 
         private long       c0;
         private long       c1;

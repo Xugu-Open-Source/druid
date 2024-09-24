@@ -9,8 +9,8 @@ import java.sql.DriverManager;
 public class AlibDriverTest extends TestCase {
 
     public void test_for_alib() throws Exception {
-        String url = "jdbc:mysql://127.0.0.1:8507";
-        Connection conn = DriverManager.getConnection(url, "root", "root");
+        String url = "jdbc:Xugu://127.0.0.1:5135/SYSTEM";
+        Connection conn = DriverManager.getConnection(url, "SYSDBA", "SYSDBA");
         conn.close();
     }
 

@@ -19,6 +19,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import com.xugu.pool.XgDataSource;
 import junit.framework.TestCase;
 
 import com.alibaba.druid.pool.DruidDataSource;
@@ -29,11 +30,11 @@ import com.alibaba.druid.util.JMXUtils;
 public class TestTraceFilter extends TestCase {
 
     public void test_loop() throws Exception {
-        DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setFilters("stat,trace");
-        dataSource.setUrl("jdbc:mock:");
+        XgDataSource dataSource = new XgDataSource();
+        //dataSource.setFilters("stat,trace");
+        dataSource.setUrl("jdbc:xugu://127.0.0.1:5135/SYSTEM?user=SYSDBA&password=SYSDBA");
 
-        JMXUtils.register("com.alibaba.dragoon:type=JdbcTraceManager", JdbcTraceManager.getInstance());
+        JMXUtils.register("com.xugu.cloudjdbc.Driver:type=JdbcTraceManager", JdbcTraceManager.getInstance());
 
         for (int i = 0; i < 1000; ++i) {
             Connection conn = dataSource.getConnection();
@@ -46,6 +47,6 @@ public class TestTraceFilter extends TestCase {
 
             Thread.sleep(1000);
         }
-        dataSource.close();
+        dataSource.getConnection().close();
     }
 }

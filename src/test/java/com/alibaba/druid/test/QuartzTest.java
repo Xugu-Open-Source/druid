@@ -25,6 +25,7 @@ public class QuartzTest extends PoolTestCase {
         scheduler = (StdScheduler) factory.getScheduler();
 
         scheduler.getContext();
+        System.out.println("scheduler.getContext():" + scheduler.getContext());
     }
     
     protected void tearDown() throws Exception {

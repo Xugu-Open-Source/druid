@@ -17,6 +17,7 @@ package com.alibaba.druid;
 
 import java.lang.management.ManagementFactory;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.concurrent.CountDownLatch;
 
 import javax.management.ObjectName;
@@ -31,10 +32,10 @@ public class TestIdel3 extends TestCase {
 
     public void test_idle2() throws Exception {
         MockDriver driver = new MockDriver();
-
+        String driverClass = "com.xugu.cloudjdbc.Driver";
         final DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setUrl("jdbc:mock:xxx");
-        dataSource.setDriver(driver);
+
+        dataSource.setUrl("jdbc:xugu://localhost:5135/SYSTEM?user=SYSDBA&password=SYSDBA");
         dataSource.setInitialSize(1);
         dataSource.setMaxActive(14);
         dataSource.setMaxIdle(14);
