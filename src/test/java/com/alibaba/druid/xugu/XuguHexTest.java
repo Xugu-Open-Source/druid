@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alibaba.druid.xg;
+package com.alibaba.druid.xugu;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.util.JdbcUtils;
-import com.xugu.pool.XgDataSource;
 import junit.framework.TestCase;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
-import com.xugu.cloudjdbc.Connection;
-import com.xugu.cloudjdbc.PreparedStatement;
-import com.xugu.cloudjdbc.ResultSet;
-
-public class XgHexTest extends TestCase {
+public class XuguHexTest extends TestCase {
     final int COUNT = 800;
     
     private String          jdbcUrl;
@@ -33,19 +31,19 @@ public class XgHexTest extends TestCase {
     private String          password;
     private String          driverClass;
 
-    private XgDataSource dataSource;
+    private DruidDataSource dataSource;
 
     protected void setUp() throws Exception {
-        jdbcUrl = "jdbc:xugu://localhost:5138/SYSTEM";
-        user = "SYSDBA";
-        password = "SYSDBA";
-        driverClass = "com.xugu.cloudjdbc.Driver";
+        jdbcUrl = "jdbc:mysql://hbase-01:3306/sonar";
+        user = "sonar";
+        password = "sonar";
+        driverClass = "com.mysql.jdbc.Driver";
 
-        dataSource = new XgDataSource();
-        Class.forName(driverClass);
+        dataSource = new DruidDataSource();
+        dataSource.setDriverClassName(driverClass);
         dataSource.setUrl(jdbcUrl);
-//        dataSource.setPoolPreparedStatements(true);
-        dataSource.setUser(user);
+        dataSource.setPoolPreparedStatements(true);
+        dataSource.setUsername(user);
         dataSource.setPassword(password);
 
     }
@@ -53,13 +51,13 @@ public class XgHexTest extends TestCase {
 
     public void test_0() throws Exception {
 
-        Connection conn = (Connection) dataSource.getConnection();
+        Connection conn = dataSource.getConnection();
 
         String sql = "SELECT INSERT('Quadratic', 1, 4, 'What')";
 
-        PreparedStatement stmt = (PreparedStatement) conn.prepareStatement(sql);
+        PreparedStatement stmt = conn.prepareStatement(sql);
 
-        ResultSet rs = (ResultSet) stmt.executeQuery();
+        ResultSet rs = stmt.executeQuery();
         JdbcUtils.printResultSet(rs);
         rs.close();
         stmt.close();

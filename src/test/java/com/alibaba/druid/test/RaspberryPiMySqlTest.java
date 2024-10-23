@@ -20,7 +20,7 @@ public class RaspberryPiMySqlTest extends TestCase {
 
     protected void setUp() throws Exception {
         dataSource = new XgDataSource();
-        dataSource.setUrl("jdbc:Xugu://127.0.0.1:5135/SYSTEM?allowMultiQueries=true");
+        dataSource.setUrl("jdbc:Xugu://127.0.0.1:5138/SYSTEM?allowMultiQueries=true");
         dataSource.setUser("SYSDBA");
         dataSource.setPassword("SYSDBA");
 

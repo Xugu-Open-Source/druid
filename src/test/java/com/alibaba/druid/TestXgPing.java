@@ -37,7 +37,7 @@ public class TestXgPing extends TestCase {
         // password = "ccbuauto";
         // SQL = "SELECT * FROM WP_ORDERS WHERE ID = ?";
 
-        jdbcUrl = "jdbc:xugu://localhost:5135/SYSTEM";
+        jdbcUrl = "jdbc:xugu://localhost:5138/SYSTEM";
         user = "SYSDBA";
         password = "SYSDBA";
         SQL = "SELECT * FROM TABLE1 WHERE ID = ?";

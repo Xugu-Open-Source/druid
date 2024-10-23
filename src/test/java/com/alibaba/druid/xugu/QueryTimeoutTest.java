@@ -1,11 +1,8 @@
-package com.alibaba.druid.xg;
-
+package com.alibaba.druid.xugu;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.util.JdbcUtils;
-import com.xugu.pool.XgDataSource;
 import junit.framework.TestCase;
-import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,9 +14,9 @@ public class QueryTimeoutTest extends TestCase {
 
     protected void setUp() throws Exception {
         dataSource = new DruidDataSource();
-        dataSource.setUrl("jdbc:xugu://localhost:5138/SYSTEM");
-        dataSource.setUsername("SYSDBA");
-        dataSource.setPassword("SYSDBA");
+        dataSource.setUrl("jdbc:oracle:thin:@a.b.c.d:1521:OINTEST");
+        dataSource.setUsername("alibaba");
+        dataSource.setPassword("deYcR7facWSJtCuDpm2r");
         dataSource.setInitialSize(1);
         dataSource.setMaxActive(14);
         dataSource.setMinIdle(1);
@@ -30,14 +27,13 @@ public class QueryTimeoutTest extends TestCase {
         dataSource.setValidationQuery("SELECT 1 FROM DUAL");
         dataSource.setFilters("stat");
     }
-
     
     public void test_queryTimeout() throws Exception {
         {
             Connection conn = dataSource.getConnection();
             
             String sql = "SELECT * FROM ws_product WHERE HAVE_IMAGE = 'N' AND ROWNUM < 1000";
-            PreparedStatement stmt =  conn.prepareStatement(sql);
+            PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setQueryTimeout(1);
             ResultSet rs = stmt.executeQuery();
             JdbcUtils.printResultSet(rs);
@@ -45,10 +41,10 @@ public class QueryTimeoutTest extends TestCase {
             stmt.close();
             conn.close();
         }
-        Connection conn =  dataSource.getConnection();
+        Connection conn = dataSource.getConnection();
         
-        String sql = "SELECT 'x' FROM TABLE1";
-        PreparedStatement stmt =  conn.prepareStatement(sql);
+        String sql = "SELECT 'x' FROM DUAL";
+        PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setQueryTimeout(1);
         ResultSet rs = stmt.executeQuery();
         JdbcUtils.printResultSet(rs);

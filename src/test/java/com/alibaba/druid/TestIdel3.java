@@ -35,7 +35,7 @@ public class TestIdel3 extends TestCase {
         String driverClass = "com.xugu.cloudjdbc.Driver";
         final DruidDataSource dataSource = new DruidDataSource();
 
-        dataSource.setUrl("jdbc:xugu://localhost:5135/SYSTEM?user=SYSDBA&password=SYSDBA");
+        dataSource.setUrl("jdbc:xugu://localhost:5138/SYSTEM?user=SYSDBA&password=SYSDBA");
         dataSource.setInitialSize(1);
         dataSource.setMaxActive(14);
         dataSource.setMaxIdle(14);

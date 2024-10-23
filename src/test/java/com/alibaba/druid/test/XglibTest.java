@@ -10,7 +10,7 @@ public class XglibTest extends TestCase {
 
     protected void setUp() throws Exception {
         dataSource = new XgDataSource();
-        dataSource.setUrl("jdbc:Xugu://127.0.0.1:5135/SYSTEM");
+        dataSource.setUrl("jdbc:Xugu://127.0.0.1:5138/SYSTEM");
         dataSource.setUser("SYSDBA");
         dataSource.setPassword("SYSDBA");
     }

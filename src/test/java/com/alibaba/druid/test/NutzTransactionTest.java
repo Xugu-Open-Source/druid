@@ -24,7 +24,7 @@ public class NutzTransactionTest extends TestCase {
     protected void setUp() throws Exception {
         XgDataSource dataSource = new XgDataSource();
         Class.forName("com.xugu.cloudjdbc.Driver");
-        dataSource.setUrl("jdbc:Xugu://127.0.0.1:5135/SYSTEM");
+        dataSource.setUrl("jdbc:Xugu://127.0.0.1:5138/SYSTEM");
         dataSource.setUser("SYSDBA");
         dataSource.setPassword("SYSDBA");
         dataSource.setLogWriter(new PrintWriter(new FileWriter("D://outputTest.txt")));

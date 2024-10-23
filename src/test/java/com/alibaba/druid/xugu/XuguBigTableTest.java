@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alibaba.druid.xg;
+package com.alibaba.druid.xugu;
 
-import com.xugu.pool.XgDataSource;
+import com.alibaba.druid.pool.DruidDataSource;
 import junit.framework.TestCase;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-public class XgBigTableTest extends TestCase {
+public class XuguBigTableTest extends TestCase {
     final int COUNT = 800;
     
     private String          jdbcUrl;
@@ -28,18 +31,19 @@ public class XgBigTableTest extends TestCase {
     private String          password;
     private String          driverClass;
 
-    private XgDataSource dataSource;
+    private DruidDataSource dataSource;
 
     protected void setUp() throws Exception {
-        jdbcUrl = "jdbc:xugu://localhost:5138/SYSTEM";
-        user = "SYSDBA";
-        password = "SYSDBA";
-        driverClass = "com.xugu.cloudjdbc.Driver";
+        jdbcUrl = "jdbc:mysql://a.b.c.d:3306/dragoon_v25_masterdb";
+        user = "dragoon_test";
+        password = "dragoon_test";
+        driverClass = "com.mysql.jdbc.Driver";
 
-        dataSource = new XgDataSource();
-        DriverManager.registerDriver(new com.xugu.cloudjdbc.Driver());
+        dataSource = new DruidDataSource();
+        dataSource.setDriverClassName(driverClass);
         dataSource.setUrl(jdbcUrl);
-        dataSource.setUser(user);
+        dataSource.setPoolPreparedStatements(true);
+        dataSource.setUsername(user);
         dataSource.setPassword(password);
 
         createTable();
@@ -53,7 +57,7 @@ public class XgBigTableTest extends TestCase {
         }
 
         if (dataSource != null) {
-            dataSource.getConnection().close();
+            dataSource.close();
         }
     }
 

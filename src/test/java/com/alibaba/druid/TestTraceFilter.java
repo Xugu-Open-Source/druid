@@ -32,7 +32,7 @@ public class TestTraceFilter extends TestCase {
     public void test_loop() throws Exception {
         XgDataSource dataSource = new XgDataSource();
         //dataSource.setFilters("stat,trace");
-        dataSource.setUrl("jdbc:xugu://127.0.0.1:5135/SYSTEM?user=SYSDBA&password=SYSDBA");
+        dataSource.setUrl("jdbc:xugu://127.0.0.1:5138/SYSTEM?user=SYSDBA&password=SYSDBA");
 
         JMXUtils.register("com.xugu.cloudjdbc.Driver:type=JdbcTraceManager", JdbcTraceManager.getInstance());
 
