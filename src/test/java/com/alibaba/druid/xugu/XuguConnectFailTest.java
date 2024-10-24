@@ -14,7 +14,7 @@ public class XuguConnectFailTest extends TestCase {
 
     protected void setUp() throws Exception {
         dataSource = new DruidDataSource();
-        dataSource.setUrl("jdbc:mysql://rm-bp1n325y4m6h78xt3.mysql.rds.aliyuncs.com:3306/oracle_info?allowMultiQueries=true&characterEncoding=UTF8");
+        dataSource.setUrl("jdbc:xugu://localhost:5138/druid_test");
         dataSource.setUsername("xx");
         dataSource.setPassword("xxx");
         dataSource.setCreateScheduler(Executors.newScheduledThreadPool(10));

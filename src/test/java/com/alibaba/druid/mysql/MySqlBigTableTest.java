@@ -35,10 +35,10 @@ public class MySqlBigTableTest extends TestCase {
     private DruidDataSource dataSource;
 
     protected void setUp() throws Exception {
-        jdbcUrl = "jdbc:mysql://a.b.c.d:3306/dragoon_v25_masterdb";
-        user = "dragoon_test";
-        password = "dragoon_test";
-        driverClass = "com.mysql.jdbc.Driver";
+        jdbcUrl = "jdbc:mysql://localhost:3306/druid_test";
+        user = "root";
+        password = "123456";
+        driverClass = "com.mysql.cj.jdbc.Driver";
 
         dataSource = new DruidDataSource();
         dataSource.setDriverClassName(driverClass);

@@ -34,10 +34,10 @@ public class XuguHexTest extends TestCase {
     private DruidDataSource dataSource;
 
     protected void setUp() throws Exception {
-        jdbcUrl = "jdbc:mysql://hbase-01:3306/sonar";
-        user = "sonar";
-        password = "sonar";
-        driverClass = "com.mysql.jdbc.Driver";
+        jdbcUrl = "jdbc:xugu://localhost:5138/druid_test";
+        user = "SYSDBA";
+        password = "SYSDBA";
+        driverClass = "com.xugu.cloudjdbc.Driver";
 
         dataSource = new DruidDataSource();
         dataSource.setDriverClassName(driverClass);

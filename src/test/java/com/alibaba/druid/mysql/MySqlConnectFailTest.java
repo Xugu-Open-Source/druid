@@ -14,7 +14,7 @@ public class MySqlConnectFailTest extends TestCase {
 
     protected void setUp() throws Exception {
         dataSource = new DruidDataSource();
-        dataSource.setUrl("jdbc:mysql://rm-bp1n325y4m6h78xt3.mysql.rds.aliyuncs.com:3306/oracle_info?allowMultiQueries=true&characterEncoding=UTF8");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/druid_test?allowMultiQueries=true&characterEncoding=UTF8");
         dataSource.setUsername("xx");
         dataSource.setPassword("xxx");
         dataSource.setCreateScheduler(Executors.newScheduledThreadPool(10));

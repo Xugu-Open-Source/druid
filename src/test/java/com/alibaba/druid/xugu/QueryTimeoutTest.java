@@ -14,9 +14,9 @@ public class QueryTimeoutTest extends TestCase {
 
     protected void setUp() throws Exception {
         dataSource = new DruidDataSource();
-        dataSource.setUrl("jdbc:oracle:thin:@a.b.c.d:1521:OINTEST");
-        dataSource.setUsername("alibaba");
-        dataSource.setPassword("deYcR7facWSJtCuDpm2r");
+        dataSource.setUrl("jdbc:xugu://localhost:5138/druid_test");
+        dataSource.setUsername("SYSDBA");
+        dataSource.setPassword("SYSDBA");
         dataSource.setInitialSize(1);
         dataSource.setMaxActive(14);
         dataSource.setMinIdle(1);

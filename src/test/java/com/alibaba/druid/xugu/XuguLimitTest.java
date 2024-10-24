@@ -8,15 +8,14 @@ import junit.framework.TestCase;
 import java.util.List;
 
 /**
- * Created by tianzhen.wtz on 2016/6/7.
- * 类说明：
+ * 大概率要改，这玩意咋测都通过，就是不写dbType都行
  */
 public class XuguLimitTest extends TestCase{
 
 
     public void testLimit(){
         String sql = "select * from aaa limit 20exx";
-        SQLStatementParser statementParser = SQLParserUtils.createSQLStatementParser(sql, "mysql");
+        SQLStatementParser statementParser = SQLParserUtils.createSQLStatementParser(sql, "xugu");
         try {
             List<SQLStatement> sqlStatements = statementParser.parseStatementList();
         } catch (Exception e) {

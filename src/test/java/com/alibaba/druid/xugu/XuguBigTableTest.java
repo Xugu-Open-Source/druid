@@ -23,6 +23,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+
+/**
+ * 测试通过，但是存在不能删表的问题
+ * */
 public class XuguBigTableTest extends TestCase {
     final int COUNT = 800;
     
@@ -34,10 +38,10 @@ public class XuguBigTableTest extends TestCase {
     private DruidDataSource dataSource;
 
     protected void setUp() throws Exception {
-        jdbcUrl = "jdbc:mysql://a.b.c.d:3306/dragoon_v25_masterdb";
-        user = "dragoon_test";
-        password = "dragoon_test";
-        driverClass = "com.mysql.jdbc.Driver";
+        jdbcUrl = "jdbc:xugu://localhost:5138/druid_test";
+        user = "SYSDBA";
+        password = "SYSDBA";
+        driverClass = "com.xugu.cloudjdbc.Driver";
 
         dataSource = new DruidDataSource();
         dataSource.setDriverClassName(driverClass);

@@ -14,7 +14,7 @@ import org.junit.Test;
 import java.util.List;
 
 /**
- * Created by szf on 2017/11/16.
+ * 没有和MySqlStatementParser匹配的虚谷类，不必管它
  */
 public class XuguVarantRefTest {
 
