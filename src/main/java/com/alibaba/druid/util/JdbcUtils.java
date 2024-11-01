@@ -904,6 +904,15 @@ public final class JdbcUtils implements JdbcConstants {
                 JdbcUtils.H2.equals(dbType); // H2 SchemaStatVisitor & SQLASTOutputVisitor should specify
     }
 
+    public static boolean isXuguDbType(String dbType) {
+        return JdbcUtils.XUGU.equals(dbType) || //这一行可能要删
+                JdbcUtils.MYSQL.equals(dbType) || //
+                JdbcUtils.OCEANBASE.equals(dbType) || //
+                JdbcUtils.ALIYUN_DRDS.equals(dbType) || //
+                JdbcUtils.MARIADB.equals(dbType) ||
+                JdbcUtils.H2.equals(dbType); // H2 SchemaStatVisitor & SQLASTOutputVisitor should specify
+    }
+
     public static boolean isPgsqlDbType(String dbType) {
         return JdbcUtils.POSTGRESQL.equals(dbType) || //
                 JdbcUtils.ENTERPRISEDB.equals(dbType) || //

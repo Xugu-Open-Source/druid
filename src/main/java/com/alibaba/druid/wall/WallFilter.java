@@ -134,7 +134,11 @@ public class WallFilter extends FilterAdapter implements WallFilterMBean {
             if (config == null) {
                 config = new WallConfig(MySqlWallProvider.DEFAULT_CONFIG_DIR);
             }
-
+            provider = new MySqlWallProvider(config);
+        } else if (JdbcUtils.isXuguDbType(dbType)) {
+            if (config == null) {
+                config = new WallConfig(MySqlWallProvider.DEFAULT_CONFIG_DIR);
+            }
             provider = new MySqlWallProvider(config);
         } else if (JdbcUtils.isOracleDbType(dbType)) {
             if (config == null) {

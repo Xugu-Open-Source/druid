@@ -104,7 +104,7 @@ public class XgBigTableTest extends TestCase {
 
     private void createTable() throws SQLException {
         StringBuffer ddl = new StringBuffer();
-        ddl.append("CREATE TABLE t_big (FID INT AUTO_INCREMENT PRIMARY KEY ");
+        ddl.append("CREATE TABLE t_big (FID INT IDENTITY(1,1) NOT NULL");
         for (int i = 0; i < COUNT; ++i) {
             ddl.append(", ");
             ddl.append("F" + i);
