@@ -41,7 +41,7 @@
 		<junit.version>4.13.1</junit.version>
 		<jmh.version>1.37</jmh.version>
 
-		<gpg.skip>false</gpg.skip>
+		<gpg.skip>true</gpg.skip>
 		<javadoc.skip>false</javadoc.skip>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

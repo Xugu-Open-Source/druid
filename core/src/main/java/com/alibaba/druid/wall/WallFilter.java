@@ -129,6 +129,7 @@ public class WallFilter extends FilterAdapter implements WallFilterMBean {
         }
         switch (dbType) {
             case mysql:
+            case xugu:
             case oceanbase:
             case drds:
             case mariadb:
