@@ -28,6 +28,7 @@ import com.alibaba.druid.sql.dialect.oracle.visitor.OracleParameterizedOutputVis
 import com.alibaba.druid.sql.dialect.phoenix.visitor.PhoenixOutputVisitor;
 import com.alibaba.druid.sql.dialect.postgresql.visitor.PGOutputVisitor;
 import com.alibaba.druid.sql.dialect.sqlserver.visitor.SQLServerOutputVisitor;
+import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuOutputVisitor;
 import com.alibaba.druid.sql.parser.*;
 import com.alibaba.druid.util.FnvHash;
 import com.alibaba.druid.util.JdbcUtils;
@@ -263,6 +264,10 @@ public class ParameterizedOutputVisitorUtils {
             || JdbcUtils.MARIADB.equals(dbType)
             || JdbcUtils.H2.equals(dbType)) {
             return new MySqlOutputVisitor(out, true);
+        }
+
+        if (JdbcUtils.XUGU.equals(dbType)) {
+            return new XuGuOutputVisitor(out, true);
         }
 
         if (JdbcUtils.POSTGRESQL.equals(dbType)

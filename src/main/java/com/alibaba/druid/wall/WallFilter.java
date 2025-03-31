@@ -33,6 +33,7 @@ import com.alibaba.druid.wall.spi.MySqlWallProvider;
 import com.alibaba.druid.wall.spi.OracleWallProvider;
 import com.alibaba.druid.wall.spi.PGWallProvider;
 import com.alibaba.druid.wall.spi.SQLServerWallProvider;
+import com.alibaba.druid.wall.spi.XuGuWallProvider;
 import com.alibaba.druid.wall.violation.SyntaxErrorViolation;
 
 import java.io.InputStream;
@@ -130,6 +131,11 @@ public class WallFilter extends FilterAdapter implements WallFilterMBean {
             }
 
             provider = new MySqlWallProvider(config);
+        } else if (JdbcUtils.XUGU.equals(dbType)) {
+            if (config == null) {
+                config = new WallConfig(XuGuWallProvider.DEFAULT_CONFIG_DIR);
+            }
+            provider = new XuGuWallProvider(config);
         } else if (JdbcUtils.ORACLE.equals(dbType) || JdbcUtils.ALI_ORACLE.equals(dbType)) {
             if (config == null) {
                 config = new WallConfig(OracleWallProvider.DEFAULT_CONFIG_DIR);

@@ -42,6 +42,7 @@ import com.alibaba.druid.sql.dialect.postgresql.parser.PGSQLStatementParser;
 import com.alibaba.druid.sql.dialect.sqlserver.parser.SQLServerExprParser;
 import com.alibaba.druid.sql.dialect.sqlserver.parser.SQLServerLexer;
 import com.alibaba.druid.sql.dialect.sqlserver.parser.SQLServerStatementParser;
+import com.alibaba.druid.sql.dialect.xugu.parser.XuGuStatementParser;
 import com.alibaba.druid.util.JdbcConstants;
 import com.alibaba.druid.util.JdbcUtils;
 
@@ -75,6 +76,10 @@ public class SQLParserUtils {
 
         if (JdbcUtils.MYSQL.equals(dbType)) {
             return new MySqlStatementParser(sql, features);
+        }
+
+        if (JdbcUtils.XUGU.equals(dbType)) {
+            return new XuGuStatementParser(sql, features);
         }
 
         if (JdbcUtils.MARIADB.equals(dbType)) {

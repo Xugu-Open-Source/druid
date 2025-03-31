@@ -38,6 +38,8 @@ import com.alibaba.druid.sql.dialect.postgresql.visitor.PGOutputVisitor;
 import com.alibaba.druid.sql.dialect.postgresql.visitor.PGSchemaStatVisitor;
 import com.alibaba.druid.sql.dialect.sqlserver.visitor.SQLServerOutputVisitor;
 import com.alibaba.druid.sql.dialect.sqlserver.visitor.SQLServerSchemaStatVisitor;
+import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuOutputVisitor;
+import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuSchemaStatVisitor;
 import com.alibaba.druid.sql.parser.*;
 import com.alibaba.druid.sql.visitor.SQLASTOutputVisitor;
 import com.alibaba.druid.sql.visitor.SchemaStatVisitor;
@@ -100,12 +102,20 @@ public class SQLUtils {
         return toMySqlString(sqlObject, (FormatOption) null);
     }
 
+    public static String toXuGuString(SQLObject sqlObject) {
+        return toXuGuString(sqlObject, (FormatOption) null);
+    }
+
     public static String toMySqlString(SQLObject sqlObject, VisitorFeature... features) {
         return toMySqlString(sqlObject, new FormatOption(features));
     }
 
     public static String toMySqlString(SQLObject sqlObject, FormatOption option) {
         return toSQLString(sqlObject, JdbcConstants.MYSQL, option);
+    }
+
+    public static String toXuGuString(SQLObject sqlObject, FormatOption option) {
+        return toSQLString(sqlObject, JdbcConstants.XUGU, option);
     }
 
     public static SQLExpr toMySqlExpr(String sql) {
@@ -382,6 +392,10 @@ public class SQLUtils {
             return new MySqlOutputVisitor(out);
         }
 
+        if (JdbcConstants.XUGU.equals(dbType)) {
+            return new XuGuOutputVisitor(out);
+        }
+
         if (JdbcConstants.POSTGRESQL.equals(dbType)) {
             return new PGOutputVisitor(out);
         }
@@ -426,6 +440,10 @@ public class SQLUtils {
         if (JdbcConstants.MYSQL.equals(dbType) || //
                 JdbcConstants.MARIADB.equals(dbType)) {
             return new MySqlSchemaStatVisitor();
+        }
+
+        if (JdbcConstants.XUGU.equals(dbType)) {
+            return new XuGuSchemaStatVisitor();
         }
 
         if (JdbcConstants.POSTGRESQL.equals(dbType)) {
@@ -843,6 +861,10 @@ public class SQLUtils {
                     }
                 } else if (JdbcConstants.MYSQL.equals(dbType)) {
                     if (MySqlUtils.isKeyword(normalizeName)) {
+                        return name;
+                    }
+                } else if (JdbcConstants.XUGU.equals(dbType)) {
+                    if (XuGuUtils.isKeyword(normalizeName)) {
                         return name;
                     }
                 } else if (JdbcConstants.POSTGRESQL.equals(dbType)

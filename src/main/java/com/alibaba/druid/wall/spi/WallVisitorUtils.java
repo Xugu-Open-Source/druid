@@ -35,6 +35,12 @@ import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleMultiInsertStatement;
 import com.alibaba.druid.sql.dialect.postgresql.ast.stmt.PGShowStatement;
 import com.alibaba.druid.sql.dialect.sqlserver.ast.stmt.SQLServerExecStatement;
 import com.alibaba.druid.sql.dialect.sqlserver.ast.stmt.SQLServerInsertStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuOutFileExpr;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuHintStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuLockTableStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuOptimizeStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuRenameTableStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuShowStatement;
 import com.alibaba.druid.sql.parser.SQLStatementParser;
 import com.alibaba.druid.sql.visitor.ExportParameterVisitor;
 import com.alibaba.druid.sql.visitor.SQLEvalVisitor;
@@ -2148,6 +2154,14 @@ public class WallVisitorUtils {
         return isTopSelectStatement(tableSource.getParent());
     }
 
+    public static boolean isTopSelectOutFile(XuGuOutFileExpr x) {
+        if (!(x.getParent() instanceof SQLExprTableSource)) {
+            return false;
+        }
+        SQLExprTableSource tableSource = (SQLExprTableSource) x.getParent();
+        return isTopSelectStatement(tableSource.getParent());
+    }
+
     public static boolean check(WallVisitor visitor, SQLExprTableSource x) {
         final WallTopStatementContext topStatementContext = wallTopStatementContextLocal.get();
 
@@ -2523,10 +2537,12 @@ public class WallVisitorUtils {
             errorCode = ErrorCode.REPLACE_NOT_ALLOW;
         } else if (x instanceof SQLDescribeStatement
             || (x instanceof MySqlExplainStatement && ((MySqlExplainStatement)x).isDescribe())) {
+            // xugudb的desc语法只支持在控制台使用，暂不测试
             allow = config.isDescribeAllow();
             denyMessage = "describe not allow";
             errorCode = ErrorCode.DESC_NOT_ALLOW;
         } else if (x instanceof MySqlShowStatement
+                || x instanceof XuGuShowStatement
                 || x instanceof PGShowStatement
                 || x instanceof SQLShowTablesStatement) {
             allow = config.isShowAllow();
@@ -2544,15 +2560,18 @@ public class WallVisitorUtils {
             allow = config.isUseAllow();
             denyMessage = "use not allow";
             errorCode = ErrorCode.USE_NOT_ALLOW;
-        } else if (x instanceof MySqlRenameTableStatement) {
+        } else if (x instanceof MySqlRenameTableStatement
+                || x instanceof XuGuRenameTableStatement) {
             allow = config.isRenameTableAllow();
             denyMessage = "rename table not allow";
             errorCode = ErrorCode.RENAME_TABLE_NOT_ALLOW;
-        } else if (x instanceof MySqlHintStatement) {
+        } else if (x instanceof MySqlHintStatement
+                || x instanceof XuGuHintStatement) {
             allow = config.isHintAllow();
             denyMessage = "hint not allow";
             errorCode = ErrorCode.HINT_NOT_ALLOW;
-        } else if (x instanceof MySqlLockTableStatement) {
+        } else if (x instanceof MySqlLockTableStatement
+                || x instanceof XuGuLockTableStatement) {
             allow = config.isLockTableAllow();
             denyMessage = "lock table not allow";
             errorCode = ErrorCode.LOCK_TABLE_NOT_ALLOW;
@@ -2565,7 +2584,8 @@ public class WallVisitorUtils {
             denyMessage = "block statement not allow";
             errorCode = ErrorCode.BLOCK_NOT_ALLOW;
         } else if (x instanceof SQLExplainStatement
-                || x instanceof MySqlOptimizeStatement) {
+                || x instanceof MySqlOptimizeStatement
+                || x instanceof XuGuOptimizeStatement) {
             allow = true;
             errorCode = 0;
             denyMessage = null;
