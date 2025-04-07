@@ -4222,4 +4222,95 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
         printAndAccept(x.getTables(), "，");
         return false;
     }
+
+    @Override
+    public boolean visit(XuGuBackupSystemDatabaseStatement x) {
+        print0(ucase ? "BACKUP " : "backup ");
+
+        if (x.isSystem()) {
+            print0(ucase ? "SYSTEM " : "system ");
+        }else if (x.isDatabase()){
+            print0(ucase ? "DATABASE " : "database ");
+        }
+
+        if (x.isAll()) {
+            print0(ucase ? "ALL " : "all ");
+        } else if (x.isIncrement()) {
+            print0(ucase ? "INCREMENT " : "increment ");
+        }
+
+        if (x.isAppend()) {
+            print0(ucase ? "APPEND " : "append ");
+        }
+
+        print0(ucase ? "TO " : "to ");
+
+        x.getFilePath().accept(this);
+
+        if (x.isOnline()) {
+            print0(ucase ? " ONLINE" : " online");
+        } else if (x.isOffline()) {
+            print0(ucase ? " OFFLINE" : " offline");
+        }
+
+        if (x.isEncryptor()) {
+            print0(ucase ? " ENCRYPTOR IS " : " encryptor is ");
+            x.getOptEncryptor().accept(this);
+        }
+
+        if (x.isCompress()) {
+            print0(ucase ? " COMPRESS" : " compress");
+        } else if (x.isNocompress()) {
+            print0(ucase ? " NOCOMPRESS" : " nocompress");
+        }
+
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuBackupSystemDatabaseStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuBackupUserSchemaTableStatement x) {
+        print0(ucase ? "BACKUP " : "backup ");
+
+        if (x.isUser()) {
+            print0(ucase ? "USER " : "user ");
+            x.getUserName().accept(this);
+        } else if (x.isSchema()) {
+            print0(ucase ? "SCHEMA " : "schema ");
+            x.getSchemaName().accept(this);
+        } else if (x.isTable()){
+            print0(ucase ? "TABLE " : "table ");
+            x.getTableName().accept(this);
+        }
+
+        if (x.isAppend()) {
+            print0(ucase ? " APPEND" : " append");
+        }
+
+        print0(ucase ? " TO " : " to ");
+
+        x.getFilePath().accept(this);
+
+        if (x.isEncryptor()) {
+            print0(ucase ? " ENCRYPTOR IS " : " encryptor is ");
+            x.getOptEncryptor().accept(this);
+        }
+
+        if (x.isCompress()) {
+            print0(ucase ? " COMPRESS" : " compress");
+        } else if (x.isNocompress()) {
+            print0(ucase ? " NOCOMPRESS" : " nocompress");
+        }
+
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuBackupUserSchemaTableStatement x) {
+
+    }
 } //

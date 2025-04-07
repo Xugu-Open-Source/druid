@@ -36,6 +36,8 @@ import com.alibaba.druid.sql.dialect.postgresql.ast.stmt.PGShowStatement;
 import com.alibaba.druid.sql.dialect.sqlserver.ast.stmt.SQLServerExecStatement;
 import com.alibaba.druid.sql.dialect.sqlserver.ast.stmt.SQLServerInsertStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuOutFileExpr;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuBackupSystemDatabaseStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuBackupUserSchemaTableStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuHintStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuLockTableStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuOptimizeStatement;
@@ -2589,6 +2591,11 @@ public class WallVisitorUtils {
             allow = true;
             errorCode = 0;
             denyMessage = null;
+        } else if (x instanceof XuGuBackupSystemDatabaseStatement
+                || x instanceof XuGuBackupUserSchemaTableStatement) {
+            allow = config.isBackupAllow();
+            denyMessage = "xugu backup statement not allow";
+            errorCode = ErrorCode.OTHER;
         } else {
             allow = config.isNoneBaseStatementAllow();
             errorCode = ErrorCode.NONE_BASE_STATEMENT_NOT_ALLOW;
