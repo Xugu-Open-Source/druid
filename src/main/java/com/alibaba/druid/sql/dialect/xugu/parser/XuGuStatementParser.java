@@ -1156,19 +1156,19 @@ public class XuGuStatementParser extends SQLStatementParser {
         acceptIdentifier("BACKUP");
 
         if (lexer.identifierEquals("SYSTEM")) {
-            acceptIdentifier("SYSTEM");
+            lexer.nextToken();
             XuGuBackupSystemDatabaseStatement stmt = new XuGuBackupSystemDatabaseStatement();
             stmt.setSystem(true);
             parseBackupSystemDatabase(stmt);
             return stmt;
         } else if (lexer.token() == Token.DATABASE) {
-            accept(Token.DATABASE);
+            lexer.nextToken();
             XuGuBackupSystemDatabaseStatement stmt = new XuGuBackupSystemDatabaseStatement();
             stmt.setDatabase(true);
             parseBackupSystemDatabase(stmt);
             return stmt;
         } else if (lexer.token() == Token.USER) {
-            accept(Token.USER);
+            lexer.nextToken();
             XuGuBackupUserSchemaTableStatement stmt = new XuGuBackupUserSchemaTableStatement();
             stmt.setUser(true);
             SQLName userName = exprParser.name();
@@ -1176,7 +1176,7 @@ public class XuGuStatementParser extends SQLStatementParser {
             parseBackupUserSchemaTable(stmt);
             return stmt;
         } else if (lexer.token() == Token.SCHEMA) {
-            accept(Token.SCHEMA);
+            lexer.nextToken();
             XuGuBackupUserSchemaTableStatement stmt = new XuGuBackupUserSchemaTableStatement();
             stmt.setSchema(true);
             SQLName schemaName = exprParser.name();
@@ -1184,7 +1184,7 @@ public class XuGuStatementParser extends SQLStatementParser {
             parseBackupUserSchemaTable(stmt);
             return stmt;
         } else if (lexer.token() == Token.TABLE) {
-            accept(Token.TABLE);
+            lexer.nextToken();
             XuGuBackupUserSchemaTableStatement stmt = new XuGuBackupUserSchemaTableStatement();
             stmt.setTable(true);
             SQLName tableName = exprParser.name();
