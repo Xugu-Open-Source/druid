@@ -743,6 +743,12 @@ public class XuGuStatementParser extends SQLStatementParser {
             return true;
         }
 
+        if (lexer.identifierEquals("RESTORE")){
+            SQLStatement stmt = parseRestore();
+            statementList.add(stmt);
+            return true;
+        }
+
         if (lexer.token() == Token.SHOW) {
             SQLStatement stmt = parseShow();
             statementList.add(stmt);
@@ -1190,6 +1196,112 @@ public class XuGuStatementParser extends SQLStatementParser {
             SQLName tableName = exprParser.name();
             stmt.setTableName(tableName);
             parseBackupUserSchemaTable(stmt);
+            return stmt;
+        }
+
+        throw new ParserException("TODO " + lexer.info());
+    }
+
+    public SQLStatement parseRestore() {
+        acceptIdentifier("RESTORE");
+
+        if (lexer.identifierEquals("SYSTEM")) {
+            lexer.nextToken();
+            accept(Token.FROM);
+            XuGuRestoreSystemStatement stmt = new XuGuRestoreSystemStatement();
+            SQLExpr filePath = exprParser.expr();
+            stmt.setFilePath(filePath);
+            if (lexer.identifierEquals("ENCRYPTOR")) {
+                stmt.setEncryptor(true);
+                lexer.nextToken();
+                accept(Token.IS);
+                SQLExpr encryptor = exprParser.expr();
+                stmt.setOptEncryptor(encryptor);
+            }
+            return stmt;
+        } else if (lexer.token() == Token.DATABASE) {
+            lexer.nextToken();
+            XuGuRestoreDatabaseStatement stmt = new XuGuRestoreDatabaseStatement();
+            SQLName dbName = exprParser.name();
+            stmt.setDbName(dbName);
+            accept(Token.FROM);
+            SQLExpr filePath = exprParser.expr();
+            stmt.setFilePath(filePath);
+            if (lexer.identifierEquals("ENCRYPTOR")) {
+                stmt.setEncryptor(true);
+                lexer.nextToken();
+                accept(Token.IS);
+                SQLExpr encryptor = exprParser.expr();
+                stmt.setOptEncryptor(encryptor);
+            }
+
+            if (lexer.token() == Token.WITH) {
+                stmt.setReindex(true);
+                lexer.nextToken();
+                acceptIdentifier("REINDEX");
+            }
+            return stmt;
+        } else if (lexer.token() == Token.USER) {
+            lexer.nextToken();
+            XuGuRestoreUserStatement stmt = new XuGuRestoreUserStatement();
+            SQLName userName = exprParser.name();
+            stmt.setUserName(userName);
+            accept(Token.FROM);
+            SQLExpr filePath = exprParser.expr();
+            stmt.setFilePath(filePath);
+            if (lexer.identifierEquals("ENCRYPTOR")) {
+                stmt.setEncryptor(true);
+                lexer.nextToken();
+                accept(Token.IS);
+                SQLExpr encryptor = exprParser.expr();
+                stmt.setOptEncryptor(encryptor);
+            }
+            return stmt;
+        } else if (lexer.token() == Token.SCHEMA) {
+            lexer.nextToken();
+            XuGuRestoreSchemaStatement stmt = new XuGuRestoreSchemaStatement();
+            SQLName schemaName = exprParser.name();
+            stmt.setSchemaName(schemaName);
+            if (lexer.identifierEquals("RENAME")) {
+                lexer.nextToken();
+                stmt.setRename(true);
+                accept(Token.TO);
+                SQLName newSchemaName = exprParser.name();
+                stmt.setNewSchemaName(newSchemaName);
+            }
+            accept(Token.FROM);
+            SQLExpr filePath = exprParser.expr();
+            stmt.setFilePath(filePath);
+            if (lexer.identifierEquals("ENCRYPTOR")) {
+                stmt.setEncryptor(true);
+                lexer.nextToken();
+                accept(Token.IS);
+                SQLExpr encryptor = exprParser.expr();
+                stmt.setOptEncryptor(encryptor);
+            }
+            return stmt;
+        } else if (lexer.token() == Token.TABLE) {
+            lexer.nextToken();
+            XuGuRestoreTableStatement stmt = new XuGuRestoreTableStatement();
+            SQLName tableName = exprParser.name();
+            stmt.setTableName(tableName);
+            if (lexer.identifierEquals("RENAME")) {
+                stmt.setRename(true);
+                lexer.nextToken();
+                accept(Token.TO);
+                SQLName rename = exprParser.name();
+                stmt.setTableRename(rename);
+            }
+            accept(Token.FROM);
+            SQLExpr filePath = exprParser.expr();
+            stmt.setFilePath(filePath);
+            if (lexer.identifierEquals("ENCRYPTOR")) {
+                stmt.setEncryptor(true);
+                lexer.nextToken();
+                accept(Token.IS);
+                SQLExpr encryptor = exprParser.expr();
+                stmt.setOptEncryptor(encryptor);
+            }
             return stmt;
         }
 

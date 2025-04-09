@@ -96,6 +96,7 @@ public class WallConfig implements WallConfigMBean {
     private boolean             doPrivilegedAllow           = false;
 
     private boolean             backupAllow                 = false;
+    private boolean             restoreAllow                = false;
 
     protected final Set<String> denyFunctions               = new ConcurrentSkipListSet<String>();
     protected final Set<String> denyTables                  = new ConcurrentSkipListSet<String>();
@@ -680,6 +681,14 @@ public class WallConfig implements WallConfigMBean {
 
     public void setBackupAllow(boolean backupAllow) {
         this.backupAllow = backupAllow;
+    }
+
+    public boolean isRestoreAllow() {
+        return restoreAllow;
+    }
+
+    public void setRestoreAllow(boolean restoreAllow) {
+        this.restoreAllow = restoreAllow;
     }
 
     public static abstract interface TenantCallBack {

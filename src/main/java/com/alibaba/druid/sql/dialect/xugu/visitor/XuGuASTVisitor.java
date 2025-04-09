@@ -501,4 +501,18 @@ public interface XuGuASTVisitor extends SQLASTVisitor {
     boolean visit(XuGuBackupUserSchemaTableStatement x);
     void endVisit(XuGuBackupUserSchemaTableStatement x);
 
+    boolean visit(XuGuRestoreSystemStatement x);
+    void endVisit(XuGuRestoreSystemStatement x);
+
+    boolean visit(XuGuRestoreDatabaseStatement x);
+    void endVisit(XuGuRestoreDatabaseStatement x);
+
+    boolean visit(XuGuRestoreUserStatement x);
+    void endVisit(XuGuRestoreUserStatement x);
+
+    boolean visit(XuGuRestoreSchemaStatement x);
+    void endVisit(XuGuRestoreSchemaStatement x);
+
+    boolean visit(XuGuRestoreTableStatement x);
+    void endVisit(XuGuRestoreTableStatement x);
 } //

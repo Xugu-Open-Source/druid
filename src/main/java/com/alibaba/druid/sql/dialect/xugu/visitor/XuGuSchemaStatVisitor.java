@@ -1392,4 +1392,53 @@ public class XuGuSchemaStatVisitor extends SchemaStatVisitor implements XuGuASTV
 
     }
 
+    @Override
+    public boolean visit(XuGuRestoreSystemStatement x) {
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuRestoreSystemStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuRestoreDatabaseStatement x) {
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuRestoreDatabaseStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuRestoreUserStatement x) {
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuRestoreUserStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuRestoreSchemaStatement x) {
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuRestoreSchemaStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuRestoreTableStatement x) {
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuRestoreTableStatement x) {
+
+    }
 }

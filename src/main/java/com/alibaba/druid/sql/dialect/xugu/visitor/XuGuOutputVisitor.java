@@ -4313,4 +4313,111 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
     public void endVisit(XuGuBackupUserSchemaTableStatement x) {
 
     }
+
+    @Override
+    public boolean visit(XuGuRestoreSystemStatement x) {
+        print0(ucase ? "RESTORE SYSTEM FROM " : "restore system from ");
+
+        x.getFilePath().accept(this);
+
+        if (x.isEncryptor()) {
+            print0(ucase ? " ENCRYPTOR IS " : " encryptor is ");
+            x.getOptEncryptor().accept(this);
+        }
+
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuRestoreSystemStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuRestoreDatabaseStatement x) {
+        print0(ucase ? "RESTORE DATABASE " : "restore database ");
+
+        x.getDbName().accept(this);
+
+        print0(ucase ? " FROM " : " from ");
+
+        x.getFilePath().accept(this);
+
+        if (x.isEncryptor()) {
+            print0(ucase ? " ENCRYPTOR IS " : " encryptor is ");
+            x.getOptEncryptor().accept(this);
+        }
+
+        if (x.isReindex()) {
+            print0(ucase ? " WITH REINDEX" : " with reindex");
+        }
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuRestoreDatabaseStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuRestoreUserStatement x) {
+        print0(ucase ? "RESTORE USER " : "restore user ");
+        x.getUserName().accept(this);
+        print0(ucase ? " FROM " : " from ");
+        x.getFilePath().accept(this);
+        if (x.isEncryptor()) {
+            print0(ucase ? " ENCRYPTOR IS " : " encryptor is ");
+            x.getOptEncryptor().accept(this);
+        }
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuRestoreUserStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuRestoreSchemaStatement x) {
+        print0(ucase ? "RESTORE SCHEMA " : "restore schema ");
+        x.getSchemaName().accept(this);
+        if (x.isRename()) {
+            print0(ucase ? " RENAME TO " : " rename to ");
+            x.getNewSchemaName().accept(this);
+        }
+        print0(ucase ? " FROM " : " from ");
+        x.getFilePath().accept(this);
+        if (x.isEncryptor()) {
+            print0(ucase ? " ENCRYPTOR IS " : " encryptor is ");
+            x.getOptEncryptor().accept(this);
+        }
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuRestoreSchemaStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuRestoreTableStatement x) {
+        print0(ucase ? "RESTORE TABLE " : "restore table ");
+        x.getTableName().accept(this);
+        if (x.isRename()) {
+            print0(ucase ? " RENAME TO " : " rename to ");
+            x.getTableRename().accept(this);
+        }
+        print0(ucase ? " FROM " : " from ");
+        x.getFilePath().accept(this);
+        if (x.isEncryptor()) {
+            print0(ucase ? " ENCRYPTOR IS " : " encryptor is ");
+            x.getOptEncryptor().accept(this);
+        }
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuRestoreTableStatement x) {
+
+    }
 } //

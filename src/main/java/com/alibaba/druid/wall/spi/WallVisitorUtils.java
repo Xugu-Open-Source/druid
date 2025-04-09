@@ -42,6 +42,11 @@ import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuHintStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuLockTableStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuOptimizeStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuRenameTableStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuRestoreDatabaseStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuRestoreSchemaStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuRestoreSystemStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuRestoreTableStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuRestoreUserStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuShowStatement;
 import com.alibaba.druid.sql.parser.SQLStatementParser;
 import com.alibaba.druid.sql.visitor.ExportParameterVisitor;
@@ -2595,6 +2600,14 @@ public class WallVisitorUtils {
                 || x instanceof XuGuBackupUserSchemaTableStatement) {
             allow = config.isBackupAllow();
             denyMessage = "xugu backup statement not allow";
+            errorCode = ErrorCode.OTHER;
+        } else if (x instanceof XuGuRestoreSystemStatement
+                || x instanceof XuGuRestoreDatabaseStatement
+                || x instanceof XuGuRestoreUserStatement
+                || x instanceof XuGuRestoreSchemaStatement
+                || x instanceof XuGuRestoreTableStatement) {
+            allow = config.isRestoreAllow();
+            denyMessage = "xugu restore statement not allow";
             errorCode = ErrorCode.OTHER;
         } else {
             allow = config.isNoneBaseStatementAllow();
