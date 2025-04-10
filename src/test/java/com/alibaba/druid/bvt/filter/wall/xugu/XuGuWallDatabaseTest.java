@@ -19,7 +19,7 @@ import com.alibaba.druid.wall.WallUtils;
 import junit.framework.TestCase;
 import org.junit.Assert;
 
-public class XuGuWallCreateDatabaseTest extends TestCase {
+public class XuGuWallDatabaseTest extends TestCase {
 
     public void testCreateDatabase() throws Exception {
         Assert.assertTrue(WallUtils.isValidateXuGu("CREATE DATABASE IF NOT EXISTS `druid` CHARACTER SET 'utf8_bin' TIME ZONE 'GMT+08:00';"));
@@ -35,6 +35,14 @@ public class XuGuWallCreateDatabaseTest extends TestCase {
 
     public void testCreateDatabase4() throws Exception {
         Assert.assertTrue(WallUtils.isValidateXuGu("CREATE DATABASE druid CHAR SET GB18030 TIME ZONE 'GMT+08:00' ENCRYPT BY 'ENCRYPTOR1';"));
+    }
+
+    public void testDropDatabase() throws Exception {
+        Assert.assertTrue(WallUtils.isValidateXuGu("DROP DATABASE IF EXISTS druid;"));
+    }
+
+    public void testAlterDatabase() throws Exception {
+        Assert.assertTrue(WallUtils.isValidateXuGu("ALTER DATABASE druid RENAME TO druid2;"));
     }
 
 }

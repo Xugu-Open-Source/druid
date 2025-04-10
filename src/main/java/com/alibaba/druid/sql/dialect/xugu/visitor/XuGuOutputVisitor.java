@@ -4420,4 +4420,18 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
     public void endVisit(XuGuRestoreTableStatement x) {
 
     }
-} //
+
+    @Override
+    public boolean visit(XuGuAlterDatabaseStatement x) {
+        print0(ucase ? "ALTER DATABASE " : "alter database ");
+        x.getDatabaseName().accept(this);
+        print0(ucase ? " RENAME TO " : " rename to ");
+        x.getDatabaseNewName().accept(this);
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuAlterDatabaseStatement x) {
+
+    }
+}

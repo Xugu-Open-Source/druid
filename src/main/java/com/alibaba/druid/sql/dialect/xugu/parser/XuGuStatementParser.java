@@ -3921,7 +3921,7 @@ public class XuGuStatementParser extends SQLStatementParser {
                     renameStmt.addItem(item);
 
                     return renameStmt;
-                }   
+                }
             } else if (lexer.token() == Token.ORDER) {
                 throw new ParserException("TODO " + lexer.info());
             } else if (lexer.identifierEquals("CONVERT")) {
@@ -4448,32 +4448,13 @@ public class XuGuStatementParser extends SQLStatementParser {
             accept(Token.DATABASE);
         }
 
-        SQLAlterDatabaseStatement stmt = new SQLAlterDatabaseStatement(dbType);
-
+        XuGuAlterDatabaseStatement stmt = new XuGuAlterDatabaseStatement();
         SQLName name = this.exprParser.name();
-        stmt.setName(name);
-
-        if (lexer.identifierEquals("UPGRADE")) {
-            lexer.nextToken();
-            acceptIdentifier("DATA");
-            acceptIdentifier("DIRECTORY");
-            acceptIdentifier("NAME");
-            stmt.setUpgradeDataDirectoryName(true);
-        }
-
-        if (lexer.token() == Token.DEFAULT) {
-            lexer.nextToken();
-            if (lexer.identifierEquals(FnvHash.Constants.CHARACTER)) {
-                SQLAlterCharacter item = alterTableCharacter();
-                stmt.setCharacter(item);
-            } else {
-                throw new ParserException("TODO " + lexer.info());
-            }
-        } else if (lexer.identifierEquals(FnvHash.Constants.CHARACTER)) {
-            SQLAlterCharacter item = alterTableCharacter();
-            stmt.setCharacter(item);
-        }
-
+        stmt.setDatabaseName(name);
+        acceptIdentifier("RENAME");
+        accept(Token.TO);
+        SQLName newName = this.exprParser.name();
+        stmt.setDatabaseNewName(newName);
         return stmt;
     }
 
