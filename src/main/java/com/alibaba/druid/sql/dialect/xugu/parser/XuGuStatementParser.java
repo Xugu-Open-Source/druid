@@ -4392,46 +4392,28 @@ public class XuGuStatementParser extends SQLStatementParser {
 
         stmt.setName(this.exprParser.name());
 
-        if (lexer.token() == Token.DEFAULT) {
-            lexer.nextToken();
-        }
-
-        if (lexer.token() == Token.HINT) {
-            stmt.setHints(this.exprParser.parseHints());
-        }
-
-        if (lexer.token() == Token.DEFAULT) {
-            lexer.nextToken();
-        }
-
-        for (;;) {
-            if (lexer.identifierEquals("CHARACTER")) {
+        for (; ; ) {
+            if (lexer.identifierEquals("CHARACTER")
+                    || lexer.identifierEquals("CHAR")) {
                 lexer.nextToken();
                 accept(Token.SET);
-                if (lexer.token() == Token.EQ) {
-                    lexer.nextToken();
-                }
-                String charset = lexer.stringVal();
-                accept(Token.IDENTIFIER);
-                stmt.setCharacterSet(charset);
-            } else if (lexer.identifierEquals("CHARSET")) {
+                SQLExpr charset = exprParser.expr();
+                stmt.setXgCharSet(charset);
+            } else if (lexer.identifierEquals("TIME")) {
                 lexer.nextToken();
-                if (lexer.token() == Token.EQ) {
-                    lexer.nextToken();
-                }
-                String charset = lexer.stringVal();
-                accept(Token.IDENTIFIER);
-                stmt.setCharacterSet(charset);
-            } else if (lexer.token() == Token.DEFAULT) {
+                acceptIdentifier("ZONE");
+                SQLExpr timeZone = exprParser.expr();
+                stmt.setTimeZone(timeZone);
+            } else if (lexer.token() == Token.ENABLE
+                    || lexer.token() == Token.DISABLE) {
                 lexer.nextToken();
-            } else if (lexer.identifierEquals("COLLATE")) {
+                acceptIdentifier("ENCRYPT");
+                stmt.setEncrypt(true);
+            } else if (lexer.identifierEquals("ENCRYPT")) {
                 lexer.nextToken();
-                if (lexer.token() == Token.EQ) {
-                    lexer.nextToken();
-                }
-                String collate = lexer.stringVal();
-                accept(Token.IDENTIFIER);
-                stmt.setCollate(collate);
+                accept(Token.BY);
+                SQLExpr encrypt = exprParser.expr();
+                stmt.setEncryptor(encrypt);
             } else {
                 break;
             }

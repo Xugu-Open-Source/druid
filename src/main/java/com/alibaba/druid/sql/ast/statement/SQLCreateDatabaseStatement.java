@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.alibaba.druid.sql.ast.SQLCommentHint;
+import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.SQLObject;
 import com.alibaba.druid.sql.ast.SQLStatementImpl;
@@ -30,6 +31,11 @@ public class SQLCreateDatabaseStatement extends SQLStatementImpl implements SQLC
 
     private String               characterSet;
     private String               collate;
+
+    private SQLExpr              xgCharSet;
+    private SQLExpr              timeZone;
+    private SQLExpr              encryptor;
+    private boolean              encrypt = false;
 
     private List<SQLCommentHint> hints;
     
@@ -46,6 +52,9 @@ public class SQLCreateDatabaseStatement extends SQLStatementImpl implements SQLC
     protected void accept0(SQLASTVisitor visitor) {
         if (visitor.visit(this)) {
             acceptChild(visitor, name);
+            acceptChild(visitor, xgCharSet);
+            acceptChild(visitor, timeZone);
+            acceptChild(visitor, encryptor);
         }
         visitor.endVisit(this);
     }
@@ -55,6 +64,15 @@ public class SQLCreateDatabaseStatement extends SQLStatementImpl implements SQLC
         List<SQLObject> children = new ArrayList<SQLObject>();
         if (name != null) {
             children.add(name);
+        }
+        if (xgCharSet != null) {
+            children.add(xgCharSet);
+        }
+        if (timeZone != null) {
+            children.add(timeZone);
+        }
+        if (encryptor != null) {
+            children.add(encryptor);
         }
         return children;
     }
@@ -99,4 +117,35 @@ public class SQLCreateDatabaseStatement extends SQLStatementImpl implements SQLC
         this.ifNotExists = ifNotExists;
     }
 
+    public SQLExpr getXgCharSet() {
+        return xgCharSet;
+    }
+
+    public void setXgCharSet(SQLExpr xgCharSet) {
+        this.xgCharSet = xgCharSet;
+    }
+
+    public SQLExpr getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(SQLExpr timeZone) {
+        this.timeZone = timeZone;
+    }
+
+    public SQLExpr getEncryptor() {
+        return encryptor;
+    }
+
+    public void setEncryptor(SQLExpr encryptor) {
+        this.encryptor = encryptor;
+    }
+
+    public boolean isEncrypt() {
+        return encrypt;
+    }
+
+    public void setEncrypt(boolean encrypt) {
+        this.encrypt = encrypt;
+    }
 }

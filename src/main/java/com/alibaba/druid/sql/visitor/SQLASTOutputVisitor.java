@@ -3319,6 +3319,25 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
             print0(x.getCollate());
         }
 
+        if (x.getXgCharSet() != null) {
+            print0(ucase ? " CHARACTER SET " : " character set ");
+            x.getXgCharSet().accept(this);
+        }
+
+        if (x.getTimeZone() != null) {
+            print0(ucase ? " TIME ZONE " : " time zone ");
+            x.getTimeZone().accept(this);
+        }
+
+        if (x.isEncrypt()) {
+            print0(ucase ? " ENABLE ENCRYPT" : " enable encrypt");
+        }
+
+        if (x.getEncryptor() != null) {
+            print0(ucase ? " ENCRYPT BY " : " encrypt by ");
+            x.getEncryptor().accept(this);
+        }
+
         return false;
     }
 
