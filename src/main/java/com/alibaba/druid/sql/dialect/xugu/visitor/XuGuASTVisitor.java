@@ -518,4 +518,13 @@ public interface XuGuASTVisitor extends SQLASTVisitor {
 
     boolean visit(XuGuAlterDatabaseStatement x);
     void endVisit(XuGuAlterDatabaseStatement x);
+
+    boolean visit(XuGuCreateSchemaStatement x);
+    void endVisit(XuGuCreateSchemaStatement x);
+
+    boolean visit(XuGuDropSchemaStatement x);
+    void endVisit(XuGuDropSchemaStatement x);
+
+    boolean visit(XuGuAlterSchemaStatement x);
+    void endVisit(XuGuAlterSchemaStatement x);
 }

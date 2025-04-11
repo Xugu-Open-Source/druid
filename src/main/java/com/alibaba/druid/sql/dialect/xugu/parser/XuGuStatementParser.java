@@ -250,12 +250,15 @@ public class XuGuStatementParser extends SQLStatementParser {
             return stmt;
         }
 
-        if (lexer.token() == Token.DATABASE
-                || lexer.token() == Token.SCHEMA) {
+        if (lexer.token() == Token.DATABASE) {
             if (replace) {
                 lexer.reset(markBp, markChar, Token.CREATE);
             }
             return parseCreateDatabase();
+        }
+
+        if (lexer.token() == Token.SCHEMA){
+            return parseCreateSchema();
         }
 
         if (lexer.token() == Token.UNIQUE || lexer.token() == Token.INDEX || lexer.identifierEquals(FULLTEXT)
@@ -3025,9 +3028,12 @@ public class XuGuStatementParser extends SQLStatementParser {
             return parseAlterTable(ignore);
         }
 
-        if (lexer.token() == Token.DATABASE
-                || lexer.token() == Token.SCHEMA) {
+        if (lexer.token() == Token.DATABASE) {
             return parseAlterDatabase();
+        }
+
+        if (lexer.token() == Token.SCHEMA){
+            return parseAlterSchema();
         }
 
         if (lexer.identifierEquals(FnvHash.Constants.EVENT)) {
@@ -4374,12 +4380,7 @@ public class XuGuStatementParser extends SQLStatementParser {
         if (lexer.token() == Token.CREATE) {
             lexer.nextToken();
         }
-
-        if (lexer.token() == Token.SCHEMA) {
-            lexer.nextToken();
-        } else {
-            accept(Token.DATABASE);
-        }
+        accept(Token.DATABASE);
 
         SQLCreateDatabaseStatement stmt = new SQLCreateDatabaseStatement(JdbcConstants.XUGU);
 
@@ -4426,6 +4427,19 @@ public class XuGuStatementParser extends SQLStatementParser {
         return stmt;
     }
 
+    public SQLStatement parseCreateSchema() {
+        accept(Token.SCHEMA);
+        XuGuCreateSchemaStatement stmt = new XuGuCreateSchemaStatement();
+        SQLName schemaName = exprParser.name();
+        stmt.setSchemaName(schemaName);
+        if (lexer.identifierEquals("AUTHORIZATION")) {
+            lexer.nextToken();
+            SQLName userName = exprParser.name();
+            stmt.setUserName(userName);
+        }
+        return stmt;
+    }
+
     protected void parseUpdateSet(SQLUpdateStatement update) {
         accept(Token.SET);
 
@@ -4442,12 +4456,7 @@ public class XuGuStatementParser extends SQLStatementParser {
     }
 
     public SQLStatement parseAlterDatabase() {
-        if (lexer.token() == Token.SCHEMA) {
-            lexer.nextToken();
-        } else {
-            accept(Token.DATABASE);
-        }
-
+        accept(Token.DATABASE);
         XuGuAlterDatabaseStatement stmt = new XuGuAlterDatabaseStatement();
         SQLName name = this.exprParser.name();
         stmt.setDatabaseName(name);
@@ -4455,6 +4464,25 @@ public class XuGuStatementParser extends SQLStatementParser {
         accept(Token.TO);
         SQLName newName = this.exprParser.name();
         stmt.setDatabaseNewName(newName);
+        return stmt;
+    }
+
+    public SQLStatement parseAlterSchema() {
+        accept(Token.SCHEMA);
+        XuGuAlterSchemaStatement stmt = new XuGuAlterSchemaStatement();
+        SQLName schemaName = exprParser.name();
+        stmt.setSchemaName(schemaName);
+        if (lexer.identifierEquals("RENAME")) {
+            lexer.nextToken();
+            accept(Token.TO);
+            SQLName newName = exprParser.name();
+            stmt.setNewName(newName);
+        } else {
+            acceptIdentifier("OWNER");
+            accept(Token.TO);
+            SQLName userName = exprParser.name();
+            stmt.setUserName(userName);
+        }
         return stmt;
     }
 

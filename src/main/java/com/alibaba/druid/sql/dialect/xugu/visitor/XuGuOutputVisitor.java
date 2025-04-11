@@ -4434,4 +4434,56 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
     public void endVisit(XuGuAlterDatabaseStatement x) {
 
     }
+
+    @Override
+    public boolean visit(XuGuCreateSchemaStatement x) {
+        print0(ucase ? "CREATE SCHEMA " : "create schema ");
+        x.getSchemaName().accept(this);
+        if (x.getUserName() != null) {
+            print0(ucase ? " AUTHORIZATION " : " authorization ");
+            x.getUserName().accept(this);
+        }
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuCreateSchemaStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuDropSchemaStatement x) {
+        print0(ucase ? "DROP SCHEMA " : "drop schema ");
+        x.getSchemaName().accept(this);
+        if (x.isCascade()) {
+            print0(ucase ? " CASCADE" : " cascade");
+        } else if (x.isRestrict()) {
+            print0(ucase ? " RESTRICT" : " restrict");
+        }
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuDropSchemaStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuAlterSchemaStatement x) {
+        print0(ucase ? "ALTER SCHEMA " : "alter schema ");
+        x.getSchemaName().accept(this);
+        if (x.getNewName() != null) {
+            print0(ucase ? " RENAME TO " : " rename to ");
+            x.getNewName().accept(this);
+        } else {
+            print0(ucase ? " OWNER TO " : " owner to ");
+            x.getUserName().accept(this);
+        }
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuAlterSchemaStatement x) {
+
+    }
 }

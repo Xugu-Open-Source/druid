@@ -27,6 +27,7 @@ import com.alibaba.druid.sql.dialect.hive.ast.HiveInsertStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlSelectQueryBlock;
 import com.alibaba.druid.sql.dialect.mysql.parser.MySqlExprParser;
 import com.alibaba.druid.sql.dialect.oracle.parser.OracleExprParser;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuDropSchemaStatement;
 import com.alibaba.druid.util.FnvHash;
 import com.alibaba.druid.util.JdbcConstants;
 
@@ -454,6 +455,8 @@ public class SQLStatementParser extends SQLParser {
             stmt = parseDropView(false);
         } else if (lexer.token == Token.TRIGGER) {
             stmt = parseDropTrigger(false);
+        } else if (lexer.token == Token.SCHEMA && JdbcConstants.XUGU.equals(lexer.dbType)) {
+            stmt = parseDropXuGuSchema();
         } else if (lexer.token == Token.DATABASE || lexer.token == Token.SCHEMA) {
             stmt = parseDropDatabase(false);
         } else if (lexer.token == Token.FUNCTION) {
@@ -1602,6 +1605,21 @@ public class SQLStatementParser extends SQLParser {
             stmt.setCascade(true);
         }
 
+        return stmt;
+    }
+
+    protected XuGuDropSchemaStatement parseDropXuGuSchema() {
+        XuGuDropSchemaStatement stmt = new XuGuDropSchemaStatement();
+        accept(Token.SCHEMA);
+        SQLName schemaName = exprParser.name();
+        stmt.setSchemaName(schemaName);
+        if (lexer.identifierEquals("CASCADE")) {
+            lexer.nextToken();
+            stmt.setCascade(true);
+        } else if (lexer.identifierEquals("RESTRICT")) {
+            lexer.nextToken();
+            stmt.setRestrict(true);
+        }
         return stmt;
     }
 
