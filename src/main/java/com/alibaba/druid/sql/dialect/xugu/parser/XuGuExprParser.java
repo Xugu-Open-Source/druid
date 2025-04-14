@@ -22,6 +22,7 @@ import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
 import com.alibaba.druid.sql.ast.expr.SQLCharExpr;
 import com.alibaba.druid.sql.ast.expr.SQLHexExpr;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
+import com.alibaba.druid.sql.ast.expr.SQLIntegerExpr;
 import com.alibaba.druid.sql.ast.expr.SQLMethodInvokeExpr;
 import com.alibaba.druid.sql.ast.expr.SQLUnaryExpr;
 import com.alibaba.druid.sql.ast.expr.SQLUnaryOperator;
@@ -1025,5 +1026,20 @@ public class XuGuExprParser extends SQLExprParser {
     protected SQLExpr parseAliasExpr(String alias) {
         String chars = alias.substring(1, alias.length() - 1);
         return new SQLCharExpr(chars);
+    }
+
+    public SQLExpr parseTop() {
+        if(lexer.token() == Token.TOP){
+            lexer.nextToken();
+
+            if (lexer.token() == Token.LITERAL_INT) {
+                int i = lexer.integerValue().intValue();
+                lexer.nextToken();
+                return new SQLIntegerExpr(i);
+            }else {
+                return primary();
+            }
+        }
+        return null;
     }
 }

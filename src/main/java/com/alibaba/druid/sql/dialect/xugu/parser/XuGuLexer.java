@@ -61,6 +61,9 @@ public class XuGuLexer extends Lexer {
         map.put("SQLSTATE", Token.SQLSTATE);
         map.put("CONDITION", Token.CONDITION);
 
+        // xugu
+        map.put("TOP", Token.TOP);
+
         DEFAULT_XUGU_KEYWORDS = new Keywords(map);
     }
 

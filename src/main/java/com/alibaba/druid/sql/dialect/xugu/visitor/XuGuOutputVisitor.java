@@ -130,6 +130,12 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
                 print(' ');
             }
 
+            if (x.getTopExpr() != null) {
+                print0(ucase ? "TOP " : "top ");
+                x.getTopExpr().accept(this);
+                print0(" ");
+            }
+
             final int distionOption = x.getDistionOption();
             if (SQLSetQuantifier.ALL == distionOption) {
                 print0(ucase ? "ALL " : "all ");

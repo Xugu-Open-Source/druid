@@ -107,6 +107,11 @@ public class XuGuSelectParser extends SQLSelectParser {
                 this.exprParser.parseHints(queryBlock.getHints());
             }
 
+            if (lexer.token() == Token.TOP) {
+                XuGuExprParser xgExprParser = new XuGuExprParser(lexer);
+                queryBlock.setTopExpr(xgExprParser.parseTop());
+            }
+
             Token token = lexer.token();
             if (token == (Token.DISTINCT)) {
                 queryBlock.setDistionOption(SQLSetQuantifier.DISTINCT);

@@ -27,6 +27,7 @@ import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 import com.alibaba.druid.util.JdbcConstants;
 
 public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObject {
+    private SQLExpr              topExpr;
     private boolean              hignPriority;
     private boolean              straightJoin;
     private boolean              smallResult;
@@ -48,6 +49,7 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
         XuGuSelectQueryBlock x = new XuGuSelectQueryBlock();
         cloneTo(x);
 
+        x.topExpr = topExpr;
         x.hignPriority = hignPriority;
         x.straightJoin = straightJoin;
 
@@ -85,6 +87,14 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
             hints = new ArrayList<SQLCommentHint>(2);
         }
         return hints;
+    }
+
+    public SQLExpr getTopExpr() {
+        return topExpr;
+    }
+
+    public void setTopExpr(SQLExpr topExpr) {
+        this.topExpr = topExpr;
     }
 
     public void setHints(List<SQLCommentHint> hints) {
@@ -174,6 +184,7 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + ((topExpr == null) ? 1231 : 1237);
         result = prime * result + (bigResult ? 1231 : 1237);
         result = prime * result + (bufferResult ? 1231 : 1237);
         result = prime * result + ((cache == null) ? 0 : cache.hashCode());
@@ -221,6 +232,9 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
         if (procedureName == null) {
             if (other.procedureName != null) return false;
         } else if (!procedureName.equals(other.procedureName)) return false;
+        if (topExpr == null) {
+            if (other.topExpr != null) return false;
+        } else if (! topExpr.equals(other.topExpr)) return false;
         if (smallResult != other.smallResult) return false;
         if (straightJoin != other.straightJoin) return false;
         return true;
@@ -247,6 +261,7 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
             acceptChild(visitor, this.orderBy);
             acceptChild(visitor, this.limit);
             acceptChild(visitor, this.procedureName);
+            acceptChild(visitor, this.topExpr);
             acceptChild(visitor, this.procedureArgumentList);
             acceptChild(visitor, this.into);
         }
