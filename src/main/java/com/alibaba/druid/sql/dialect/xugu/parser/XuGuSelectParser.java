@@ -172,6 +172,8 @@ public class XuGuSelectParser extends SQLSelectParser {
                 SQLName partition = this.exprParser.name();
                 queryBlock.setForcePartition(partition);
             }
+
+            parseBulk(queryBlock);
             
             parseInto(queryBlock);
         }
@@ -358,6 +360,14 @@ public class XuGuSelectParser extends SQLSelectParser {
         update.setLimit(this.exprParser.parseLimit());
         
         return update;
+    }
+
+    private void parseBulk(XuGuSelectQueryBlock queryBlock) {
+        if (lexer.identifierEquals("BULK")) {
+            lexer.nextToken();
+            acceptIdentifier("COLLECT");
+            queryBlock.setBulk(true);
+        }
     }
     
     protected void parseInto(SQLSelectQueryBlock queryBlock) {

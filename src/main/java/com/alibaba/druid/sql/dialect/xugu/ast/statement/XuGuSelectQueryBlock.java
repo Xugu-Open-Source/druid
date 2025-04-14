@@ -28,6 +28,7 @@ import com.alibaba.druid.util.JdbcConstants;
 
 public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObject {
     private SQLExpr              topExpr;
+    private boolean              bulk;
     private boolean              hignPriority;
     private boolean              straightJoin;
     private boolean              smallResult;
@@ -50,6 +51,7 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
         cloneTo(x);
 
         x.topExpr = topExpr;
+        x.bulk = bulk;
         x.hignPriority = hignPriority;
         x.straightJoin = straightJoin;
 
@@ -124,6 +126,14 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
         return procedureArgumentList;
     }
 
+    public boolean isBulk() {
+        return bulk;
+    }
+
+    public void setBulk(boolean bulk) {
+        this.bulk = bulk;
+    }
+
     public boolean isHignPriority() {
         return hignPriority;
     }
@@ -190,6 +200,7 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
         result = prime * result + ((cache == null) ? 0 : cache.hashCode());
         result = prime * result + (calcFoundRows ? 1231 : 1237);
         result = prime * result + (forUpdate ? 1231 : 1237);
+        result = prime * result + (bulk ? 1231 : 1237);
         result = prime * result + (hignPriority ? 1231 : 1237);
         result = prime * result + ((hints == null) ? 0 : hints.hashCode());
         result = prime * result + ((limit == null) ? 0 : limit.hashCode());
@@ -215,6 +226,7 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
         } else if (!cache.equals(other.cache)) return false;
         if (calcFoundRows != other.calcFoundRows) return false;
         if (forUpdate != other.forUpdate) return false;
+        if (bulk != other.bulk) return false;
         if (hignPriority != other.hignPriority) return false;
         if (hints == null) {
             if (other.hints != null) return false;

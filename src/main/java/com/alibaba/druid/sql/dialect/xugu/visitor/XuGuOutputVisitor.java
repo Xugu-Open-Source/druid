@@ -186,6 +186,11 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
                 printExpr(forcePartition);
             }
 
+            if (x.isBulk()) {
+                println();
+                print0(ucase ? "BULK COLLECT " : "bulk collect ");
+            }
+
             SQLExprTableSource into = x.getInto();
             if (into != null) {
                 println();
