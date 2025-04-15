@@ -263,6 +263,10 @@ public enum Token {
     LITERAL_ALIAS,
     LINE_COMMENT,
     MULTI_LINE_COMMENT,
+
+    // xugu
+    BULK("BULK"),
+
     
     // Oracle
     BINARY_FLOAT,

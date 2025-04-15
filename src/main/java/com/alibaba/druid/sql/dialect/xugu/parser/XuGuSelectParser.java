@@ -363,7 +363,7 @@ public class XuGuSelectParser extends SQLSelectParser {
     }
 
     private void parseBulk(XuGuSelectQueryBlock queryBlock) {
-        if (lexer.identifierEquals("BULK")) {
+        if (lexer.token() == Token.BULK) {
             lexer.nextToken();
             acceptIdentifier("COLLECT");
             queryBlock.setBulk(true);

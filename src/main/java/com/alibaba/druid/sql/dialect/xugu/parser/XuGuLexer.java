@@ -63,6 +63,7 @@ public class XuGuLexer extends Lexer {
 
         // xugu
         map.put("TOP", Token.TOP);
+        map.put("BULK", Token.BULK);
 
         DEFAULT_XUGU_KEYWORDS = new Keywords(map);
     }

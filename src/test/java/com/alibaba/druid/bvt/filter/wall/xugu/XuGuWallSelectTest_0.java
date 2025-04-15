@@ -30,4 +30,16 @@ public class XuGuWallSelectTest_0 extends TestCase {
         Assert.assertFalse(WallUtils.isValidateXuGu("SELECT * BULK FROM tb_top ORDER BY id DESC;"));
     }
 
+    public void testBulk3() throws Exception {
+        Assert.assertTrue(WallUtils.isValidateXuGu("SELECT id BULK COLLECT FROM tb_top ORDER BY id DESC;"));
+    }
+
+    public void testBulk4() throws Exception {
+        Assert.assertFalse(WallUtils.isValidateXuGu("SELECT id BULK FROM tb_top ORDER BY id DESC;"));
+    }
+
+    public void testBulk5() throws Exception {
+        Assert.assertTrue(WallUtils.isValidateXuGu("SELECT id COLLECT FROM tb_top ORDER BY id DESC;"));
+    }
+
 }
