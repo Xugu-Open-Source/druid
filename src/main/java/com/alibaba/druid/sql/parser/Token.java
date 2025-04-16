@@ -266,6 +266,8 @@ public enum Token {
 
     // xugu
     BULK("BULK"),
+    ENDFOR("ENDFOR"),
+    ENDLOOP("ENDLOOP"),
 
     
     // Oracle

@@ -318,6 +318,15 @@ public class SQLStatementParser extends SQLParser {
                     break;
             }
 
+            if ((lexer.token == Token.ENDFOR || lexer.token == Token.ENDLOOP)
+                    && JdbcConstants.XUGU.equals(dbType)) {
+                if (lexer.isKeepComments() && lexer.hasComment() && !statementList.isEmpty()) {
+                    SQLStatement stmt = statementList.get(statementList.size() - 1);
+                    stmt.addAfterComment(lexer.readAndResetComments());
+                }
+                return;
+            }
+
             if (lexer.token == Token.LBRACE || lexer.identifierEquals("CALL")) {
                 SQLCallStatement stmt = parseCall();
                 statementList.add(stmt);

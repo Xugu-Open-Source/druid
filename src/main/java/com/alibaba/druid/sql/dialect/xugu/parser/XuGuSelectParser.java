@@ -197,8 +197,6 @@ public class XuGuSelectParser extends SQLSelectParser {
             throw new ParserException("TODO. " + lexer.info());
         }
 
-        parseInto(queryBlock);
-
         if (lexer.token() == Token.FOR) {
             lexer.nextToken();
             accept(Token.UPDATE);
@@ -373,72 +371,20 @@ public class XuGuSelectParser extends SQLSelectParser {
     protected void parseInto(SQLSelectQueryBlock queryBlock) {
         if (lexer.token() == (Token.INTO)) {
             lexer.nextToken();
+            SQLExpr intoExpr = this.exprParser.name();
+            if (lexer.token() == Token.COMMA) {
+                SQLListExpr list = new SQLListExpr();
+                list.addItem(intoExpr);
 
-            if (lexer.identifierEquals("OUTFILE")) {
-                lexer.nextToken();
-
-                XuGuOutFileExpr outFile = new XuGuOutFileExpr();
-                outFile.setFile(expr());
-
-                queryBlock.setInto(outFile);
-
-                if (lexer.identifierEquals("FIELDS") || lexer.identifierEquals("COLUMNS")) {
+                while (lexer.token() == Token.COMMA) {
                     lexer.nextToken();
-
-                    if (lexer.identifierEquals("TERMINATED")) {
-                        lexer.nextToken();
-                        accept(Token.BY);
-                    }
-                    outFile.setColumnsTerminatedBy(expr());
-
-                    if (lexer.identifierEquals("OPTIONALLY")) {
-                        lexer.nextToken();
-                        outFile.setColumnsEnclosedOptionally(true);
-                    }
-
-                    if (lexer.identifierEquals("ENCLOSED")) {
-                        lexer.nextToken();
-                        accept(Token.BY);
-                        outFile.setColumnsEnclosedBy((SQLLiteralExpr) expr());
-                    }
-
-                    if (lexer.identifierEquals("ESCAPED")) {
-                        lexer.nextToken();
-                        accept(Token.BY);
-                        outFile.setColumnsEscaped((SQLLiteralExpr) expr());
-                    }
+                    SQLName name = this.exprParser.name();
+                    list.addItem(name);
                 }
 
-                if (lexer.identifierEquals("LINES")) {
-                    lexer.nextToken();
-
-                    if (lexer.identifierEquals("STARTING")) {
-                        lexer.nextToken();
-                        accept(Token.BY);
-                        outFile.setLinesStartingBy((SQLLiteralExpr) expr());
-                    } else {
-                        lexer.identifierEquals("TERMINATED");
-                        lexer.nextToken();
-                        accept(Token.BY);
-                        outFile.setLinesTerminatedBy((SQLLiteralExpr) expr());
-                    }
-                }
-            } else {
-                SQLExpr intoExpr = this.exprParser.name();
-                if (lexer.token() == Token.COMMA) {
-                    SQLListExpr list = new SQLListExpr();
-                    list.addItem(intoExpr);
-
-                    while (lexer.token() == Token.COMMA) {
-                        lexer.nextToken();
-                        SQLName name = this.exprParser.name();
-                        list.addItem(name);
-                    }
-
-                    intoExpr = list;
-                }
-                queryBlock.setInto(intoExpr);
+                intoExpr = list;
             }
+            queryBlock.setInto(intoExpr);
         }
     }
 

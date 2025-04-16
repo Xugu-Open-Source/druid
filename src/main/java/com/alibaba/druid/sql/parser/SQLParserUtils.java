@@ -50,7 +50,7 @@ public class SQLParserUtils {
 
     public static SQLStatementParser createSQLStatementParser(String sql, String dbType) {
         SQLParserFeature[] features;
-        if (JdbcConstants.ODPS.equals(dbType) || JdbcConstants.MYSQL.equals(dbType)) {
+        if (JdbcConstants.ODPS.equals(dbType) || JdbcConstants.MYSQL.equals(dbType) || JdbcConstants.XUGU.equals(dbType)) {
             features = new SQLParserFeature[] {SQLParserFeature.KeepComments};
         } else {
             features = new SQLParserFeature[] {};

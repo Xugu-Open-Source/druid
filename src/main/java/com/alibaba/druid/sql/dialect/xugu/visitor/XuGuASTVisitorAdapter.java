@@ -39,6 +39,7 @@ import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuExtractExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuMatchAgainstExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuOrderingExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuOutFileExpr;
+import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuRangeExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuUserName;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.*;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuCreateTableStatement.TableSpaceOption;
@@ -1345,6 +1346,26 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuAlterSchemaStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuForStatement x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuForStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuRangeExpr x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuRangeExpr x) {
 
     }
 }

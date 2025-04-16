@@ -40,7 +40,7 @@ import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuCharExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuExtractExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuMatchAgainstExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuOrderingExpr;
-import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuOutFileExpr;
+import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuRangeExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuUserName;
 import com.alibaba.druid.sql.parser.*;
 import com.alibaba.druid.util.FnvHash;
@@ -141,15 +141,6 @@ public class XuGuExprParser extends SQLExprParser {
 
     public SQLExpr primary() {
         final Token tok = lexer.token();
-
-        if (lexer.identifierEquals(FnvHash.Constants.OUTFILE)) {
-            lexer.nextToken();
-            SQLExpr file = primary();
-            SQLExpr expr = new XuGuOutFileExpr(file);
-
-            return primaryRest(expr);
-
-        }
 
         switch (tok) {
             case VARIANT:
@@ -288,6 +279,12 @@ public class XuGuExprParser extends SQLExprParser {
                     return primaryRest(expr);
                 }
             }
+        }
+
+        if (lexer.token() == Token.DOTDOT) {
+            lexer.nextToken();
+            SQLExpr upBound = expr();
+            return new XuGuRangeExpr(expr, upBound);
         }
 
 //        if (lexer.token() == Token.LPAREN && expr instanceof SQLIdentifierExpr) {

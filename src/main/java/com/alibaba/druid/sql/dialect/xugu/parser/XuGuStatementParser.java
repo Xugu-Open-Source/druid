@@ -20,6 +20,10 @@ import com.alibaba.druid.sql.ast.*;
 import com.alibaba.druid.sql.ast.SQLParameter.ParameterType;
 import com.alibaba.druid.sql.ast.expr.*;
 import com.alibaba.druid.sql.ast.statement.*;
+import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleCreateTypeStatement;
+import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleLabelStatement;
+import com.alibaba.druid.sql.dialect.oracle.parser.OracleFunctionDataType;
+import com.alibaba.druid.sql.dialect.oracle.parser.OracleProcedureDataType;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.ConditionValue.ConditionType;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuLockTableStatement.LockType;
 import com.alibaba.druid.sql.dialect.xugu.ast.XuGuForeignKey;
@@ -740,6 +744,7 @@ public class XuGuStatementParser extends SQLStatementParser {
             return true;
         }
 
+        // xugu dialect
         if (lexer.identifierEquals("BACKUP")){
             SQLStatement stmt = parseBackup();
             statementList.add(stmt);
@@ -749,6 +754,25 @@ public class XuGuStatementParser extends SQLStatementParser {
         if (lexer.identifierEquals("RESTORE")){
             SQLStatement stmt = parseRestore();
             statementList.add(stmt);
+            return true;
+        }
+
+        if (lexer.token() == Token.FOR) {
+            XuGuForStatement forStatement = parseFor();
+            if (lexer.token() == Token.IDENTIFIER) {
+                String strVal = lexer.stringVal();
+                int stmtListSize = statementList.size();
+                if (stmtListSize > 0) {
+                    SQLStatement lastStmt = statementList.get(stmtListSize - 1);
+                    if (lastStmt instanceof OracleLabelStatement) {
+                        if (((OracleLabelStatement) lastStmt).getLabel().getSimpleName().equalsIgnoreCase(strVal)) {
+                            SQLName endLabbel = this.exprParser.name();
+                            forStatement.setEndLabel(endLabbel);
+                        }
+                    }
+                }
+            }
+            statementList.add(forStatement);
             return true;
         }
 
@@ -1159,6 +1183,57 @@ public class XuGuStatementParser extends SQLStatementParser {
         }
 
         return explain;
+    }
+
+    public XuGuForStatement parseFor() {
+        XuGuForStatement stmt = new XuGuForStatement();
+
+        if (lexer.token() == Token.FOR) {
+            lexer.nextToken();
+        } else {
+            acceptIdentifier("FORALL");
+            stmt.setAll(true);
+        }
+
+        stmt.setIndex(exprParser.name());
+        accept(Token.IN);
+
+        if (lexer.identifierEquals("REVERSE")) {
+            lexer.nextToken();
+        }
+
+        stmt.setRange(exprParser.expr());
+
+        if (stmt.isAll()) {
+            SQLStatement itemStmt = parseStatement();
+            itemStmt.setParent(stmt);
+            stmt.getStatements().add(itemStmt);
+        } else {
+            accept(Token.LOOP);
+
+            this.parseStatementList(stmt.getStatements(), -1, stmt);
+            if (lexer.token() == Token.END) {
+                lexer.nextToken();
+                if (lexer.token() == Token.FOR) {
+                    lexer.nextToken();
+                } else {
+                    accept(Token.LOOP);
+                }
+            } else if (lexer.token() == Token.ENDFOR) {
+                lexer.nextToken();
+            } else {
+                accept(Token.ENDLOOP);
+            }
+
+            if (lexer.token() != Token.SEMI) {
+                SQLName endLabel = exprParser.name();
+                stmt.setEndLabel(endLabel);
+            }
+
+            accept(Token.SEMI);
+            stmt.setAfterSemi(true);
+        }
+        return stmt;
     }
 
     public SQLStatement parseBackup() {

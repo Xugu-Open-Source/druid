@@ -42,6 +42,7 @@ import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuExtractExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuMatchAgainstExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuOrderingExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuOutFileExpr;
+import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuRangeExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuUserName;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.*;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuCreateTableStatement.TableSpaceOption;
@@ -4495,6 +4496,81 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuAlterSchemaStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuForStatement x) {
+        boolean all = x.isAll();
+        if (all) {
+            print0(ucase ? "FORALL " : "forall ");
+        } else {
+            print0(ucase ? "FOR " : "for ");
+        }
+        x.getIndex().accept(this);
+        print0(ucase ? " IN " : " in ");
+
+        if (x.getRange() instanceof XuGuRangeExpr) {
+            XuGuRangeExpr rangeExpr = (XuGuRangeExpr) x.getRange();
+            if (rangeExpr.getLowBound() instanceof SQLIntegerExpr && rangeExpr.getUpBound() instanceof SQLIntegerExpr) {
+                if (((SQLIntegerExpr) rangeExpr.getLowBound()).getNumber() instanceof Integer && ((SQLIntegerExpr) rangeExpr.getUpBound()).getNumber() instanceof Integer) {
+                    Integer lowBound = (Integer) ((SQLIntegerExpr) rangeExpr.getLowBound()).getNumber();
+                    Integer upBound = (Integer) ((SQLIntegerExpr) rangeExpr.getUpBound()).getNumber();
+                    if (lowBound > upBound) {
+                        print0(" REVERSE ");
+                    }
+                }
+            }
+        }
+
+        SQLExpr range = x.getRange();
+        range.accept(this);
+
+        if (!all) {
+            println();
+            print0(ucase ? "LOOP" : "loop");
+        }
+        this.indentCount++;
+        println();
+
+        for (int i = 0, size = x.getStatements().size(); i < size; ++i) {
+            SQLStatement stmt = x.getStatements().get(i);
+            stmt.accept(this);
+            if (!all) {
+                if (i != size - 1) {
+                    println();
+                }
+            }
+        }
+
+        this.indentCount--;
+        if (!all) {
+            println();
+            print0(ucase ? "END LOOP" : "end loop");
+            SQLName endLabel = x.getEndLabel();
+            if (endLabel != null) {
+                print(' ');
+                endLabel.accept(this);
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuForStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuRangeExpr x) {
+        x.getLowBound().accept(this);
+        print0("..");
+        x.getUpBound().accept(this);
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuRangeExpr x) {
 
     }
 }
