@@ -15,6 +15,19 @@
  */
 package com.alibaba.druid.sql.dialect.xugu.visitor;
 
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalDay;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalDayToHour;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalDayToMinute;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalDayToSecond;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalHour;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalHourToMinute;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalHourToSecond;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalMinute;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalMinuteToSecond;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalMonth;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalSecond;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalYear;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalYearToMonth;
 import com.alibaba.druid.sql.dialect.xugu.ast.XuGuForceIndexHint;
 import com.alibaba.druid.sql.dialect.xugu.ast.XuGuForeignKey;
 import com.alibaba.druid.sql.dialect.xugu.ast.XuGuIgnoreIndexHint;
@@ -534,4 +547,43 @@ public interface XuGuASTVisitor extends SQLASTVisitor {
 
     boolean visit(XuGuRangeExpr x);
     void endVisit(XuGuRangeExpr x);
+
+    boolean visit(XuGuDataTypeIntervalDay x);
+    void endVisit(XuGuDataTypeIntervalDay x);
+
+    boolean visit(XuGuDataTypeIntervalYearToMonth x);
+    void endVisit(XuGuDataTypeIntervalYearToMonth x);
+
+    boolean visit(XuGuDataTypeIntervalYear x);
+    void endVisit(XuGuDataTypeIntervalYear x);
+
+    boolean visit(XuGuDataTypeIntervalMonth x);
+    void endVisit(XuGuDataTypeIntervalMonth x);
+
+    boolean visit(XuGuDataTypeIntervalDayToHour x);
+    void endVisit(XuGuDataTypeIntervalDayToHour x);
+
+    boolean visit(XuGuDataTypeIntervalDayToMinute x);
+    void endVisit(XuGuDataTypeIntervalDayToMinute x);
+
+    boolean visit(XuGuDataTypeIntervalDayToSecond x);
+    void endVisit(XuGuDataTypeIntervalDayToSecond x);
+
+    boolean visit(XuGuDataTypeIntervalHour x);
+    void endVisit(XuGuDataTypeIntervalHour x);
+
+    boolean visit(XuGuDataTypeIntervalHourToMinute x);
+    void endVisit(XuGuDataTypeIntervalHourToMinute x);
+
+    boolean visit(XuGuDataTypeIntervalHourToSecond x);
+    void endVisit(XuGuDataTypeIntervalHourToSecond x);
+
+    boolean visit(XuGuDataTypeIntervalMinute x);
+    void endVisit(XuGuDataTypeIntervalMinute x);
+
+    boolean visit(XuGuDataTypeIntervalMinuteToSecond x);
+    void endVisit(XuGuDataTypeIntervalMinuteToSecond x);
+
+    boolean visit(XuGuDataTypeIntervalSecond x);
+    void endVisit(XuGuDataTypeIntervalSecond x);
 }

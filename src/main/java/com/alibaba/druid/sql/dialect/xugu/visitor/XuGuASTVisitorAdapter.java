@@ -17,6 +17,19 @@ package com.alibaba.druid.sql.dialect.xugu.visitor;
 
 import com.alibaba.druid.sql.ast.statement.SQLAlterCharacter;
 import com.alibaba.druid.sql.ast.expr.SQLIntervalExpr;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalDay;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalDayToHour;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalDayToMinute;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalDayToSecond;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalHour;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalHourToMinute;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalHourToSecond;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalMinute;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalMinuteToSecond;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalMonth;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalSecond;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalYear;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalYearToMonth;
 import com.alibaba.druid.sql.dialect.xugu.ast.XuGuForceIndexHint;
 import com.alibaba.druid.sql.dialect.xugu.ast.XuGuIgnoreIndexHint;
 import com.alibaba.druid.sql.dialect.xugu.ast.XuGuKey;
@@ -1366,6 +1379,136 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuRangeExpr x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuDataTypeIntervalDay x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuDataTypeIntervalDay x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuDataTypeIntervalYearToMonth x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuDataTypeIntervalYearToMonth x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuDataTypeIntervalYear x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuDataTypeIntervalYear x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuDataTypeIntervalMonth x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuDataTypeIntervalMonth x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuDataTypeIntervalDayToHour x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuDataTypeIntervalDayToHour x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuDataTypeIntervalDayToMinute x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuDataTypeIntervalDayToMinute x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuDataTypeIntervalDayToSecond x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuDataTypeIntervalDayToSecond x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuDataTypeIntervalHour x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuDataTypeIntervalHour x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuDataTypeIntervalHourToMinute x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuDataTypeIntervalHourToMinute x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuDataTypeIntervalHourToSecond x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuDataTypeIntervalHourToSecond x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuDataTypeIntervalMinute x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuDataTypeIntervalMinute x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuDataTypeIntervalMinuteToSecond x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuDataTypeIntervalMinuteToSecond x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuDataTypeIntervalSecond x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuDataTypeIntervalSecond x) {
 
     }
 }
