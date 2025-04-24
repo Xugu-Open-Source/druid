@@ -269,6 +269,8 @@ public class SchemaRepository {
             resolveVisitor = new SchemaResolveVisitorFactory.PGResolveVisitor(this, optionsValue);
         } else if (JdbcConstants.SQL_SERVER.equals(dbType)) {
             resolveVisitor = new SchemaResolveVisitorFactory.SQLServerResolveVisitor(this, optionsValue);
+        } else if (JdbcConstants.XUGU.equals(dbType)) {
+            resolveVisitor = new SchemaResolveVisitorFactory.XuGuResolveVisitor(this, optionsValue);
         } else {
             resolveVisitor = new SchemaResolveVisitorFactory.SQLResolveVisitor(this, optionsValue);
         }
