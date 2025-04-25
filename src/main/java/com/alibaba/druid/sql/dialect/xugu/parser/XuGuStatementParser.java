@@ -25,6 +25,7 @@ import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleLabelStatement;
 import com.alibaba.druid.sql.dialect.oracle.parser.OracleFunctionDataType;
 import com.alibaba.druid.sql.dialect.oracle.parser.OracleProcedureDataType;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.ConditionValue.ConditionType;
+import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuReturningClause;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuLockTableStatement.LockType;
 import com.alibaba.druid.sql.dialect.xugu.ast.XuGuForeignKey;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.ConditionValue;
@@ -2852,6 +2853,11 @@ public class XuGuStatementParser extends SQLStatementParser {
                 }
                 accept(Token.RPAREN);
             }
+        } else if (lexer.token() == Token.DEFAULT) {
+            lexer.nextToken();
+            accept(Token.VALUES);
+            stmt.setDefaultValues(true);
+            return stmt;
         }
 
         if (lexer.token() == Token.VALUES || lexer.identifierEquals(FnvHash.Constants.VALUE)) {
@@ -2921,8 +2927,44 @@ public class XuGuStatementParser extends SQLStatementParser {
                 break;
             }
         }
+        stmt.setReturning(parseReturningClause());
 
         return stmt;
+    }
+
+    public XuGuReturningClause parseReturningClause() {
+        XuGuReturningClause clause = null;
+
+        if (lexer.token() == Token.RETURNING) {
+            lexer.nextToken();
+            clause = new XuGuReturningClause();
+
+            for (;;) {
+                SQLExpr item = exprParser.expr();
+                clause.addItem(item);
+                if (lexer.token() == Token.COMMA) {
+                    lexer.nextToken();
+                    continue;
+                }
+                break;
+            }
+            if (lexer.token() == Token.BULK) {
+                lexer.nextToken();
+                acceptIdentifier("COLLECT");
+                clause.setOptBulk(true);
+            }
+            accept(Token.INTO);
+            for (;;) {
+                SQLExpr item = exprParser.expr();
+                clause.addValue(item);
+                if (lexer.token() == Token.COMMA) {
+                    lexer.nextToken();
+                    continue;
+                }
+                break;
+            }
+        }
+        return clause;
     }
 
     public XuGuSelectParser createSQLSelectParser() {

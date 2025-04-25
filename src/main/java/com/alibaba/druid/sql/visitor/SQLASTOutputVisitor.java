@@ -2968,7 +2968,9 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
             return false;
         }
 
-        print('(');
+        if (!(JdbcConstants.XUGU.equals(dbType) && x.isInPlSql())) {
+            print('(');
+        }
         this.indentCount++;
 
 
@@ -3001,7 +3003,9 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
         }
 
         this.indentCount--;
-        print(')');
+        if (!(JdbcConstants.XUGU.equals(dbType) && x.isInPlSql())) {
+            print(')');
+        }
         return false;
     }
 

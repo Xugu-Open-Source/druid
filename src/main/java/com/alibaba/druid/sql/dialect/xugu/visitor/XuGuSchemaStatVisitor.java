@@ -48,6 +48,7 @@ import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuDeclareStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuIterateStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuLeaveStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuRepeatStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuReturningClause;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuSelectIntoStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuCharExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuExtractExpr;
@@ -145,6 +146,8 @@ public class XuGuSchemaStatVisitor extends SchemaStatVisitor implements XuGuASTV
         accept(x.getValuesList());
         accept(x.getQuery());
         accept(x.getDuplicateKeyUpdate());
+        accept(x.getReturning());
+        accept(x.getIdent());
 
         return false;
     }
@@ -1643,6 +1646,16 @@ public class XuGuSchemaStatVisitor extends SchemaStatVisitor implements XuGuASTV
 
     @Override
     public void endVisit(XuGuDataTypeIntervalSecond x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuReturningClause x) {
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuReturningClause x) {
 
     }
 }

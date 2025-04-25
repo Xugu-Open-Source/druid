@@ -20,6 +20,7 @@ import java.util.List;
 
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.statement.SQLInsertStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuReturningClause;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuOutputVisitor;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
@@ -27,11 +28,14 @@ import com.alibaba.druid.util.JdbcConstants;
 
 public class XuGuInsertStatement extends SQLInsertStatement {
 
+    private XuGuReturningClause returning;
     private boolean             lowPriority        = false;
     private boolean             delayed            = false;
     private boolean             highPriority       = false;
     private boolean             ignore             = false;
     private boolean             rollbackOnFail     = false;
+    private boolean             defaultValues      = false;
+    private SQLExpr             ident;
 
     private final List<SQLExpr> duplicateKeyUpdate = new ArrayList<SQLExpr>();
 
@@ -41,12 +45,16 @@ public class XuGuInsertStatement extends SQLInsertStatement {
 
     public void cloneTo(XuGuInsertStatement x) {
         super.cloneTo(x);
+        if (returning != null) {
+            x.setReturning(returning.clone());
+        }
         x.lowPriority = lowPriority;
         x.delayed = delayed;
         x.highPriority = highPriority;
         x.ignore = ignore;
         x.rollbackOnFail = rollbackOnFail;
-
+        x.defaultValues = defaultValues;
+        x.ident = ident;
         for (SQLExpr e : duplicateKeyUpdate) {
             SQLExpr e2 = e.clone();
             e2.setParent(x);
@@ -98,6 +106,30 @@ public class XuGuInsertStatement extends SQLInsertStatement {
         this.rollbackOnFail = rollbackOnFail;
     }
 
+    public boolean isDefaultValues() {
+        return defaultValues;
+    }
+
+    public void setDefaultValues(boolean defaultValues) {
+        this.defaultValues = defaultValues;
+    }
+
+    public XuGuReturningClause getReturning() {
+        return returning;
+    }
+
+    public void setReturning(XuGuReturningClause returning) {
+        this.returning = returning;
+    }
+
+    public SQLExpr getIdent() {
+        return ident;
+    }
+
+    public void setIdent(SQLExpr ident) {
+        this.ident = ident;
+    }
+
     @Override
     protected void accept0(SQLASTVisitor visitor) {
         if (visitor instanceof XuGuASTVisitor) {
@@ -118,6 +150,8 @@ public class XuGuInsertStatement extends SQLInsertStatement {
             this.acceptChild(visitor, getValuesList());
             this.acceptChild(visitor, getQuery());
             this.acceptChild(visitor, getDuplicateKeyUpdate());
+            this.acceptChild(visitor, returning);
+            this.acceptChild(visitor, ident);
         }
 
         visitor.endVisit(this);

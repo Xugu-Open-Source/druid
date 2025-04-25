@@ -16,6 +16,7 @@
 package com.alibaba.druid.sql.parser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.alibaba.druid.sql.ast.*;
@@ -3228,6 +3229,15 @@ public class SQLStatementParser extends SQLParser {
     protected void parseValueClause(List<SQLInsertStatement.ValuesClause> valueClauseList, int columnSize, SQLObject parent) {
         final boolean optimizedForParameterized = lexer.isEnabled(SQLParserFeature.OptimizedForForParameterizedSkipValue);
 
+        if (JdbcConstants.XUGU.equals(lexer.dbType) && lexer.token != Token.LPAREN
+                && lexer.token == Token.IDENTIFIER && (lexer.text.contains("BEGIN") && lexer.text.contains("END;"))){
+            SQLExpr expr = exprParser.expr();
+            SQLInsertStatement.ValuesClause values = new SQLInsertStatement.ValuesClause(Collections.singletonList(expr));
+            values.setInPlSql(true);
+            valueClauseList.add(values);
+            return;
+        }
+
         for (int i = 0; ; ++i) {
             int startPos = lexer.pos() - 1;
 
@@ -3346,6 +3356,8 @@ public class SQLStatementParser extends SQLParser {
             lexer.nextTokenComma();
             if (lexer.token() == Token.COMMA) {
                 lexer.nextTokenLParen();
+                continue;
+            } else if (JdbcConstants.XUGU.equals(lexer.dbType) && lexer.token == Token.LPAREN) {
                 continue;
             } else {
                 break;

@@ -49,6 +49,7 @@ import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuDeclareStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuIterateStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuLeaveStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuRepeatStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuReturningClause;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuSelectIntoStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuCharExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuExtractExpr;
@@ -952,6 +953,10 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
             x.getQuery().accept(this);
         }
 
+        if (x.isDefaultValues()) {
+            print0(ucase ? " DEFAULT VALUES" : " default values");
+        }
+
         List<SQLExpr> duplicateKeyUpdate = x.getDuplicateKeyUpdate();
         if (duplicateKeyUpdate.size() != 0) {
             println();
@@ -965,6 +970,11 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
                 }
                 duplicateKeyUpdate.get(i).accept(this);
             }
+        }
+
+        if (x.getReturning() != null) {
+            println();
+            x.getReturning().accept(this);
         }
 
         return false;
@@ -4815,6 +4825,23 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuDataTypeIntervalSecond x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuReturningClause x) {
+        print0(ucase ? "RETURNING " : "returning ");
+        printAndAccept(x.getItems(), ", ");
+        if (x.isOptBulk()) {
+            print0(ucase ? " BULK COLLECT" : " bulk collect");
+        }
+        print0(ucase ? " INTO " : " into ");
+        printAndAccept(x.getValues(), ", ");
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuReturningClause x) {
 
     }
 }

@@ -46,6 +46,7 @@ import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuDeclareStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuIterateStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuLeaveStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuRepeatStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuReturningClause;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuSelectIntoStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuCharExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuExtractExpr;
@@ -1509,6 +1510,16 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuDataTypeIntervalSecond x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuReturningClause x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuReturningClause x) {
 
     }
 }
