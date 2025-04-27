@@ -777,6 +777,11 @@ public class XuGuStatementParser extends SQLStatementParser {
             return true;
         }
 
+        if (lexer.token() == Token.LOOP) {
+            statementList.add(this.parseLoop());
+            return true;
+        }
+
         if (lexer.token() == Token.SHOW) {
             SQLStatement stmt = parseShow();
             statementList.add(stmt);
@@ -5339,8 +5344,12 @@ public class XuGuStatementParser extends SQLStatementParser {
         SQLLoopStatement loopStmt = new SQLLoopStatement();
         accept(Token.LOOP);
         this.parseStatementList(loopStmt.getStatements(), -1, loopStmt);
-        accept(Token.END);
-        accept(Token.LOOP);
+        if (JdbcConstants.XUGU.equals(dbType) && lexer.token() == Token.ENDLOOP) {
+            lexer.nextToken();
+        } else {
+            accept(Token.END);
+            accept(Token.LOOP);
+        }
         accept(Token.SEMI);
         loopStmt.setAfterSemi(true);
         return loopStmt;
