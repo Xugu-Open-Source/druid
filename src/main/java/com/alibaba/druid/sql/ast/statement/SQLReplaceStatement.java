@@ -27,6 +27,7 @@ import java.util.List;
 public class SQLReplaceStatement extends SQLStatementImpl {
     protected boolean             lowPriority = false;
     protected boolean             delayed     = false;
+    private boolean               defaultValues = false;
 
     protected SQLExprTableSource  tableSource;
     protected final List<SQLExpr> columns     = new ArrayList<SQLExpr>();
@@ -82,6 +83,14 @@ public class SQLReplaceStatement extends SQLStatementImpl {
 
     public void setDelayed(boolean delayed) {
         this.delayed = delayed;
+    }
+
+    public boolean isDefaultValues() {
+        return defaultValues;
+    }
+
+    public void setDefaultValues(boolean defaultValues) {
+        this.defaultValues = defaultValues;
     }
 
     public SQLQueryExpr getQuery() {

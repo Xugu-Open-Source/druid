@@ -24,7 +24,17 @@ import junit.framework.TestCase;
 
 import java.util.List;
 
-public class XgInsertTest extends TestCase {
+public class XgReplaceTest extends TestCase {
+
+    public void test_replace() {
+        String sql = "REPLACE INTO tb_top VALUES(1,'one-1');";
+        XuGuStatementParser parser = new XuGuStatementParser(sql);
+        List<SQLStatement> sqlStatements = parser.parseStatementList();
+        SQLStatement stmt = sqlStatements.get(0);
+        XuGuSchemaStatVisitor visitor = new XuGuSchemaStatVisitor();
+        stmt.accept(visitor);
+        System.out.println(SQLUtils.toXuGuString(stmt));
+    }
 
     public void test_values_ident() {
         String sql = "DECLARE\n" +
@@ -34,7 +44,7 @@ public class XgInsertTest extends TestCase {
                 "\tSELECT id INTO v_testRow.id FROM tb_top WHERE id IS NOT NULL ORDER BY id DESC LIMIT 1;\n" +
                 "\tv_testRow.id := v_testRow.id + 1;\n" +
                 "\tv_testRow.NAME := '' || sysdate;\n" +
-                "\tinsert INTO tb_top values v_testRow;\n" +
+                "\tREPLACE INTO tb_top values v_testRow;\n" +
                 "END;";
         XuGuStatementParser parser = new XuGuStatementParser(sql);
         List<SQLStatement> sqlStatements = parser.parseStatementList();
@@ -42,40 +52,10 @@ public class XgInsertTest extends TestCase {
         XuGuSchemaStatVisitor visitor = new XuGuSchemaStatVisitor();
         stmt.accept(visitor);
         System.out.println(SQLUtils.toXuGuString(stmt));
-    }
-
-
-    public void test_ignore_select() {
-        String sql = "insert IGNORE INTO tb_top(id,name) (SELECT 18,'aaabbb' FROM dual) UNION all SELECT 222,'aaabbb' FROM dual;";
-        XuGuStatementParser parser = new XuGuStatementParser(sql);
-        List<SQLStatement> sqlStatements = parser.parseStatementList();
-        SQLStatement stmt = sqlStatements.get(0);
-        XuGuInsertStatement insertStmt = (XuGuInsertStatement) stmt;
-        XuGuSchemaStatVisitor visitor = new XuGuSchemaStatVisitor();
-        stmt.accept(visitor);
-        System.out.println(SQLUtils.toXuGuString(insertStmt));
     }
 
     public void test_values() {
-        String sql = "insert  INTO tb_top(id,name) VALUES ( 18,'aaabbb') (222,'aaabbb');";
-        XuGuStatementParser parser = new XuGuStatementParser(sql);
-        List<SQLStatement> sqlStatements = parser.parseStatementList();
-        SQLStatement stmt = sqlStatements.get(0);
-        XuGuInsertStatement insertStmt = (XuGuInsertStatement) stmt;
-        XuGuSchemaStatVisitor visitor = new XuGuSchemaStatVisitor();
-        stmt.accept(visitor);
-        System.out.println(SQLUtils.toXuGuString(insertStmt));
-    }
-
-
-    public void test_returning() {
-        String sql = "DECLARE\n" +
-                "\tTYPE type_table_var2 IS TABLE OF tb_top%ROWTYPE;\n" +
-                "\ttable_var2 type_table_var2;\n" +
-                "BEGIN\n" +
-                "\tinsert INTO tb_top values (1,'111a')\n" +
-                "\t\tRETURNING tb_top.id, tb_top.NAME  BULK COLLECT INTO table_var2;\n" +
-                "END;\n";
+        String sql = "REPLACE  INTO tb_top(id,name) VALUES ( 18,'aaabbb') (222,'aaabbb');";
         XuGuStatementParser parser = new XuGuStatementParser(sql);
         List<SQLStatement> sqlStatements = parser.parseStatementList();
         SQLStatement stmt = sqlStatements.get(0);
@@ -84,15 +64,8 @@ public class XgInsertTest extends TestCase {
         System.out.println(SQLUtils.toXuGuString(stmt));
     }
 
-
-    public void test_returning2() {
-        String sql = "DECLARE\n" +
-                "var_id NUMBER;\n" +
-                "var_name VARCHAR;\n" +
-                "BEGIN\n" +
-                "insert INTO tb_top values (1,'222')\n" +
-                "\tRETURNING tb_top.id ,tb_top.name  INTO var_id, var_name;\n" +
-                "END;";
+    public void test_select_union() {
+        String sql = "REPLACE INTO tb_top(id,name) (SELECT 18,'18-1' FROM dual) UNION all SELECT 19,'19-1' FROM dual ;";
         XuGuStatementParser parser = new XuGuStatementParser(sql);
         List<SQLStatement> sqlStatements = parser.parseStatementList();
         SQLStatement stmt = sqlStatements.get(0);
@@ -102,7 +75,7 @@ public class XgInsertTest extends TestCase {
     }
 
     public void test_default_values() {
-        String sql = "INSERT  INTO tb_top DEFAULT VALUES;";
+        String sql = "REPLACE INTO tb_top DEFAULT VALUES;";
         XuGuStatementParser parser = new XuGuStatementParser(sql);
         List<SQLStatement> sqlStatements = parser.parseStatementList();
         SQLStatement stmt = sqlStatements.get(0);
@@ -110,6 +83,4 @@ public class XgInsertTest extends TestCase {
         stmt.accept(visitor);
         System.out.println(SQLUtils.toXuGuString(stmt));
     }
-
-
 }

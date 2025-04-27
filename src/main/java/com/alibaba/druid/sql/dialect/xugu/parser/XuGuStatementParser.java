@@ -2387,15 +2387,24 @@ public class XuGuStatementParser extends SQLStatementParser {
         SQLName tableName = exprParser.name();
         stmt.setTableName(tableName);
 
+        boolean useSelectStmt = false;
         if (lexer.token() == Token.LPAREN) {
+            Lexer.SavePoint mark = lexer.mark();
             lexer.nextToken();
             if (lexer.token() == Token.SELECT) {
+                lexer.reset(mark);
                 SQLQueryExpr queryExpr = (SQLQueryExpr) this.exprParser.expr();
                 stmt.setQuery(queryExpr);
+                useSelectStmt = true;
             } else {
                 this.exprParser.exprList(stmt.getColumns(), stmt);
+                accept(Token.RPAREN);
             }
-            accept(Token.RPAREN);
+        } else if (lexer.token() == Token.DEFAULT) {
+            lexer.nextToken();
+            accept(Token.VALUES);
+            stmt.setDefaultValues(true);
+            return stmt;
         }
 
         if (lexer.token() == Token.VALUES || lexer.identifierEquals("VALUE")) {
@@ -2403,6 +2412,9 @@ public class XuGuStatementParser extends SQLStatementParser {
 
             parseValueClause(stmt.getValuesList(), 0, stmt);
         } else if (lexer.token() == Token.SELECT) {
+            if (useSelectStmt) {
+                throw new ParserException("syntax error, illegal charset. "  + lexer.info());
+            }
             SQLQueryExpr queryExpr = (SQLQueryExpr) this.exprParser.expr();
             stmt.setQuery(queryExpr);
         } else if (lexer.token() == Token.SET) {
@@ -2754,7 +2766,9 @@ public class XuGuStatementParser extends SQLStatementParser {
         }
 
         int columnSize = 0;
+        boolean useSelectStmt = false;
         if (lexer.token() == Token.LPAREN) {
+            Lexer.SavePoint mark = lexer.mark();
             boolean useInsertColumnsCache = lexer.isEnabled(SQLParserFeature.UseInsertColumnsCache);
             InsertColumnsCache insertColumnsCache = null;
 
@@ -2787,9 +2801,11 @@ public class XuGuStatementParser extends SQLStatementParser {
             } else {
                 lexer.nextToken();
                 if (lexer.token() == Token.SELECT) {
+                    lexer.reset(mark);
                     SQLSelect select = this.exprParser.createSelectParser().select();
                     select.setParent(stmt);
                     stmt.setQuery(select);
+                    useSelectStmt = true;
                 } else {
                     List<SQLExpr> columns = stmt.getColumns();
 
@@ -2850,8 +2866,8 @@ public class XuGuStatementParser extends SQLStatementParser {
                             stmt.setColumnsString(formattedColumnsString, columnsFormattedStringHash);
                         }
                     }
+                    accept(Token.RPAREN);
                 }
-                accept(Token.RPAREN);
             }
         } else if (lexer.token() == Token.DEFAULT) {
             lexer.nextToken();
@@ -2888,15 +2904,16 @@ public class XuGuStatementParser extends SQLStatementParser {
             }
 
         } else if (lexer.token() == (Token.SELECT)) {
+            if (useSelectStmt) {
+                throw new ParserException("syntax error, illegal charset. "  + lexer.info());
+            }
             SQLSelect select = this.exprParser.createSelectParser().select();
             select.setParent(stmt);
             stmt.setQuery(select);
         } else if (lexer.token() == (Token.LPAREN)) {
-            lexer.nextToken();
             SQLSelect select = this.exprParser.createSelectParser().select();
             select.setParent(stmt);
             stmt.setQuery(select);
-            accept(Token.RPAREN);
         }
 
         if (lexer.token() == Token.ON) {

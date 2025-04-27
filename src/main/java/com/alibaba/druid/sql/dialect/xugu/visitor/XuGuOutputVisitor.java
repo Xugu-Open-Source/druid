@@ -1152,6 +1152,10 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
             visit(query);
         }
 
+        if (x.isDefaultValues()) {
+            print0(ucase ? " DEFAULT VALUES" : " default values");
+        }
+
         return false;
     }
 
