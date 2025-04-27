@@ -147,7 +147,6 @@ public class XuGuSchemaStatVisitor extends SchemaStatVisitor implements XuGuASTV
         accept(x.getQuery());
         accept(x.getDuplicateKeyUpdate());
         accept(x.getReturning());
-        accept(x.getIdent());
 
         return false;
     }

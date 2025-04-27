@@ -3230,7 +3230,7 @@ public class SQLStatementParser extends SQLParser {
         final boolean optimizedForParameterized = lexer.isEnabled(SQLParserFeature.OptimizedForForParameterizedSkipValue);
 
         if (JdbcConstants.XUGU.equals(lexer.dbType) && lexer.token != Token.LPAREN
-                && lexer.token == Token.IDENTIFIER && (lexer.text.contains("BEGIN") && lexer.text.contains("END;"))){
+                && lexer.token == Token.IDENTIFIER && (lexer.text.contains("BEGIN") && lexer.text.contains("END"))){
             SQLExpr expr = exprParser.expr();
             SQLInsertStatement.ValuesClause values = new SQLInsertStatement.ValuesClause(Collections.singletonList(expr));
             values.setInPlSql(true);

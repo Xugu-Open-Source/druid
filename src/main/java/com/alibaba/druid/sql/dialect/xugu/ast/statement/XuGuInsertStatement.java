@@ -35,7 +35,6 @@ public class XuGuInsertStatement extends SQLInsertStatement {
     private boolean             ignore             = false;
     private boolean             rollbackOnFail     = false;
     private boolean             defaultValues      = false;
-    private SQLExpr             ident;
 
     private final List<SQLExpr> duplicateKeyUpdate = new ArrayList<SQLExpr>();
 
@@ -54,7 +53,6 @@ public class XuGuInsertStatement extends SQLInsertStatement {
         x.ignore = ignore;
         x.rollbackOnFail = rollbackOnFail;
         x.defaultValues = defaultValues;
-        x.ident = ident;
         for (SQLExpr e : duplicateKeyUpdate) {
             SQLExpr e2 = e.clone();
             e2.setParent(x);
@@ -122,14 +120,6 @@ public class XuGuInsertStatement extends SQLInsertStatement {
         this.returning = returning;
     }
 
-    public SQLExpr getIdent() {
-        return ident;
-    }
-
-    public void setIdent(SQLExpr ident) {
-        this.ident = ident;
-    }
-
     @Override
     protected void accept0(SQLASTVisitor visitor) {
         if (visitor instanceof XuGuASTVisitor) {
@@ -151,7 +141,6 @@ public class XuGuInsertStatement extends SQLInsertStatement {
             this.acceptChild(visitor, getQuery());
             this.acceptChild(visitor, getDuplicateKeyUpdate());
             this.acceptChild(visitor, returning);
-            this.acceptChild(visitor, ident);
         }
 
         visitor.endVisit(this);
