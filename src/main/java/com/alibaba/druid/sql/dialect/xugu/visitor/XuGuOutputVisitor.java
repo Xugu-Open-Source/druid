@@ -2882,12 +2882,12 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
         if (JdbcConstants.XUGU.equals(dbType)) {
             xgSpecial = "NAMES".equalsIgnoreCase(tagetString)
                     || "CHARACTER SET".equalsIgnoreCase(tagetString)
-                    || "CHARSET".equalsIgnoreCase(tagetString);
+                    || "CHAR SET".equalsIgnoreCase(tagetString);
         }
 
         if (!xgSpecial) {
             x.getTarget().accept(this);
-            print0(" = ");
+            print0(" := ");
         } else {
             print0(ucase ? tagetString.toUpperCase() : tagetString.toLowerCase());
             print(' ');
@@ -2991,7 +2991,8 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public boolean visit(SQLSetStatement x) {
-        boolean printSet = x.getAttribute("parser.set") == Boolean.TRUE || !JdbcConstants.ORACLE.equals(dbType);
+        boolean printSet = x.getAttribute("parser.set") == Boolean.TRUE || !(JdbcConstants.ORACLE.equals(dbType)
+                || JdbcConstants.XUGU.equals(dbType));
         if (printSet) {
             print0(ucase ? "SET " : "set ");
         }

@@ -2805,7 +2805,8 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
 
     @Override
     public boolean visit(SQLSetStatement x) {
-        boolean printSet = x.getAttribute("parser.set") == Boolean.TRUE || !JdbcConstants.ORACLE.equals(dbType);
+        boolean printSet = x.getAttribute("parser.set") == Boolean.TRUE || !(JdbcConstants.ORACLE.equals(dbType)
+                || JdbcConstants.XUGU.equals(dbType));
         if (printSet) {
             print0(ucase ? "SET " : "set ");
         }
