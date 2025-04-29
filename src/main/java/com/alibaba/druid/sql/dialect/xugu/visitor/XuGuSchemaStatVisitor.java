@@ -1677,4 +1677,44 @@ public class XuGuSchemaStatVisitor extends SchemaStatVisitor implements XuGuASTV
     public void endVisit(XuGuExitStatement x) {
 
     }
+
+    @Override
+    public boolean visit(XuGuMultiInsertStatement x) {
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuMultiInsertStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuMultiInsertStatement.ConditionalInsertClause x) {
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuMultiInsertStatement.ConditionalInsertClause x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuMultiInsertStatement.ConditionalInsertClauseItem x) {
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuMultiInsertStatement.ConditionalInsertClauseItem x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuMultiInsertStatement.InsertIntoClause x) {
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuMultiInsertStatement.InsertIntoClause x) {
+
+    }
 }

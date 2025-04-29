@@ -93,6 +93,12 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
         }
     }
 
+    private void printHints(List<SQLHint> hints) {
+        if (!hints.isEmpty()) {
+            printAndAccept(hints, ", ");
+        }
+    }
+
     public void configFromProperty(Properties properties) {
         if (this.parameterized) {
             String property = properties.getProperty("druid.parameterized.shardingSupport");
@@ -4987,6 +4993,123 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuExitStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuMultiInsertStatement x) {
+        print0(ucase ? "INSERT " : "insert ");
+
+        if (!x.getHints().isEmpty()) {
+            this.printHints(x.getHints());
+        }
+
+        if (x.getOption() != null) {
+            print0(x.getOption().name());
+            print(' ');
+        }
+
+        for (int i = 0, size = x.getEntries().size(); i < size; ++i) {
+            this.indentCount++;
+            println();
+            x.getEntries().get(i).accept(this);
+            this.indentCount--;
+        }
+
+        println();
+        x.getSubQuery().accept(this);
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuMultiInsertStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuMultiInsertStatement.ConditionalInsertClause x) {
+        for (int i = 0, size = x.getItems().size(); i < size; ++i) {
+            if (i != 0) {
+                println();
+            }
+
+            XuGuMultiInsertStatement.ConditionalInsertClauseItem item = x.getItems().get(i);
+
+            item.accept(this);
+        }
+
+        if (x.getElseItem() != null) {
+            println();
+            print0(ucase ? "ELSE" : "else");
+            this.indentCount++;
+            println();
+            x.getElseItem().accept(this);
+            this.indentCount--;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuMultiInsertStatement.ConditionalInsertClause x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuMultiInsertStatement.ConditionalInsertClauseItem x) {
+        print0(ucase ? "WHEN " : "when ");
+        x.getWhen().accept(this);
+        print0(ucase ? " THEN" : " then");
+        this.indentCount++;
+        println();
+        x.getThen().accept(this);
+        this.indentCount--;
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuMultiInsertStatement.ConditionalInsertClauseItem x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuMultiInsertStatement.InsertIntoClause x) {
+        print0(ucase ? "INTO " : "into ");
+
+        x.getTableSource().accept(this);
+
+        if (x.getColumns().size() > 0) {
+            this.indentCount++;
+            println();
+            print('(');
+            for (int i = 0, size = x.getColumns().size(); i < size; ++i) {
+                if (i != 0) {
+                    if (i % 5 == 0) {
+                        println();
+                    }
+                    print0(", ");
+                }
+                x.getColumns().get(i).accept(this);
+            }
+            print(')');
+            this.indentCount--;
+        }
+
+        if (x.getValues() != null) {
+            println();
+            print0(ucase ? "VALUES " : "values ");
+            x.getValues().accept(this);
+        } else {
+            if (x.getQuery() != null) {
+                println();
+                x.getQuery().accept(this);
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuMultiInsertStatement.InsertIntoClause x) {
 
     }
 }

@@ -2738,7 +2738,7 @@ public class XuGuStatementParser extends SQLStatementParser {
         return stmt;
     }
 
-    public SQLInsertStatement parseInsert() {
+    public XuGuInsertStatement parseInsert0() {
         XuGuInsertStatement stmt = new XuGuInsertStatement();
 
         SQLName tableName = null;
@@ -2986,6 +2986,76 @@ public class XuGuStatementParser extends SQLStatementParser {
         }
         stmt.setReturning(parseReturningClause());
 
+        return stmt;
+    }
+
+    public XuGuStatement parseInsert() {
+        Lexer.SavePoint mark = lexer.mark();
+        accept(Token.INSERT);
+        if (lexer.token() == Token.INTO || lexer.identifierEquals("IGNORE")) {
+            lexer.reset(mark);
+            return parseInsert0();
+        } else {
+            List<SQLHint> hints = new ArrayList<SQLHint>();
+            parseHints(hints);
+            XuGuMultiInsertStatement stmt = parseMultiInsert();
+            stmt.setHints(hints);
+            return stmt;
+        }
+    }
+
+    public XuGuMultiInsertStatement parseMultiInsert() {
+        XuGuMultiInsertStatement stmt = new XuGuMultiInsertStatement();
+
+        if (lexer.token() == Token.ALL) {
+            lexer.nextToken();
+            stmt.setOption(XuGuMultiInsertStatement.Option.ALL);
+        } else if (lexer.token() == Token.FIRST || lexer.identifierEquals("FIRST")) {
+            lexer.nextToken();
+            stmt.setOption(XuGuMultiInsertStatement.Option.FIRST);
+        }
+
+        while (lexer.token() == Token.INTO) {
+            XuGuMultiInsertStatement.InsertIntoClause clause = new XuGuMultiInsertStatement.InsertIntoClause();
+
+            boolean acceptSubQuery = stmt.getEntries().size() == 0;
+            parseInsert0(clause, acceptSubQuery);
+
+            clause.setReturning(parseReturningClause());
+            clause.setErrorLogging(parseErrorLoggingClause());
+
+            stmt.addEntry(clause);
+        }
+
+        if (lexer.token() == Token.WHEN) {
+            XuGuMultiInsertStatement.ConditionalInsertClause clause = new XuGuMultiInsertStatement.ConditionalInsertClause();
+
+            while (lexer.token() == Token.WHEN) {
+                lexer.nextToken();
+
+                XuGuMultiInsertStatement.ConditionalInsertClauseItem item = new XuGuMultiInsertStatement.ConditionalInsertClauseItem();
+
+                item.setWhen(this.exprParser.expr());
+                accept(Token.THEN);
+                XuGuMultiInsertStatement.InsertIntoClause insertInto = new XuGuMultiInsertStatement.InsertIntoClause();
+                parseInsert0(insertInto);
+                item.setThen(insertInto);
+
+                clause.addItem(item);
+            }
+
+            if (lexer.token() == Token.ELSE) {
+                lexer.nextToken();
+
+                XuGuMultiInsertStatement.InsertIntoClause insertInto = new XuGuMultiInsertStatement.InsertIntoClause();
+                parseInsert0(insertInto, false);
+                clause.setElseItem(insertInto);
+            }
+            stmt.addEntry(clause);
+        }
+
+        SQLSelect subQuery = this.createSQLSelectParser().select();
+        stmt.setSubQuery(subQuery);
         return stmt;
     }
 

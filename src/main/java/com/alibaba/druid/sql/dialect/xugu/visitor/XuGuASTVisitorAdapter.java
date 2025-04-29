@@ -1542,4 +1542,44 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
     public void endVisit(XuGuExitStatement x) {
 
     }
+
+    @Override
+    public boolean visit(XuGuMultiInsertStatement x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuMultiInsertStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuMultiInsertStatement.ConditionalInsertClause x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuMultiInsertStatement.ConditionalInsertClause x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuMultiInsertStatement.ConditionalInsertClauseItem x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuMultiInsertStatement.ConditionalInsertClauseItem x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuMultiInsertStatement.InsertIntoClause x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuMultiInsertStatement.InsertIntoClause x) {
+
+    }
 }

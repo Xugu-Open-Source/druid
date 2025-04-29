@@ -26,7 +26,7 @@ import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuOutputVisitor;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 import com.alibaba.druid.util.JdbcConstants;
 
-public class XuGuInsertStatement extends SQLInsertStatement {
+public class XuGuInsertStatement extends SQLInsertStatement implements XuGuStatement{
 
     private XuGuReturningClause returning;
     private boolean             lowPriority        = false;
@@ -133,7 +133,7 @@ public class XuGuInsertStatement extends SQLInsertStatement {
         new XuGuOutputVisitor(buf).visit(this);
     }
 
-    protected void accept0(XuGuASTVisitor visitor) {
+    public void accept0(XuGuASTVisitor visitor) {
         if (visitor.visit(this)) {
             this.acceptChild(visitor, getTableSource());
             this.acceptChild(visitor, getColumns());

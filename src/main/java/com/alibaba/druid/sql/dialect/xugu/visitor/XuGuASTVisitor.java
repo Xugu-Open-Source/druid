@@ -596,4 +596,16 @@ public interface XuGuASTVisitor extends SQLASTVisitor {
 
     boolean visit(XuGuExitStatement x);
     void endVisit(XuGuExitStatement x);
+
+    boolean visit(XuGuMultiInsertStatement x);
+    void endVisit(XuGuMultiInsertStatement x);
+
+    boolean visit(XuGuMultiInsertStatement.ConditionalInsertClause x);
+    void endVisit(XuGuMultiInsertStatement.ConditionalInsertClause x);
+
+    boolean visit(XuGuMultiInsertStatement.ConditionalInsertClauseItem x);
+    void endVisit(XuGuMultiInsertStatement.ConditionalInsertClauseItem x);
+
+    boolean visit(XuGuMultiInsertStatement.InsertIntoClause x);
+    void endVisit(XuGuMultiInsertStatement.InsertIntoClause x);
 }
