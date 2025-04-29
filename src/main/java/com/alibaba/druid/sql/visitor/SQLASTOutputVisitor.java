@@ -794,7 +794,8 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
                     && rightOp != op
                     && rightOp.isLogical()
                     && op.isLogical()
-            )) {
+            ) || (JdbcConstants.XUGU.equals(dbType) && right.isBracket()
+                    && op == SQLBinaryOperator.Concat && rightOp == SQLBinaryOperator.Add)) {
                 if (rightRational) {
                     this.indentCount++;
                 }

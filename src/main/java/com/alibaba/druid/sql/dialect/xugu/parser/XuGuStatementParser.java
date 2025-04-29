@@ -981,6 +981,30 @@ public class XuGuStatementParser extends SQLStatementParser {
                 lexer.reset(bp, ch, Token.IDENTIFIER);
             }
 
+            // PL/SQL 中 SEND_MSG()
+            SQLExpr expr = exprParser.expr();
+
+            if (expr instanceof SQLBinaryOpExpr) {
+                SQLBinaryOpExpr binaryOpExpr = (SQLBinaryOpExpr) expr;
+                if (binaryOpExpr.getOperator() == SQLBinaryOperator.Assignment) {
+                    SQLSetStatement stmt = new SQLSetStatement();
+                    stmt.setDbType(JdbcConstants.XUGU);
+
+                    SQLAssignItem assignItem = new SQLAssignItem(binaryOpExpr.getLeft(), binaryOpExpr.getRight());
+                    assignItem.setParent(stmt);
+                    stmt.getItems().add(assignItem);
+
+                    statementList.add(stmt);
+
+                    return true;
+                }
+            } else if (expr instanceof SQLMethodInvokeExpr) {
+                SQLExprStatement stmt = new SQLExprStatement(expr);
+                stmt.setDbType(dbType);
+                statementList.add(stmt);
+                return true;
+            }
+
         }
 
         return false;
