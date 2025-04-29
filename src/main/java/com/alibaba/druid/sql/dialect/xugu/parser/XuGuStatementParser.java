@@ -17,13 +17,11 @@ package com.alibaba.druid.sql.dialect.xugu.parser;
 
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.*;
-import com.alibaba.druid.sql.ast.SQLParameter.ParameterType;
 import com.alibaba.druid.sql.ast.expr.*;
 import com.alibaba.druid.sql.ast.statement.*;
-import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleCreateTypeStatement;
 import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleLabelStatement;
-import com.alibaba.druid.sql.dialect.oracle.parser.OracleFunctionDataType;
-import com.alibaba.druid.sql.dialect.oracle.parser.OracleProcedureDataType;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuguFunctionDataType;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuguProdecureDataType;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.ConditionValue.ConditionType;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuReturningClause;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuLockTableStatement.LockType;
@@ -34,7 +32,6 @@ import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuCaseStatement.XuGuWhenS
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuCursorDeclareStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuDeclareConditionStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuDeclareHandlerStatement;
-import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuDeclareStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuHandlerType;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuIterateStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuLeaveStatement;
@@ -4828,57 +4825,220 @@ public class XuGuStatementParser extends SQLStatementParser {
 
         for (; ; ) {
             SQLParameter parameter = new SQLParameter();
+                parameter.setParent(parent);
 
+            if (parent instanceof XuGuCreateTypeStatement) {
+                if (lexer.identifierEquals(FnvHash.Constants.MAP)) {
+                    lexer.nextToken();
+                    parameter.setMap(true);
+                } else if (lexer.token() == Token.ORDER) {
+                    lexer.nextToken();
+                    parameter.setOrder(true);
+                }
+
+                // acceptIdentifier("MEMBER");
+            }
+
+            SQLName name;
+            SQLDataType dataType = null;
             if (lexer.token() == Token.CURSOR) {
                 lexer.nextToken();
 
-                parameter.setName(this.exprParser.name());
-
-                accept(Token.IS);
-                SQLSelect select = this.createSQLSelectParser().select();
-
-                SQLDataTypeImpl dataType = new SQLDataTypeImpl();
+                dataType = new SQLDataTypeImpl();
                 dataType.setName("CURSOR");
-                parameter.setDataType(dataType);
 
+                name = this.exprParser.name();
+
+                if (lexer.token() == Token.LPAREN) {
+                    lexer.nextToken();
+                    this.parserParameters(parameter.getCursorParameters(), parameter);
+                    accept(Token.RPAREN);
+                }
+
+                if (lexer.token() == Token.AS) {
+                    lexer.nextToken();
+                } else {
+                    accept(Token.IS);
+                }
+                SQLSelect select = this.createSQLSelectParser().select();
                 parameter.setDefaultValue(new SQLQueryExpr(select));
 
-            } else if (lexer.token() == Token.IN || lexer.token() == Token.OUT || lexer.token() == Token.INOUT) {
+            } else if (lexer.token() == Token.PROCEDURE
+                    || lexer.token() == Token.END
+                    || lexer.token() == Token.TABLE) {
+                break;
+            } else if (lexer.identifierEquals(FnvHash.Constants.TYPE)
+                    || lexer.identifierEquals("SUBTYPE")) {
+                lexer.nextToken();
+                name = this.exprParser.name();
+                accept(Token.IS);
+                parameter.setXgPrintType(true);
+                if (lexer.token() == Token.TABLE) {
+                    lexer.nextToken();
+                    accept(Token.OF);
+
+                    dataType = exprParser.parseDataType(false);
+                    dataType.setName("TABLE OF " + dataType.getName());
+
+                    if (lexer.token() == Token.INDEX) {
+                        lexer.nextToken();
+                        accept(Token.BY);
+                        SQLExpr indexBy = this.exprParser.primary();
+                        ((SQLDataTypeImpl) dataType).setIndexBy(indexBy);
+                    }
+                    dataType.setDbType(dbType);
+                } else if (lexer.identifierEquals("VARRAY")) {
+                    lexer.nextToken();
+                    dataType = getSqlDataTypeVarray("VARRAY");
+                } else if (lexer.identifierEquals("VARYING")) {
+                    lexer.nextToken();
+                    acceptIdentifier("ARRAY");
+                    dataType = getSqlDataTypeVarray("VARYING ARRAY");
+                } else {
+                    dataType = exprParser.parseDataType(false);
+                }
+
+            } else {
+                if (lexer.token() == Token.KEY) {
+                    name = new SQLIdentifierExpr(lexer.stringVal());
+                    lexer.nextToken();
+                } else {
+                    name = this.exprParser.name();
+                }
 
                 if (lexer.token() == Token.IN) {
-                    parameter.setParamType(ParameterType.IN);
+                    lexer.nextToken();
+
+                    if (lexer.token() == Token.OUT) {
+                        lexer.nextToken();
+                        parameter.setParamType(SQLParameter.ParameterType.INOUT);
+                    } else {
+                        parameter.setParamType(SQLParameter.ParameterType.IN);
+                    }
                 } else if (lexer.token() == Token.OUT) {
-                    parameter.setParamType(ParameterType.OUT);
+                    lexer.nextToken();
+
+                    if (lexer.token() == Token.IN) {
+                        lexer.nextToken();
+                        parameter.setParamType(SQLParameter.ParameterType.INOUT);
+                    } else {
+                        parameter.setParamType(SQLParameter.ParameterType.OUT);
+                    }
                 } else if (lexer.token() == Token.INOUT) {
-                    parameter.setParamType(ParameterType.INOUT);
+                    lexer.nextToken();
+                    parameter.setParamType(SQLParameter.ParameterType.INOUT);
                 }
-                lexer.nextToken();
 
-                parameter.setName(this.exprParser.name());
+                if (lexer.identifierEquals("NOCOPY")) {
+                    lexer.nextToken();
+                    parameter.setNoCopy(true);
+                }
 
-                parameter.setDataType(this.exprParser.parseDataType());
-            } else {
-                parameter.setParamType(ParameterType.DEFAULT);// default parameter type is in
-                parameter.setName(this.exprParser.name());
-                parameter.setDataType(this.exprParser.parseDataType());
+                if (lexer.identifierEquals("CONSTANT")) {
+                    lexer.nextToken();
+                    parameter.setConstant(true);
+                }
 
-                if (lexer.token() == Token.COLONEQ) {
+                if ((name.nameHashCode64() == FnvHash.Constants.MEMBER
+                        || name.nameHashCode64() == FnvHash.Constants.STATIC)
+                        && lexer.token() == Token.FUNCTION) {
+                    if (name.nameHashCode64() == FnvHash.Constants.MEMBER) {
+                        parameter.setMember(true);
+                    }
+                    XuguFunctionDataType functionDataType = new XuguFunctionDataType();
+                    functionDataType.setStatic(name.nameHashCode64() == FnvHash.Constants.STATIC);
+                    lexer.nextToken();
+                    functionDataType.setName(lexer.stringVal());
+                    accept(Token.IDENTIFIER);
+                    // 虚谷自定义类型member类型过程或函数没有参数时匹配到了左括号,不解析参数直接匹配右括号
+                    if (lexer.token() == Token.LPAREN) {
+                        lexer.nextToken();
+                        if (lexer.token() == Token.RPAREN) {
+                            accept(Token.RPAREN);
+                        } else {
+                            this.parserParameters(functionDataType.getParameters(), functionDataType);
+                            accept(Token.RPAREN);
+                        }
+                    }
+                    accept(Token.RETURN);
+                    functionDataType.setReturnDataType(this.exprParser.parseDataType(false));
+                    dataType = functionDataType;
+                    name = null;
+
+                    if (lexer.token() == Token.IS || lexer.token()==Token.AS) {
+                        lexer.nextToken();
+                        SQLStatement block = this.parseBlock();
+                        functionDataType.setBlock(block);
+                    }
+                } else if ((name.nameHashCode64() == FnvHash.Constants.MEMBER
+                        || name.nameHashCode64() == FnvHash.Constants.STATIC)
+                        && lexer.token() == Token.PROCEDURE) {
+                    if (name.nameHashCode64() == FnvHash.Constants.MEMBER) {
+                        parameter.setMember(true);
+                    }
+                    XuguProdecureDataType procedureDataType = new XuguProdecureDataType();
+                    procedureDataType.setStatic(name.nameHashCode64() == FnvHash.Constants.STATIC);
+                    lexer.nextToken();
+                    procedureDataType.setName(lexer.stringVal());
+                    accept(Token.IDENTIFIER);
+                    if (lexer.token() == Token.LPAREN) {
+                        lexer.nextToken();
+                        if(lexer.token()==Token.RPAREN){
+                            accept(Token.RPAREN);
+                        }else{
+                            this.parserParameters(procedureDataType.getParameters(), procedureDataType);
+                            accept(Token.RPAREN);
+                        }
+                    }
+
+                    dataType = procedureDataType;
+                    name = null;
+
+                    if (lexer.token() == Token.IS || lexer.token() == Token.AS) {
+                        lexer.nextToken();
+                        SQLStatement block = this.parseBlock();
+                        procedureDataType.setBlock(block);
+                    }
+                } else {
+                    dataType = this.exprParser.parseDataType(false);
+                }
+                if (lexer.token() == Token.COLONEQ || lexer.token() == Token.DEFAULT) {
                     lexer.nextToken();
                     parameter.setDefaultValue(this.exprParser.expr());
                 }
             }
 
+            parameter.setName(name);
+            parameter.setDataType(dataType);
+
             parameters.add(parameter);
-            if (lexer.token() == Token.COMMA || lexer.token() == Token.SEMI) {
+            Token token = lexer.token();
+            if (token == Token.COMMA || token == Token.SEMI || token == Token.IS) {
                 lexer.nextToken();
             }
 
-            if (lexer.token() != Token.BEGIN && lexer.token() != Token.RPAREN) {
+            token = lexer.token();
+            if (token != Token.BEGIN
+                    && token != Token.RPAREN
+                    && token != Token.EOF
+                    && token != Token.FUNCTION
+                    && !lexer.identifierEquals("DETERMINISTIC")) {
                 continue;
             }
 
             break;
         }
+    }
+
+    private SQLDataType getSqlDataTypeVarray(String typeName) {
+        accept(Token.LPAREN);
+        int len = this.exprParser.acceptInteger();
+        accept(Token.RPAREN);
+        accept(Token.OF);
+        typeName = typeName + "(" + len + ") OF ";
+        SQLDataType dataType = exprParser.parseDataType(false);
+        dataType.setName(typeName + dataType.getName());
+        return dataType;
     }
 
     /**
@@ -5298,63 +5458,60 @@ public class XuGuStatementParser extends SQLStatementParser {
     }
 
     /**
-     * parse declare statement
+     * xugu 类似 Oracle ，关键字 DECLARE 是定义 PL/SQL 声明部分的，而不是存储过程中定义变量的
      */
     public SQLStatement parseDeclare() {
-        char markChar = lexer.current();
-        int markBp = lexer.bp();
-
-        lexer.nextToken();
-
-        if (lexer.token() == Token.CONTINUE) {
-            lexer.reset(markBp, markChar, Token.DECLARE);
-            return this.parseDeclareHandler();
+        SQLBlockStatement block = new SQLBlockStatement();
+        block.setDbType(JdbcConstants.XUGU);
+        Lexer.SavePoint savePoint = lexer.mark();
+        if (lexer.token() == Token.DECLARE) {
+            lexer.nextToken();
         }
-
-        lexer.nextToken();
-        if (lexer.token() == Token.CURSOR) {
-            lexer.reset(markBp, markChar, Token.DECLARE);
-            return this.parseCursorDeclare();
-        } else if (lexer.identifierEquals("HANDLER")) {
-            //DECLARE异常处理程序 [add by zhujun 2016-04-16]
-            lexer.reset(markBp, markChar, Token.DECLARE);
-            return this.parseDeclareHandler();
-        } else if (lexer.token() == Token.CONDITION) {
-            //DECLARE异常 [add by zhujun 2016-04-17]
-            lexer.reset(markBp, markChar, Token.DECLARE);
-            return this.parseDeclareCondition();
-        } else {
-            lexer.reset(markBp, markChar, Token.DECLARE);
-        }
-
-        XuGuDeclareStatement stmt = new XuGuDeclareStatement();
-        accept(Token.DECLARE);
-        // lexer.nextToken();
-        for (; ; ) {
-            SQLDeclareItem item = new SQLDeclareItem();
-            item.setName(exprParser.name());
-
-            stmt.addVar(item);
-            if (lexer.token() == Token.COMMA) {
-                lexer.nextToken();
-                stmt.setAfterSemi(true);
-                continue;
-            } else if (lexer.token() != Token.EOF) {
-                // var type
-                item.setDataType(exprParser.parseDataType());
-
-                if (lexer.token() == Token.DEFAULT) {
-                    lexer.nextToken();
-                    SQLExpr defaultValue = this.exprParser.primary();
-                    item.setValue(defaultValue);
-                }
-
-                break;
-            } else {
-                throw new ParserException("TODO. " + lexer.info());
+        // 声明部分（可选）
+        if (lexer.token() == Token.IDENTIFIER || lexer.token() == Token.CURSOR) {
+            parserParameters(block.getParameters(), block);
+            for (SQLParameter param : block.getParameters()) {
+                param.setParent(block);
             }
         }
-        return stmt;
+
+        if (lexer.token() == Token.PROCEDURE) {
+            SQLCreateProcedureStatement stmt = this.parseCreateProcedure();
+            for (SQLParameter param : block.getParameters()) {
+                param.setParent(stmt);
+                stmt.getParameters().add(param);
+            }
+            return stmt;
+        }
+
+        if (lexer.token() == Token.FUNCTION) {
+            if (savePoint.token == Token.DECLARE) {
+                lexer.reset(savePoint);
+            }
+            return this.parseCreateFunction();
+        }
+
+
+        // 可执行部分
+        accept(Token.BEGIN);
+
+        parseStatementList(block.getStatementList(), -1, block);
+
+        accept(Token.END);
+
+        Token token = lexer.token();
+
+        if (token == Token.EOF) {
+            return block;
+        }
+
+        if (token != Token.SEMI) {
+            String endLabel = lexer.stringVal();
+            accept(Token.IDENTIFIER);
+            block.setEndLabel(endLabel);
+        }
+        accept(Token.SEMI);
+        return block;
     }
 
     /**

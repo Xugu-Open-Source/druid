@@ -3100,7 +3100,7 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
         if (!x.isEndOfCommit()) {
             this.indentCount--;
             println();
-            print0(ucase ? "END" : "end");
+            print0(ucase ? "END;" : "end;");
             if (labelName != null && !labelName.equals("")) {
                 print(' ');
                 print0(labelName);
