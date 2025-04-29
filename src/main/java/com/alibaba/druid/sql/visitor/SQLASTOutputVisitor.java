@@ -4771,7 +4771,7 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
             }
             SQLDataType dataType = x.getDataType();
 
-            if (JdbcConstants.ORACLE.equals(dbType)
+            if (JdbcConstants.ORACLE.equals(dbType) || JdbcConstants.XUGU.equals(dbType)
                     || dataType instanceof OracleFunctionDataType
                     || dataType instanceof OracleProcedureDataType) {
                 if (dataType instanceof OracleFunctionDataType) {
@@ -4787,9 +4787,14 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
                 }
 
                 String dataTypeName = dataType.getName();
-                boolean printType = (dataTypeName.startsWith("TABLE OF") && x.getDefaultValue() == null)
-                        || dataTypeName.equalsIgnoreCase("REF CURSOR")
-                        || dataTypeName.startsWith("VARRAY(");
+                boolean printType;
+                if (JdbcConstants.XUGU.equals(dbType)){
+                    printType = x.isXgPrintType();
+                }else {
+                    printType = (dataTypeName.startsWith("TABLE OF") && x.getDefaultValue() == null)
+                            || dataTypeName.equalsIgnoreCase("REF CURSOR")
+                            || dataTypeName.startsWith("VARRAY(");
+                }
                 if (printType) {
                     print0(ucase ? "TYPE " : "type ");
                 }
