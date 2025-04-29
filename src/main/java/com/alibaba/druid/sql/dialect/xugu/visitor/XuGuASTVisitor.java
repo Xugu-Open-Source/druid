@@ -543,6 +543,9 @@ public interface XuGuASTVisitor extends SQLASTVisitor {
     boolean visit(XuGuAlterSchemaStatement x);
     void endVisit(XuGuAlterSchemaStatement x);
 
+    boolean visit(XuGuCreateTypeStatement x);
+    void endVisit(XuGuCreateTypeStatement x);
+
     boolean visit(XuGuForStatement x);
     void endVisit(XuGuForStatement x);
 

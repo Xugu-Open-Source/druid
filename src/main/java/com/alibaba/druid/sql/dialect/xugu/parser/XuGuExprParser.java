@@ -28,10 +28,24 @@ import com.alibaba.druid.sql.ast.expr.SQLUnaryExpr;
 import com.alibaba.druid.sql.ast.expr.SQLUnaryOperator;
 import com.alibaba.druid.sql.ast.expr.SQLVariantRefExpr;
 import com.alibaba.druid.sql.ast.statement.SQLAssignItem;
+import com.alibaba.druid.sql.ast.statement.SQLCharacterDataType;
 import com.alibaba.druid.sql.ast.statement.SQLColumnDefinition;
 import com.alibaba.druid.sql.ast.statement.SQLForeignKeyImpl.*;
 import com.alibaba.druid.sql.ast.expr.SQLIntervalExpr;
 import com.alibaba.druid.sql.ast.expr.SQLIntervalUnit;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalDay;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalDayToHour;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalDayToMinute;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalDayToSecond;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalHour;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalHourToMinute;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalHourToSecond;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalMinute;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalMinuteToSecond;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalSecond;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalYear;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalYearToMonth;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuDataTypeIntervalMonth;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuMatchAgainstExpr.SearchModifier;
 import com.alibaba.druid.sql.dialect.xugu.ast.XuGuPrimaryKey;
 import com.alibaba.druid.sql.dialect.xugu.ast.XuGuUnique;
@@ -137,6 +151,319 @@ public class XuGuExprParser extends SQLExprParser {
     public XuGuExprParser(String sql, boolean skipComment, boolean keepComments){
         this(new XuGuLexer(sql, skipComment, keepComments));
         this.lexer.nextToken();
+    }
+
+    @Override
+    protected boolean isCharType(long hash) {
+        return hash == FnvHash.Constants.CHAR
+                || hash == FnvHash.Constants.NCHAR
+                || hash == FnvHash.Constants.VARCHAR
+                || hash == FnvHash.Constants.VARCHAR2
+                || hash == FnvHash.Constants.NVARCHAR
+                || hash == FnvHash.Constants.NVARCHAR2
+                || hash == FnvHash.Constants.CLOB
+                ;
+    }
+
+    @Override
+    public SQLDataType parseDataType(boolean restrict) {
+
+        if (lexer.token() == Token.CONSTRAINT || lexer.token() == Token.COMMA) {
+            return null;
+        }
+
+        if (lexer.token() == Token.DEFAULT || lexer.token() == Token.NOT || lexer.token() == Token.NULL) {
+            return null;
+        }
+
+        if (lexer.token() == Token.INTERVAL) {
+            lexer.nextToken();
+            if (lexer.identifierEquals("YEAR")) {
+                lexer.nextToken();
+                XuGuDataTypeIntervalYear interval = new XuGuDataTypeIntervalYear();
+                XuGuDataTypeIntervalYearToMonth intervalYearToMonth = new XuGuDataTypeIntervalYearToMonth();
+
+                if (lexer.token() == Token.LPAREN) {
+                    lexer.nextToken();
+                    interval.addArgument(this.expr());
+                    accept(Token.RPAREN);
+                }
+                if (lexer.token() != Token.TO) {
+                    return interval;
+                } else {
+                    accept(Token.TO);
+                    acceptIdentifier("MONTH");
+                    for (SQLExpr sqlExpr : interval.getArguments()) {
+                        intervalYearToMonth.addArgument(sqlExpr);
+                    }
+                    // intervalYearToMonth.addArgument(interval.get);
+                }
+                return intervalYearToMonth;
+            } else if (lexer.identifierEquals("MONTH")) {
+                lexer.nextToken();
+                XuGuDataTypeIntervalMonth interval = new XuGuDataTypeIntervalMonth();
+
+                if (lexer.token() == Token.LPAREN) {
+                    lexer.nextToken();
+                    interval.addArgument(this.expr());
+                    accept(Token.RPAREN);
+                }
+                return interval;
+            } else if (lexer.identifierEquals("DAY")) {
+                lexer.nextToken();
+                XuGuDataTypeIntervalDay interval = new XuGuDataTypeIntervalDay();
+                XuGuDataTypeIntervalDayToHour intervalDayToHour = new XuGuDataTypeIntervalDayToHour();
+                XuGuDataTypeIntervalDayToMinute intervalDayToMinute = new XuGuDataTypeIntervalDayToMinute();
+                XuGuDataTypeIntervalDayToSecond intervalDayToSecond = new XuGuDataTypeIntervalDayToSecond();
+                if (lexer.token() == Token.LPAREN) {
+                    lexer.nextToken();
+                    interval.addArgument(this.expr());
+                    accept(Token.RPAREN);
+                }
+                if (lexer.token() != Token.TO) {
+                    return interval;
+                }
+                accept(Token.TO);
+                if (lexer.identifierEquals("HOUR")) {
+                    lexer.nextToken();
+                    for (SQLExpr argument : interval.getArguments()) {
+                        intervalDayToHour.addArgument(argument);
+                    }
+                    return intervalDayToHour;
+                } else if (lexer.identifierEquals("MINUTE")) {
+                    lexer.nextToken();
+                    for (SQLExpr argument : interval.getArguments()) {
+                        intervalDayToMinute.addArgument(argument);
+                    }
+                    return intervalDayToMinute;
+                } else {
+                    acceptIdentifier("SECOND");
+                    if (lexer.token() == Token.LPAREN) {
+                        lexer.nextToken();
+                        for (SQLExpr argument : interval.getArguments()) {
+                            intervalDayToSecond.addArgument(argument);
+                        }
+                        // intervalDayToSecond.addArgument(this.expr());
+                        intervalDayToSecond.getFractionalSeconds().add(this.expr());
+                        accept(Token.RPAREN);
+                    }
+                    return intervalDayToSecond;
+                }
+            } else if (lexer.identifierEquals("HOUR")) {
+                lexer.nextToken();
+                XuGuDataTypeIntervalHour interval = new XuGuDataTypeIntervalHour();
+                XuGuDataTypeIntervalHourToMinute intervalHourToMinute = new XuGuDataTypeIntervalHourToMinute();
+                XuGuDataTypeIntervalHourToSecond intervalHourToSecond = new XuGuDataTypeIntervalHourToSecond();
+
+                if (lexer.token() == Token.LPAREN) {
+                    lexer.nextToken();
+                    interval.addArgument(this.expr());
+                    accept(Token.RPAREN);
+                }
+                if (lexer.token() != Token.TO) {
+                    return interval;
+                }
+                accept(Token.TO);
+                if (lexer.identifierEquals("MINUTE")) {
+                    lexer.nextToken();
+                    for (SQLExpr argument : interval.getArguments()) {
+                        intervalHourToMinute.addArgument(argument);
+                    }
+                    return intervalHourToMinute;
+                } else {
+                    acceptIdentifier("SECOND");
+                    if (lexer.token() == Token.LPAREN) {
+                        lexer.nextToken();
+                        for (SQLExpr argument : interval.getArguments()) {
+                            intervalHourToSecond.addArgument(argument);
+                        }
+                        // intervalHourToSecond.addArgument(this.expr());
+                        intervalHourToSecond.getFractionalSeconds().add(this.expr());
+                        accept(Token.RPAREN);
+                    }
+                    return intervalHourToSecond;
+                }
+
+            } else if (lexer.identifierEquals("MINUTE")) {
+                lexer.nextToken();
+                XuGuDataTypeIntervalMinute interval = new XuGuDataTypeIntervalMinute();
+                XuGuDataTypeIntervalMinuteToSecond intervalMinuteToSecond = new XuGuDataTypeIntervalMinuteToSecond();
+
+                if (lexer.token() == Token.LPAREN) {
+                    lexer.nextToken();
+                    interval.addArgument(this.expr());
+                    accept(Token.RPAREN);
+                }
+                if (lexer.token() != Token.TO) {
+                    return interval;
+                } else {
+                    accept(Token.TO);
+                    acceptIdentifier("SECOND");
+                    if (lexer.token() == Token.LPAREN) {
+                        lexer.nextToken();
+                        for (SQLExpr argument : interval.getArguments()) {
+                            intervalMinuteToSecond.addArgument(argument);
+                        }
+                        // intervalMinuteToSecond.addArgument(this.expr());
+                        intervalMinuteToSecond.getFractionalSeconds().add(this.expr());
+                        accept(Token.RPAREN);
+                    }
+                }
+                return intervalMinuteToSecond;
+            } else if (lexer.identifierEquals("SECOND")) {
+                lexer.nextToken();
+                XuGuDataTypeIntervalSecond interval = new XuGuDataTypeIntervalSecond();
+
+                if (lexer.token() == Token.LPAREN) {
+                    lexer.nextToken();
+                    interval.addArgument(this.expr());
+                    if (lexer.token() == Token.COMMA) {
+                        lexer.nextToken();
+                        interval.addArgument(this.expr());
+                    }
+                    accept(Token.RPAREN);
+                }
+                return interval;
+            }
+        }
+
+        String typeName;
+        if (lexer.token() == Token.EXCEPTION) {
+            typeName = "EXCEPTION";
+            lexer.nextToken();
+        } else if (lexer.identifierEquals(FnvHash.Constants.LONG)) {
+            lexer.nextToken();
+
+            if (lexer.identifierEquals(FnvHash.Constants.RAW)) {
+                lexer.nextToken();
+                typeName = "LONG RAW";
+            } else {
+                typeName = "LONG";
+            }
+        } else if (lexer.token() == Token.ROW) {
+            lexer.nextToken();
+            acceptIdentifier("TYPE");
+            accept(Token.OF);
+            typeName = "ROW TYPE OF " + name();
+        } else if (lexer.identifierEquals("ROWTYPE")) {
+            lexer.nextToken();
+            accept(Token.OF);
+            typeName = "ROWTYPE OF " + name();
+        } else if (lexer.identifierEquals("TYPE")) {
+            lexer.nextToken();
+            accept(Token.OF);
+            typeName = "TYPE OF " + name();
+        } else if (lexer.identifierEquals("REF")) {
+            lexer.nextToken();
+            accept(Token.CURSOR);
+            typeName = "REF CURSOR";
+        } else if (lexer.identifierEquals(FnvHash.Constants.RECORD)) {
+            lexer.nextToken();
+            SQLRecordDataType recordDataType = new SQLRecordDataType();
+            recordDataType.setName("RECORD");
+            accept(Token.LPAREN);
+            for (; ; ) {
+                SQLColumnDefinition column = parseColumn();
+                recordDataType.addColumn(column);
+                if (lexer.token() == Token.COMMA) {
+                    lexer.nextToken();
+                    continue;
+                }
+                break;
+            }
+            accept(Token.RPAREN);
+            return recordDataType;
+        } else {
+            SQLName typeExpr = name();
+            typeName = typeExpr.toString();
+        }
+
+        if ("TIMESTAMP".equalsIgnoreCase(typeName)) {
+            SQLDataTypeImpl timestamp = new SQLDataTypeImpl(typeName);
+            timestamp.setDbType(dbType);
+
+            if (lexer.token() == Token.LPAREN) {
+                lexer.nextToken();
+                timestamp.addArgument(this.expr());
+                accept(Token.RPAREN);
+            }
+
+            if (lexer.token() == Token.WITH) {
+                lexer.nextToken();
+
+                if (lexer.identifierEquals("LOCAL")) {
+                    lexer.nextToken();
+                    timestamp.setWithLocalTimeZone(true);
+                }
+
+                timestamp.setWithTimeZone(true);
+
+                acceptIdentifier("TIME");
+                acceptIdentifier("ZONE");
+            }
+
+            return timestamp;
+        }
+
+        if ("NUMBER".equalsIgnoreCase(typeName)) {
+            if (lexer.token() == Token.LPAREN) {
+                accept(Token.LPAREN);
+                int numLen = acceptInteger();
+                accept(Token.RPAREN);
+                typeName += "(" + numLen + ")";
+            }
+            SQLDataTypeImpl dataType = new SQLDataTypeImpl(typeName);
+            dataType.setDbType(dbType);
+            return dataType;
+        }
+
+        if (isCharType(typeName)) {
+            SQLCharacterDataType charType = new SQLCharacterDataType(typeName);
+
+            if (lexer.token() == Token.LPAREN) {
+                lexer.nextToken();
+
+                charType.addArgument(this.expr());
+
+                if (lexer.identifierEquals("CHAR")) {
+                    lexer.nextToken();
+                    charType.setCharType(SQLCharacterDataType.CHAR_TYPE_CHAR);
+                } else if (lexer.identifierEquals("BYTE")) {
+                    lexer.nextToken();
+                    charType.setCharType(SQLCharacterDataType.CHAR_TYPE_BYTE);
+                }
+
+                accept(Token.RPAREN);
+            } else if (lexer.token() == Token.COMMA) {
+                return parseCharTypeRest(charType);
+            } else if (restrict) {
+                accept(Token.LPAREN);
+            }
+
+            return parseCharTypeRest(charType);
+        }
+
+        if (lexer.token() == Token.PERCENT) {
+            lexer.nextToken();
+            if (lexer.identifierEquals("TYPE")) {
+                lexer.nextToken();
+                typeName += "%TYPE";
+            } else if (lexer.identifierEquals("ROWTYPE")) {
+                lexer.nextToken();
+                typeName += "%ROWTYPE";
+            } else if (lexer.token() == Token.ROW) {
+                lexer.nextToken();
+                acceptIdentifier("TYPE");
+                typeName += "%ROW TYPE";
+            } else {
+                throw new ParserException("syntax error : " + lexer.info());
+            }
+        }
+
+
+        SQLDataTypeImpl dataType = new SQLDataTypeImpl(typeName);
+        dataType.setDbType(dbType);
+        return parseDataTypeRest(dataType);
     }
 
     public SQLExpr primary() {

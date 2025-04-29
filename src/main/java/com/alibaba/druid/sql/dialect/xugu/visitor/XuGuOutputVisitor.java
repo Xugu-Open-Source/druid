@@ -61,6 +61,8 @@ import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuUserName;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.*;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuCreateTableStatement.TableSpaceOption;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuCreateUserStatement.UserSpecification;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuguFunctionDataType;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuguProdecureDataType;
 import com.alibaba.druid.sql.visitor.*;
 import com.alibaba.druid.util.JdbcConstants;
 
@@ -4523,6 +4525,123 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuAlterSchemaStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuCreateTypeStatement x) {
+
+        if (x.isOrReplace()) {
+            print0(ucase ? "CREATE OR REPLACE TYPE " : "create or replace type ");
+        } else {
+            print0(ucase ? "CREATE TYPE " : "create type ");
+        }
+
+        if (x.isBody()) {
+            print0(ucase ? "BODY " : "body ");
+        }
+
+        x.getName().accept(this);
+
+        SQLName under = x.getUnder();
+        if (under != null) {
+            print0(ucase ? " UNDER " : " under ");
+            under.accept(this);
+        }
+
+        SQLName authId = x.getAuthId();
+        if (authId != null) {
+            print0(ucase ? " AUTHID " : " authid ");
+            authId.accept(this);
+        }
+
+        if (x.isForce()) {
+            print0(ucase ? "FORCE " : "force ");
+        }
+
+        List<SQLParameter> parameters = x.getParameters();
+        SQLDataType tableOf = x.getTableOf();
+
+        if (x.isObject()) {
+            print0(" AS OBJECT");
+        }
+
+        if (parameters.size() > 0) {
+            if (x.isParen()) {
+                print(" (");
+            } else {
+                print0(ucase ? " IS" : " is");
+            }
+            indentCount++;
+            println();
+
+            for (int i = 0; i < parameters.size(); ++i) {
+                SQLParameter param = parameters.get(i);
+                param.accept(this);
+
+                SQLDataType dataType = param.getDataType();
+
+                if (i < parameters.size() - 1) {
+                    if (dataType instanceof XuguFunctionDataType
+                            && ((XuguFunctionDataType) dataType).getBlock() != null) {
+                        // skip
+                        println();
+                    } else if (dataType instanceof XuguProdecureDataType
+                            && ((XuguProdecureDataType) dataType).getBlock() != null) {
+                        // skip
+                        println();
+                    } else {
+                        println(", ");
+                    }
+                }
+            }
+
+            indentCount--;
+            println();
+
+            if (x.isParen()) {
+                print0(")");
+            } else {
+                print0("END");
+            }
+        } else if (tableOf != null) {
+            print0(ucase ? " AS TABLE OF " : " as table of ");
+            tableOf.accept(this);
+        } else if (x.getVarraySizeLimit() != null) {
+            print0(ucase ? " VARRAY (" : " varray (");
+            x.getVarraySizeLimit().accept(this);
+            print0(ucase ? ") OF " : ") of ");
+            x.getVarrayDataType().accept(this);
+        }
+
+        Boolean isFinal = x.getFinal();
+        if (isFinal != null) {
+            if (isFinal.booleanValue()) {
+                print0(ucase ? " FINAL" : " final");
+            } else {
+                print0(ucase ? " NOT FINAL" : " not final");
+            }
+        }
+
+        Boolean instantiable = x.getInstantiable();
+        if (instantiable != null) {
+            if (instantiable.booleanValue()) {
+                print0(ucase ? " INSTANTIABLE" : " instantiable");
+            } else {
+                print0(ucase ? " NOT INSTANTIABLE" : " not instantiable");
+            }
+        }
+
+        String wrappedSource = x.getWrappedSource();
+        if (wrappedSource != null) {
+            print0(ucase ? " WRAPPED" : " wrapped");
+            print0(wrappedSource);
+        }
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuCreateTypeStatement x) {
 
     }
 
