@@ -1522,4 +1522,14 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
     public void endVisit(XuGuReturningClause x) {
 
     }
+
+    @Override
+    public boolean visit(XuGuExitStatement x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuExitStatement x) {
+
+    }
 }

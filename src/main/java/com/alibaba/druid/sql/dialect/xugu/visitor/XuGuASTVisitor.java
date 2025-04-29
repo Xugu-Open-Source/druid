@@ -590,4 +590,7 @@ public interface XuGuASTVisitor extends SQLASTVisitor {
 
     boolean visit(XuGuReturningClause x);
     void endVisit(XuGuReturningClause x);
+
+    boolean visit(XuGuExitStatement x);
+    void endVisit(XuGuExitStatement x);
 }

@@ -782,6 +782,20 @@ public class XuGuStatementParser extends SQLStatementParser {
             return true;
         }
 
+        if (lexer.identifierEquals("EXIT")) {
+            lexer.nextToken();
+            XuGuExitStatement stmt = parseExit();
+            statementList.add(stmt);
+            return true;
+        }
+
+        if (lexer.identifierEquals("FORALL")){
+            XuGuForStatement stmt = parseFor();
+            statementList.add(stmt);
+            return true;
+        }
+
+
         if (lexer.token() == Token.SHOW) {
             SQLStatement stmt = parseShow();
             statementList.add(stmt);
@@ -5371,6 +5385,24 @@ public class XuGuStatementParser extends SQLStatementParser {
         accept(Token.SEMI);
         loopStmt.setAfterSemi(true);
         return loopStmt;
+    }
+
+    private XuGuExitStatement parseExit() {
+        XuGuExitStatement stmt = new XuGuExitStatement();
+
+        if (lexer.token() == Token.IDENTIFIER) {
+            String label = lexer.stringVal();
+            stmt.setLabel(label);
+            lexer.nextToken();
+        }
+
+        if (lexer.token() == Token.WHEN) {
+            lexer.nextToken();
+            stmt.setWhen(this.exprParser.expr());
+        }
+        accept(Token.SEMI);
+        stmt.setAfterSemi(true);
+        return stmt;
     }
 
     /**

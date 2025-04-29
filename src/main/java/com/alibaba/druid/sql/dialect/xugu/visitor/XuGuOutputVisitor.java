@@ -4848,4 +4848,25 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
     public void endVisit(XuGuReturningClause x) {
 
     }
+
+    @Override
+    public boolean visit(XuGuExitStatement x) {
+        print0(ucase ? "EXIT" : "exit");
+
+        if (x.getLabel() != null) {
+            print(' ');
+            print0(x.getLabel());
+        }
+
+        if (x.getWhen() != null) {
+            print0(ucase ? " WHEN " : " when ");
+            x.getWhen().accept(this);
+        }
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuExitStatement x) {
+
+    }
 }

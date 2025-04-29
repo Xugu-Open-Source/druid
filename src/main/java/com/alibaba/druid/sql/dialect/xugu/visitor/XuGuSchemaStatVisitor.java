@@ -1657,4 +1657,14 @@ public class XuGuSchemaStatVisitor extends SchemaStatVisitor implements XuGuASTV
     public void endVisit(XuGuReturningClause x) {
 
     }
+
+    @Override
+    public boolean visit(XuGuExitStatement x) {
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuExitStatement x) {
+
+    }
 }
