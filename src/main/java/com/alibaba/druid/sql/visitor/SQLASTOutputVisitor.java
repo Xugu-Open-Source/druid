@@ -1062,6 +1062,14 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
             print(')');
         }
 
+        if (x instanceof SQLDataTypeImpl && JdbcConstants.XUGU.equals(dbType)) {
+            SQLExpr indexBy = ((SQLDataTypeImpl) x).getIndexBy();
+            if (indexBy != null) {
+                print0(ucase ? " INDEX BY " : " index by ");
+                indexBy.accept(this);
+            }
+        }
+
         Boolean withTimeZone = x.getWithTimeZone();
         if (withTimeZone != null) {
             if (withTimeZone) {
