@@ -4756,6 +4756,17 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
         if (x.getDataType().getName().equalsIgnoreCase("CURSOR")) {
             print0(ucase ? "CURSOR " : "cursor ");
             x.getName().accept(this);
+            if (JdbcConstants.XUGU.equals(dbType) && !x.getCursorParameters().isEmpty()){
+                print0("(");
+                List<SQLParameter> parameters = x.getCursorParameters();
+                for (int i = 0; i < parameters.size(); i++) {
+                    parameters.get(i).accept(this);
+                    if (i != parameters.size() - 1) {
+                        print0(", ");
+                    }
+                }
+                print0(")");
+            }
             print0(ucase ? " IS" : " is");
             this.indentCount++;
             println();

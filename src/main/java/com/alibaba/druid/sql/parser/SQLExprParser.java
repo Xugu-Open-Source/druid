@@ -1286,6 +1286,10 @@ public class SQLExprParser extends SQLParser {
         } else if (lexer.token == Token.VARIANT) {
             identName = lexer.stringVal();
             lexer.nextToken();
+        } else if (lexer.token == Token.LITERAL_INT && JdbcConstants.XUGU.equals(dbType)) {
+            // PL/SQL 中解析游标参数为 NUMBER 类型
+            identName = lexer.numberString();
+            lexer.nextToken();
         } else {
             switch (lexer.token) {
                 case MODEL:
