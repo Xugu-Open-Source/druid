@@ -162,6 +162,7 @@ public class SQLMergeStatement extends SQLStatementImpl {
         private List<SQLExpr> columns = new ArrayList<SQLExpr>();
         private List<SQLExpr> values  = new ArrayList<SQLExpr>();
         private SQLExpr       where;
+        private boolean       xgDefault = false;
 
         @Override
         public void accept0(SQLASTVisitor visitor) {
@@ -197,5 +198,12 @@ public class SQLMergeStatement extends SQLStatementImpl {
             this.where = where;
         }
 
+        public boolean isXgDefault() {
+            return xgDefault;
+        }
+
+        public void setXgDefault(boolean xgDefault) {
+            this.xgDefault = xgDefault;
+        }
     }
 }

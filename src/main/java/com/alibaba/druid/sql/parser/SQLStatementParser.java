@@ -3010,7 +3010,7 @@ public class SQLStatementParser extends SQLParser {
                     if (lexer.token == Token.DELETE) {
                         lexer.nextToken();
                         accept(Token.WHERE);
-                        updateClause.setWhere(exprParser.expr());
+                        updateClause.setDeleteWhere(exprParser.expr());
                     }
 
                     stmt.setUpdateClause(updateClause);
@@ -3038,19 +3038,25 @@ public class SQLStatementParser extends SQLParser {
                 accept(Token.THEN);
                 accept(Token.INSERT);
 
-                if (lexer.token == Token.LPAREN) {
-                    accept(Token.LPAREN);
-                    exprParser.exprList(insertClause.getColumns(), insertClause);
-                    accept(Token.RPAREN);
-                }
-                accept(Token.VALUES);
-                accept(Token.LPAREN);
-                exprParser.exprList(insertClause.getValues(), insertClause);
-                accept(Token.RPAREN);
-
-                if (lexer.token == Token.WHERE) {
+                if (JdbcConstants.XUGU.equals(dbType) && lexer.token == Token.DEFAULT) {
                     lexer.nextToken();
-                    insertClause.setWhere(exprParser.expr());
+                    accept(Token.VALUES);
+                    insertClause.setXgDefault(true);
+                } else {
+                    if (lexer.token == Token.LPAREN) {
+                        accept(Token.LPAREN);
+                        exprParser.exprList(insertClause.getColumns(), insertClause);
+                        accept(Token.RPAREN);
+                    }
+                    accept(Token.VALUES);
+                    accept(Token.LPAREN);
+                    exprParser.exprList(insertClause.getValues(), insertClause);
+                    accept(Token.RPAREN);
+
+                    if (lexer.token == Token.WHERE) {
+                        lexer.nextToken();
+                        insertClause.setWhere(exprParser.expr());
+                    }
                 }
 
                 stmt.setInsertClause(insertClause);

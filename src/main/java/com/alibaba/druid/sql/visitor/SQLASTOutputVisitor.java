@@ -5416,6 +5416,11 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
     @Override
     public boolean visit(MergeInsertClause x) {
         print0(ucase ? "WHEN NOT MATCHED THEN INSERT" : "when not matched then insert");
+        if (JdbcConstants.XUGU.equals(dbType) && x.isXgDefault()) {
+            print0(ucase ? " DEFAULT VALUES" : " default values");
+            return false;
+        }
+
         if (x.getColumns().size() > 0) {
             print(" (");
             printAndAccept(x.getColumns(), ", ");
