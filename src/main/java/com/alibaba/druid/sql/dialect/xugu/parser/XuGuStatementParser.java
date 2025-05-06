@@ -189,6 +189,11 @@ public class XuGuStatementParser extends SQLStatementParser {
             } else if (lexer.token() == Token.FROM) {
                 lexer.nextToken();
                 deleteStatement.setTableSource(createSQLSelectParser().parseTableSource());
+                if (lexer.token() == Token.FROM) {
+                    lexer.nextToken();
+                    SQLTableSource tableSource = createSQLSelectParser().parseTableSource();
+                    deleteStatement.setFrom(tableSource);
+                }
             } else {
                 throw new ParserException("syntax error. " + lexer.info());
             }
@@ -205,6 +210,11 @@ public class XuGuStatementParser extends SQLStatementParser {
             lexer.nextToken();
             SQLExpr where = this.exprParser.expr();
             deleteStatement.setWhere(where);
+        }
+
+        if (lexer.token() == Token.RETURNING) {
+            XuGuReturningClause clause = this.parseReturningClause();
+            deleteStatement.setReturning(clause);
         }
 
         if (lexer.token() == (Token.ORDER)) {

@@ -879,6 +879,11 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
             x.getLimit().accept(this);
         }
 
+        if (x.getReturning() != null) {
+            println();
+            x.getReturning().accept(this);
+        }
+
         return false;
     }
 

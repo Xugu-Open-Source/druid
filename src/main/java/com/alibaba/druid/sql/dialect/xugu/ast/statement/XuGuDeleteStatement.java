@@ -23,6 +23,7 @@ import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.SQLOrderBy;
 import com.alibaba.druid.sql.ast.statement.SQLDeleteStatement;
 import com.alibaba.druid.sql.ast.SQLLimit;
+import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuReturningClause;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuOutputVisitor;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
@@ -39,6 +40,7 @@ public class XuGuDeleteStatement extends SQLDeleteStatement {
     // for petadata
     private boolean              forceAllPartitions = false;
     private SQLName              forcePartition;
+    private XuGuReturningClause  returning          = null;
 
     public XuGuDeleteStatement(){
         super(JdbcConstants.XUGU);
@@ -60,6 +62,9 @@ public class XuGuDeleteStatement extends SQLDeleteStatement {
         }
         if (limit != null) {
             x.setLimit(limit.clone());
+        }
+        if (returning != null) {
+            x.setReturning(returning.clone());
         }
 
         return x;
@@ -144,6 +149,7 @@ public class XuGuDeleteStatement extends SQLDeleteStatement {
             acceptChild(visitor, using);
             acceptChild(visitor, orderBy);
             acceptChild(visitor, limit);
+            acceptChild(visitor, returning);
         }
 
         visitor.endVisit(this);
@@ -166,5 +172,13 @@ public class XuGuDeleteStatement extends SQLDeleteStatement {
             x.setParent(this);
         }
         this.forcePartition = x;
+    }
+
+    public XuGuReturningClause getReturning() {
+        return returning;
+    }
+
+    public void setReturning(XuGuReturningClause returning) {
+        this.returning = returning;
     }
 }
