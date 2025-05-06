@@ -5412,7 +5412,7 @@ public class XuGuStatementParser extends SQLStatementParser {
     /**
      * parse while statement
      *
-     * @return MySqlWhileStatement
+     * @return SQLWhileStatement
      */
     public SQLWhileStatement parseWhile() {
         accept(Token.WHILE);
@@ -5420,13 +5420,16 @@ public class XuGuStatementParser extends SQLStatementParser {
 
         stmt.setCondition(this.exprParser.expr());
 
-        accept(Token.DO);
+        accept(Token.LOOP);
 
         this.parseStatementList(stmt.getStatements(), -1, stmt);
 
-        accept(Token.END);
-
-        accept(Token.WHILE);
+        if (lexer.token() == Token.ENDLOOP) {
+            lexer.nextToken();
+        } else {
+            accept(Token.END);
+            accept(Token.LOOP);
+        }
 
         accept(Token.SEMI);
 
