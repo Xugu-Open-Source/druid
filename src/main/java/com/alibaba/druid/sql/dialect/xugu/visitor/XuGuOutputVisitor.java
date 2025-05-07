@@ -1633,14 +1633,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public boolean visit(XuGuUpdateStatement x) {
-        List<SQLExpr> returning = x.getReturning();
-        if (returning != null && returning.size() > 0) {
-            print0(ucase ? "SELECT " : "select ");
-            printAndAccept(returning, ", ");
-            println();
-            print0(ucase ? "FROM " : "from ");
-        }
-
         print0(ucase ? "UPDATE " : "update ");
 
         if (x.isLowPriority()) {
@@ -1700,6 +1692,13 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
             visit(item);
         }
 
+        SQLTableSource from = x.getFrom();
+        if (from != null) {
+            println();
+            print0(ucase ? "FROM " : "from ");
+            printTableSource(from);
+        }
+
         SQLExpr where = x.getWhere();
         if (where != null) {
             println();
@@ -1707,6 +1706,17 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
             print0(ucase ? "WHERE " : "where ");
             printExpr(where);
             indentCount--;
+        }
+
+        if (!x.getReturning().isEmpty()) {
+            println();
+            print0(ucase ? "RETURNING " : "returning ");
+            printAndAccept(x.getReturning(), ", ");
+            if (x.isOptBulk()) {
+                print0(ucase ? " BULK COLLECT" : " bulk collect");
+            }
+            print0(ucase ? " INTO " : " into ");
+            printAndAccept(x.getReturningInto(), ", ");
         }
 
         SQLOrderBy orderBy = x.getOrderBy();

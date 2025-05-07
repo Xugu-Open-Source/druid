@@ -349,15 +349,61 @@ public class XuGuSelectParser extends SQLSelectParser {
             lexer.nextToken();
         }
 
+        if (lexer.token() == Token.FROM) {
+            lexer.nextToken();
+            SQLTableSource from = selectParser.parseTableSource();
+            update.setFrom(from);
+        }
+
         if (lexer.token() == (Token.WHERE)) {
             lexer.nextToken();
             update.setWhere(this.exprParser.expr());
         }
 
+        parseReturn(update);
+
         update.setOrderBy(this.exprParser.parseOrderBy());
         update.setLimit(this.exprParser.parseLimit());
         
         return update;
+    }
+
+    private void parseReturn(XuGuUpdateStatement update) {
+        if (lexer.identifierEquals("RETURN") || lexer.token() == Token.RETURNING) {
+            lexer.nextToken();
+
+            for (;;) {
+                SQLExpr item = this.exprParser.expr();
+                update.getReturning().add(item);
+
+                if (lexer.token() == Token.COMMA) {
+                    lexer.nextToken();
+                    continue;
+                }
+
+                break;
+            }
+
+            if (lexer.token() == Token.BULK) {
+                lexer.nextToken();
+                acceptIdentifier("COLLECT");
+                update.setOptBulk(true);
+            }
+
+            accept(Token.INTO);
+
+            for (;;) {
+                SQLExpr item = this.exprParser.expr();
+                update.getReturningInto().add(item);
+
+                if (lexer.token() == Token.COMMA) {
+                    lexer.nextToken();
+                    continue;
+                }
+
+                break;
+            }
+        }
     }
 
     private void parseBulk(XuGuSelectQueryBlock queryBlock) {

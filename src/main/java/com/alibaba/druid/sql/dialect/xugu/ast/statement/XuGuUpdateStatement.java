@@ -23,6 +23,9 @@ import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 import com.alibaba.druid.util.JdbcConstants;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class XuGuUpdateStatement extends SQLUpdateStatement implements XuGuStatement {
     private SQLLimit limit;
 
@@ -36,6 +39,8 @@ public class XuGuUpdateStatement extends SQLUpdateStatement implements XuGuState
     // for petadata
     private boolean             forceAllPartitions = false;
     private SQLName             forcePartition;
+    private List<SQLExpr>       returningInto      = new ArrayList<SQLExpr>();
+    private boolean             optBulk            = false;
 
     public XuGuUpdateStatement(){
         super(JdbcConstants.XUGU);
@@ -68,6 +73,7 @@ public class XuGuUpdateStatement extends SQLUpdateStatement implements XuGuState
             acceptChild(visitor, where);
             acceptChild(visitor, orderBy);
             acceptChild(visitor, limit);
+            acceptChild(visitor, returningInto);
         }
         visitor.endVisit(this);
     }
@@ -140,5 +146,21 @@ public class XuGuUpdateStatement extends SQLUpdateStatement implements XuGuState
             x.setParent(this);
         }
         this.forcePartition = x;
+    }
+
+    public List<SQLExpr> getReturningInto() {
+        return returningInto;
+    }
+
+    public void setReturningInto(List<SQLExpr> returningInto) {
+        this.returningInto = returningInto;
+    }
+
+    public boolean isOptBulk() {
+        return optBulk;
+    }
+
+    public void setOptBulk(boolean optBulk) {
+        this.optBulk = optBulk;
     }
 }
