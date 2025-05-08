@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alibaba.druid.bvt.sql.xugu.visitor;
+package com.alibaba.druid.bvt.sql.xugu.pl;
 
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLStatement;

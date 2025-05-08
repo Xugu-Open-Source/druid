@@ -24,7 +24,8 @@ public enum SQLParserFeature {
     OptimizedForForParameterizedSkipValue,
     KeepComments,
     SkipComments,
-    StrictForWall
+    StrictForWall,
+    KeepNameQuotes,
     ;
 
     private SQLParserFeature(){

@@ -1348,8 +1348,12 @@ public class XuGuExprParser extends SQLExprParser {
     }
 
     protected SQLExpr parseAliasExpr(String alias) {
-        String chars = alias.substring(1, alias.length() - 1);
-        return new SQLCharExpr(chars);
+        if (isEnabled(SQLParserFeature.KeepNameQuotes)) {
+            return new SQLIdentifierExpr(alias);
+        }
+        Lexer newLexer = new Lexer(alias);
+        newLexer.nextTokenValue();
+        return new SQLCharExpr(newLexer.stringVal());
     }
 
     public SQLExpr parseTop() {
