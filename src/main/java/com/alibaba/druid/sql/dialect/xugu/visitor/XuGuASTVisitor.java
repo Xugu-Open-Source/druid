@@ -52,6 +52,7 @@ import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuMatchAgainstExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuOrderingExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuOutFileExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuRangeExpr;
+import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuTypeCastExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuUserName;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.*;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
@@ -608,4 +609,7 @@ public interface XuGuASTVisitor extends SQLASTVisitor {
 
     boolean visit(XuGuMultiInsertStatement.InsertIntoClause x);
     void endVisit(XuGuMultiInsertStatement.InsertIntoClause x);
+
+    boolean visit(XuGuTypeCastExpr x);
+    void endVisit(XuGuTypeCastExpr x);
 }

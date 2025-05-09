@@ -55,6 +55,7 @@ import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuExtractExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuMatchAgainstExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuOrderingExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuRangeExpr;
+import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuTypeCastExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuUserName;
 import com.alibaba.druid.sql.parser.*;
 import com.alibaba.druid.util.FnvHash;
@@ -405,6 +406,18 @@ public class XuGuExprParser extends SQLExprParser {
             return timestamp;
         }
 
+        if ("TIME".equalsIgnoreCase(typeName) || "DATETIME" .equalsIgnoreCase(typeName)) {
+            SQLDataTypeImpl dataType = new SQLDataTypeImpl(typeName);
+            dataType.setDbType(dbType);
+            if (lexer.token() == Token.WITH) {
+                lexer.nextToken();
+                dataType.setWithTimeZone(true);
+                acceptIdentifier("TIME");
+                acceptIdentifier("ZONE");
+            }
+            return dataType;
+        }
+
         if ("NUMBER".equalsIgnoreCase(typeName)) {
             if (lexer.token() == Token.LPAREN) {
                 accept(Token.LPAREN);
@@ -629,6 +642,18 @@ public class XuGuExprParser extends SQLExprParser {
 
         if (lexer.token() == Token.ERROR) {
             throw new ParserException("syntax error. " + lexer.info());
+        }
+
+        if (lexer.token() == Token.COLONCOLON) {
+            lexer.nextToken();
+            SQLDataType dataType = this.parseDataType();
+
+            XuGuTypeCastExpr castExpr = new XuGuTypeCastExpr();
+
+            castExpr.setExpr(expr);
+            castExpr.setDataType(dataType);
+
+            return primaryRest(castExpr);
         }
 
         return super.primaryRest(expr);

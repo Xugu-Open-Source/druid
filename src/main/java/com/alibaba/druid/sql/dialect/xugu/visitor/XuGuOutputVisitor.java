@@ -57,6 +57,7 @@ import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuMatchAgainstExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuOrderingExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuOutFileExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuRangeExpr;
+import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuTypeCastExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuUserName;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.*;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuCreateTableStatement.TableSpaceOption;
@@ -64,6 +65,7 @@ import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuCreateUserStatement.
 import com.alibaba.druid.sql.dialect.xugu.ast.XuguFunctionDataType;
 import com.alibaba.druid.sql.dialect.xugu.ast.XuguProdecureDataType;
 import com.alibaba.druid.sql.visitor.*;
+import com.alibaba.druid.util.FnvHash;
 import com.alibaba.druid.util.JdbcConstants;
 
 import java.io.IOException;
@@ -5125,6 +5127,43 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuMultiInsertStatement.InsertIntoClause x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuTypeCastExpr x) {
+        SQLExpr expr = x.getExpr();
+        SQLDataType dataType = x.getDataType();
+
+        if (dataType.nameHashCode64() == FnvHash.Constants.VARBIT) {
+            dataType.accept(this);
+            print(' ');
+            printExpr(expr);
+            return false;
+        }
+
+        if (expr != null) {
+            if (expr instanceof SQLBinaryOpExpr) {
+                print('(');
+                expr.accept(this);
+                print(')');
+            } else if (expr instanceof XuGuTypeCastExpr && dataType.getArguments().isEmpty()) {
+                dataType.accept(this);
+                print('(');
+                visit((XuGuTypeCastExpr) expr);
+                print(')');
+                return false;
+            } else {
+                expr.accept(this);
+            }
+        }
+        print0("::");
+        dataType.accept(this);
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuTypeCastExpr x) {
 
     }
 }
