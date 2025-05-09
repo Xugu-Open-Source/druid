@@ -41,6 +41,7 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
     private boolean              lockInShareMode;
     private List<SQLCommentHint> hints;
     private SQLName              forcePartition; // for petadata
+    private boolean              forReadOnly;
 
     public XuGuSelectQueryBlock(){
         dbType = JdbcConstants.XUGU;
@@ -71,6 +72,14 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
                 x.procedureArgumentList.add(arg_cloned);
             }
         }
+        if (forUpdateOf != null) {
+            for (SQLExpr item : forUpdateOf) {
+                SQLExpr item1 = item.clone();
+                item1.setParent(x);
+                forUpdateOf.add(item1);
+            }
+        }
+        x.forReadOnly = forReadOnly;
         x.lockInShareMode = lockInShareMode;
 
         return x;
@@ -190,6 +199,14 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
         this.calcFoundRows = calcFoundRows;
     }
 
+    public boolean isForReadOnly() {
+        return forReadOnly;
+    }
+
+    public void setForReadOnly(boolean forReadOnly) {
+        this.forReadOnly = forReadOnly;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -210,6 +227,7 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
         result = prime * result + ((procedureName == null) ? 0 : procedureName.hashCode());
         result = prime * result + (smallResult ? 1231 : 1237);
         result = prime * result + (straightJoin ? 1231 : 1237);
+        result = prime * result + (forReadOnly ? 1231 : 1237);
         return result;
     }
 
@@ -249,6 +267,7 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
         } else if (! topExpr.equals(other.topExpr)) return false;
         if (smallResult != other.smallResult) return false;
         if (straightJoin != other.straightJoin) return false;
+        if (forReadOnly != other.forReadOnly) return false;
         return true;
     }
 
@@ -276,6 +295,7 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
             acceptChild(visitor, this.topExpr);
             acceptChild(visitor, this.procedureArgumentList);
             acceptChild(visitor, this.into);
+            acceptChild(visitor, this.forUpdateOf);
         }
 
         visitor.endVisit(this);

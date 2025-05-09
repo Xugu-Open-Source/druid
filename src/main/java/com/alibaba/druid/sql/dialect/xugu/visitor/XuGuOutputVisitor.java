@@ -273,12 +273,21 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
         if (x.isForUpdate()) {
             println();
             print0(ucase ? "FOR UPDATE" : "for update");
+
+            if (x.getForUpdateOfSize() > 0) {
+                print0(ucase ? " OF " : " of ");
+                printAndAccept(x.getForUpdateOf(), ", ");
+            }
+
             if (x.isNoWait()) {
                 print0(ucase ? " NOWAIT" : " nowait");
             } else if (x.getWaitTime() != null) {
                 print0(ucase ? " WAIT " : " wait ");
                 x.getWaitTime().accept(this);
             }
+        } else if (x.isForReadOnly()) {
+            println();
+            print0(ucase ? "FOR READ ONLY" : "for read only");
         }
 
         if (x.isLockInShareMode()) {

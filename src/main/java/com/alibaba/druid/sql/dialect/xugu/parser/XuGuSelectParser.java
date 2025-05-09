@@ -199,9 +199,20 @@ public class XuGuSelectParser extends SQLSelectParser {
 
         if (lexer.token() == Token.FOR) {
             lexer.nextToken();
-            accept(Token.UPDATE);
+            if (lexer.token() == Token.UPDATE) {
+                lexer.nextToken();
 
-            queryBlock.setForUpdate(true);
+                queryBlock.setForUpdate(true);
+
+                if (lexer.token() == Token.OF) {
+                    lexer.nextToken();
+                    this.exprParser.exprList(queryBlock.getForUpdateOf(), queryBlock);
+                }
+            } else {
+                acceptIdentifier("READ");
+                acceptIdentifier("ONLY");
+                queryBlock.setForReadOnly(true);
+            }
             
             if (lexer.identifierEquals(FnvHash.Constants.NO_WAIT) || lexer.identifierEquals(FnvHash.Constants.NOWAIT)) {
                 lexer.nextToken();
