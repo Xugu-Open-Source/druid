@@ -1583,6 +1583,27 @@ public class SQLExprParser extends SQLParser {
         } else if (lexer.token == Token.DESC) {
             lexer.nextToken();
             item.setType(SQLOrderingSpecification.DESC);
+        } else if (lexer.token == Token.USING) {
+            lexer.nextToken();
+            if (lexer.token == Token.LT) {
+                lexer.nextToken();
+                item.setType(SQLOrderingSpecification.USING_LT);
+            } else if (lexer.token == Token.GT) {
+                lexer.nextToken();
+                item.setType(SQLOrderingSpecification.USING_GT);
+            } else if (lexer.token == Token.EQ) {
+                lexer.nextToken();
+                item.setType(SQLOrderingSpecification.USING_EQ);
+            } else if (lexer.token == Token.LTEQ) {
+                lexer.nextToken();
+                item.setType(SQLOrderingSpecification.USING_LTEQ);
+            } else if (lexer.token == Token.GTEQ) {
+                lexer.nextToken();
+                item.setType(SQLOrderingSpecification.USING_GTEQ);
+            } else if (lexer.token == Token.LTGT || lexer.token == Token.BANGEQ) {
+                lexer.nextToken();
+                item.setType(SQLOrderingSpecification.USING_LTGT);
+            }
         }
 
         if (lexer.identifierEquals(FnvHash.Constants.NULLS)) {
