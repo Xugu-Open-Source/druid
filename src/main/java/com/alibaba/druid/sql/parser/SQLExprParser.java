@@ -3210,6 +3210,7 @@ public class SQLExprParser extends SQLParser {
             SQLLimit limit = new SQLLimit();
 
             SQLExpr temp;
+            boolean xgRowCountAll = false;
             if (lexer.token == Token.LITERAL_INT) {
                 temp = new SQLIntegerExpr(lexer.integerValue());
                 lexer.nextTokenComma();
@@ -3217,11 +3218,20 @@ public class SQLExprParser extends SQLParser {
                     temp = this.primaryRest(temp);
                     temp = this.exprRest(temp);
                 }
+            } else if (JdbcConstants.XUGU.equals(dbType) && lexer.token == Token.ALL) {
+                String ident = lexer.stringVal();
+                long hash_lower = lexer.hash_lower();
+                temp = new SQLIdentifierExpr(ident, hash_lower);
+                xgRowCountAll = true;
+                lexer.nextTokenComma();
             } else {
                 temp = this.expr();
             }
 
             if (lexer.token == (Token.COMMA)) {
+                if (xgRowCountAll) {
+                    throw new ParserException("syntax error. " + lexer.info());
+                }
                 limit.setOffset(temp);
                 lexer.nextTokenValue();
 
@@ -3233,6 +3243,12 @@ public class SQLExprParser extends SQLParser {
                         rowCount = this.primaryRest(rowCount);
                         rowCount = this.exprRest(rowCount);
                     }
+                } else if (JdbcConstants.XUGU.equals(dbType) && lexer.token == Token.ALL) {
+                    String ident = lexer.stringVal();
+                    long hash_lower = lexer.hash_lower();
+                    rowCount = new SQLIdentifierExpr(ident, hash_lower);
+                    xgRowCountAll = true;
+                    lexer.nextTokenComma();
                 } else {
                     rowCount = this.expr();
                 }
