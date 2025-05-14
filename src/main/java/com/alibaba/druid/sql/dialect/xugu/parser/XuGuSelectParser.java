@@ -17,23 +17,24 @@ package com.alibaba.druid.sql.dialect.xugu.parser;
 
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLName;
+import com.alibaba.druid.sql.ast.SQLObject;
 import com.alibaba.druid.sql.ast.SQLSetQuantifier;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.expr.SQLListExpr;
-import com.alibaba.druid.sql.ast.expr.SQLLiteralExpr;
 import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.xugu.ast.XuGuForceIndexHint;
 import com.alibaba.druid.sql.dialect.xugu.ast.XuGuIgnoreIndexHint;
 import com.alibaba.druid.sql.dialect.xugu.ast.XuGuIndexHint;
 import com.alibaba.druid.sql.dialect.xugu.ast.XuGuIndexHintImpl;
 import com.alibaba.druid.sql.dialect.xugu.ast.XuGuUseIndexHint;
-import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuOutFileExpr;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuSelectGroupByClause;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuSelectQueryBlock;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuUpdateStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuUpdateTableSource;
 import com.alibaba.druid.sql.parser.*;
 import com.alibaba.druid.util.FnvHash;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuSelectParser extends SQLSelectParser {
@@ -234,7 +235,114 @@ public class XuGuSelectParser extends SQLSelectParser {
 
         return queryRest(queryBlock);
     }
-    
+
+    private void parseGroupBy(XuGuSelectQueryBlock queryBlock) {
+        XuGuSelectGroupByClause groupBy = new XuGuSelectGroupByClause();
+        if (lexer.token() == (Token.GROUP)) {
+            lexer.nextTokenBy();
+            accept(Token.BY);
+
+            List<XuGuSelectGroupByClause.GroupItem> groupItems = parseGroupItems(groupBy);
+            groupBy.setGroupItems(groupItems);
+            queryBlock.setXgGroupBy(groupBy);
+        }
+
+        if (lexer.token() == (Token.HAVING)) {
+            lexer.nextToken();
+            groupBy.setHaving(this.exprParser.expr());
+            queryBlock.setXgGroupBy(groupBy);
+        }
+    }
+
+    private List<XuGuSelectGroupByClause.GroupItem> parseGroupItems(SQLObject parent) {
+        List<XuGuSelectGroupByClause.GroupItem> groupItemList = new ArrayList<XuGuSelectGroupByClause.GroupItem>();
+        for (; ; ) {
+            if (lexer.identifierEquals(FnvHash.Constants.ROLLUP)) {
+                lexer.nextToken();
+                XuGuSelectGroupByClause.XgCompositeGroupItem compositeGroupItem = new XuGuSelectGroupByClause.XgCompositeGroupItem();
+                compositeGroupItem.setParent(parent);
+                accept(Token.LPAREN);
+                List<XuGuSelectGroupByClause.GroupItem> groupItems = parseGroupItems(compositeGroupItem);
+                compositeGroupItem.getGroupItems().addAll(groupItems);
+                compositeGroupItem.setType(XuGuSelectGroupByClause.GroupType.ROLLUP);
+                accept(Token.RPAREN);
+                groupItemList.add(compositeGroupItem);
+            } else if (lexer.identifierEquals(FnvHash.Constants.CUBE)) {
+                lexer.nextToken();
+                XuGuSelectGroupByClause.XgCompositeGroupItem compositeGroupItem = new XuGuSelectGroupByClause.XgCompositeGroupItem();
+                compositeGroupItem.setParent(parent);
+                accept(Token.LPAREN);
+                List<XuGuSelectGroupByClause.GroupItem> groupItems = parseGroupItems(compositeGroupItem);
+                compositeGroupItem.getGroupItems().addAll(groupItems);
+                compositeGroupItem.setType(XuGuSelectGroupByClause.GroupType.CUBE);
+                accept(Token.RPAREN);
+                groupItemList.add(compositeGroupItem);
+            } else if (lexer.identifierEquals("GROUPING")) {
+                lexer.nextToken();
+                acceptIdentifier("SETS");
+                XuGuSelectGroupByClause.XgCompositeGroupItem compositeGroupItem = new XuGuSelectGroupByClause.XgCompositeGroupItem();
+                compositeGroupItem.setParent(parent);
+                accept(Token.LPAREN);
+                List<XuGuSelectGroupByClause.GroupItem> groupItems = parseGroupItems(compositeGroupItem);
+                compositeGroupItem.getGroupItems().addAll(groupItems);
+                compositeGroupItem.setType(XuGuSelectGroupByClause.GroupType.GROUPING_SETS);
+                accept(Token.RPAREN);
+                groupItemList.add(compositeGroupItem);
+            } else if (lexer.token() == Token.LPAREN) {
+                Lexer.SavePoint mark = lexer.mark();
+                lexer.nextToken();
+                if (lexer.token() == Token.RPAREN) {
+                    lexer.nextToken();
+
+                    XuGuSelectGroupByClause.XgEmptyGroupItem xgEmptyGroupItem = new XuGuSelectGroupByClause.XgEmptyGroupItem();
+                    xgEmptyGroupItem.setParent(parent);
+                    groupItemList.add(xgEmptyGroupItem);
+                } else {
+                    lexer.reset(mark);
+                    // 简单列可以用括号包裹
+                    XuGuSelectGroupByClause.XgExprGroupItem xgExprGroupItem = getXgExprGroupItem();
+                    groupItemList.add(xgExprGroupItem);
+                }
+            } else {
+                XuGuSelectGroupByClause.XgExprGroupItem xgExprGroupItem = getXgExprGroupItem();
+                groupItemList.add(xgExprGroupItem);
+            }
+
+            if ((lexer.token() != Token.COMMA)) {
+                break;
+            }
+            lexer.nextToken();
+        }
+        return groupItemList;
+    }
+
+    private XuGuSelectGroupByClause.XgExprGroupItem getXgExprGroupItem() {
+        XuGuSelectGroupByClause.XgExprGroupItem xgExprGroupItem = new XuGuSelectGroupByClause.XgExprGroupItem();
+        for (; ; ) {
+            SQLExpr item = parseGroupByItem();
+            item.setParent(xgExprGroupItem);
+            xgExprGroupItem.getItems().add(item);
+            // 将连续列表达式的分组项收集在一个xgExprGroupItem中
+            if ((lexer.token() != Token.COMMA)) {
+                break;
+            }
+            Lexer.SavePoint mark = lexer.mark();
+            lexer.nextToken();
+            if (lexer.identifierEquals(FnvHash.Constants.ROLLUP) || lexer.identifierEquals(FnvHash.Constants.CUBE)
+                    || lexer.identifierEquals("GROUPING")) {
+                lexer.reset(mark);
+                break;
+            } else if (lexer.token() == Token.LPAREN) {
+                lexer.nextToken();
+                if (lexer.token() == Token.RPAREN) {
+                    lexer.reset(mark);
+                    break;
+                }
+            }
+        }
+        return xgExprGroupItem;
+    }
+
     public SQLTableSource parseTableSource() {
         if (lexer.token() == Token.LPAREN) {
             lexer.nextToken();

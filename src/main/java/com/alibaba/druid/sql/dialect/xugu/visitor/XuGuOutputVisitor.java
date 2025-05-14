@@ -241,7 +241,7 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
         printHierarchical(x);
 
-        SQLSelectGroupByClause groupBy = x.getGroupBy();
+        XuGuSelectGroupByClause groupBy = x.getXgGroupBy();
         if (groupBy != null) {
             println();
             visit(groupBy);
@@ -5173,6 +5173,102 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuTypeCastExpr x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuSelectGroupByClause x) {
+        int itemSize = x.getGroupItems().size();
+        if (itemSize > 0) {
+            print0(ucase ? "GROUP BY " : "group by ");
+            this.indentCount++;
+            for (int i = 0; i < itemSize; ++i) {
+                if (i != 0) {
+                    if (groupItemSingleLine) {
+                        println(", ");
+                    } else {
+                        print(", ");
+                    }
+                }
+                x.getGroupItems().get(i).accept(this);
+            }
+            this.indentCount--;
+        }
+        if (x.getHaving() != null) {
+            println();
+            print0(ucase ? "HAVING " : "having ");
+            x.getHaving().accept(this);
+        }
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuSelectGroupByClause x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuSelectGroupByClause.XgCompositeGroupItem x) {
+        switch (x.getType()) {
+            case ROLLUP:
+                print0(ucase ? "ROLLUP (" : "rollup (");
+                break;
+            case CUBE:
+                print0(ucase ? "CUBE (" : "cube (");
+                break;
+            case GROUPING_SETS:
+                print0(ucase ? "GROUPING SETS (" : "grouping sets (");
+                break;
+        }
+        int itemSize = x.getGroupItems().size();
+        for (int i = 0; i < itemSize; ++i) {
+            if (i != 0) {
+                if (groupItemSingleLine) {
+                    println(", ");
+                } else {
+                    print(", ");
+                }
+            }
+            x.getGroupItems().get(i).accept(this);
+        }
+        print(')');
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuSelectGroupByClause.XgCompositeGroupItem x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuSelectGroupByClause.XgExprGroupItem x) {
+        int itemSize = x.getItems().size();
+        for (int i = 0; i < itemSize; ++i) {
+            if (i != 0) {
+                if (groupItemSingleLine) {
+                    println(", ");
+                } else {
+                    print(", ");
+                }
+            }
+            x.getItems().get(i).accept(this);
+        }
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuSelectGroupByClause.XgExprGroupItem x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuSelectGroupByClause.XgEmptyGroupItem x) {
+        print("()");
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuSelectGroupByClause.XgEmptyGroupItem x) {
 
     }
 }

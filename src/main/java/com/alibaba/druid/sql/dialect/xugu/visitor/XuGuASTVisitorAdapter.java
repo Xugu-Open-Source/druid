@@ -1593,4 +1593,44 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
     public void endVisit(XuGuTypeCastExpr x) {
 
     }
+
+    @Override
+    public boolean visit(XuGuSelectGroupByClause x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuSelectGroupByClause x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuSelectGroupByClause.XgCompositeGroupItem x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuSelectGroupByClause.XgCompositeGroupItem x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuSelectGroupByClause.XgExprGroupItem x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuSelectGroupByClause.XgExprGroupItem x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuSelectGroupByClause.XgEmptyGroupItem x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuSelectGroupByClause.XgEmptyGroupItem x) {
+
+    }
 }

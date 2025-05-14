@@ -612,4 +612,16 @@ public interface XuGuASTVisitor extends SQLASTVisitor {
 
     boolean visit(XuGuTypeCastExpr x);
     void endVisit(XuGuTypeCastExpr x);
+
+    boolean visit(XuGuSelectGroupByClause x);
+    void endVisit(XuGuSelectGroupByClause x);
+
+    boolean visit(XuGuSelectGroupByClause.XgCompositeGroupItem x);
+    void endVisit(XuGuSelectGroupByClause.XgCompositeGroupItem x);
+
+    boolean visit(XuGuSelectGroupByClause.XgExprGroupItem x);
+    void endVisit(XuGuSelectGroupByClause.XgExprGroupItem x);
+
+    boolean visit(XuGuSelectGroupByClause.XgEmptyGroupItem x);
+    void endVisit(XuGuSelectGroupByClause.XgEmptyGroupItem x);
 }
