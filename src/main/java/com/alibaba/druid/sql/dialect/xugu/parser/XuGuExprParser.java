@@ -512,6 +512,11 @@ public class XuGuExprParser extends SQLExprParser {
                     SQLUnaryExpr binaryExpr = new SQLUnaryExpr(SQLUnaryOperator.BINARY, expr());
                     return primaryRest(binaryExpr);
                 }
+            case PRIOR:
+                lexer.nextToken();
+                SQLExpr sqlExpr = expr();
+                sqlExpr = new SQLUnaryExpr(SQLUnaryOperator.Prior, sqlExpr);
+                return primaryRest(sqlExpr);
             default:
                 return super.primary();
         }
