@@ -253,12 +253,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
             visit(orderBy);
         }
 
-        SQLLimit limit = x.getLimit();
-        if (limit != null) {
-            println();
-            visit(limit);
-        }
-
         SQLName procedureName = x.getProcedureName();
         if (procedureName != null) {
             print0(ucase ? " PROCEDURE " : " procedure ");
@@ -293,6 +287,12 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
         if (x.isLockInShareMode()) {
             println();
             print0(ucase ? "LOCK IN SHARE MODE" : "lock in share mode");
+        }
+
+        SQLLimit limit = x.getLimit();
+        if (limit != null) {
+            println();
+            visit(limit);
         }
 
         if (bracket) {

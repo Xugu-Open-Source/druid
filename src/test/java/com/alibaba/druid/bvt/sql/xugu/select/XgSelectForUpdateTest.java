@@ -35,6 +35,18 @@ public class XgSelectForUpdateTest extends TestCase {
         System.out.println(SQLUtils.toXuGuString(stmt));
     }
 
+    public void testForUpdateLimit() {
+        String sql = "SELECT * FROM tb_top ORDER BY id FOR UPDATE LIMIT 1, 1;";
+        XuGuStatementParser parser = new XuGuStatementParser(sql);
+        List<SQLStatement> sqlStatements = parser.parseStatementList();
+        SQLStatement stmt = sqlStatements.get(0);
+        XuGuSchemaStatVisitor visitor = new XuGuSchemaStatVisitor();
+        stmt.accept(visitor);
+        String xuGuString = SQLUtils.toXuGuString(stmt);
+        System.out.println(xuGuString);
+        assertEquals(sql.replaceAll("\\s+", " ").trim(), xuGuString.replaceAll("\\s+", " ").trim());
+    }
+
     public void testForUpdateNameSpace() {
         String sql = "SELECT id, name\n" +
                 "FROM tb_top\n" +

@@ -189,9 +189,6 @@ public class XuGuSelectParser extends SQLSelectParser {
 
         queryBlock.setOrderBy(this.exprParser.parseOrderBy());
 
-        if (lexer.token() == Token.LIMIT) {
-            queryBlock.setLimit(this.exprParser.parseLimit());
-        }
 
         if (lexer.token() == Token.PROCEDURE) {
             lexer.nextToken();
@@ -231,6 +228,9 @@ public class XuGuSelectParser extends SQLSelectParser {
             acceptIdentifier("SHARE");
             acceptIdentifier("MODE");
             queryBlock.setLockInShareMode(true);
+        }
+        if (lexer.token() == Token.LIMIT) {
+            queryBlock.setLimit(this.exprParser.parseLimit());
         }
 
         return queryRest(queryBlock);
