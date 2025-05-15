@@ -294,6 +294,12 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
             println();
             visit(limit);
         }
+        SQLExpr parallelConst = x.getParallelConst();
+        if (parallelConst != null) {
+            println();
+            print0(ucase ? "PARALLEL " : "parallel ");
+            parallelConst.accept(this);
+        }
 
         if (bracket) {
             print(')');

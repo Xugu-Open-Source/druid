@@ -43,6 +43,7 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
     private SQLName              forcePartition; // for petadata
     private boolean              forReadOnly;
     private XuGuSelectGroupByClause xgGroupBy;
+    private SQLExpr              parallelConst;
 
     public XuGuSelectQueryBlock(){
         dbType = JdbcConstants.XUGU;
@@ -85,6 +86,7 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
         if (xgGroupBy != null) {
             x.xgGroupBy = xgGroupBy.clone();
         }
+        x.parallelConst = parallelConst;
         return x;
     }
 
@@ -221,6 +223,14 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
         this.xgGroupBy = xgGroupBy;
     }
 
+    public SQLExpr getParallelConst() {
+        return parallelConst;
+    }
+
+    public void setParallelConst(SQLExpr parallelConst) {
+        this.parallelConst = parallelConst;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -243,6 +253,7 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
         result = prime * result + (straightJoin ? 1231 : 1237);
         result = prime * result + (forReadOnly ? 1231 : 1237);
         result = prime * result + ((xgGroupBy == null) ? 0 : xgGroupBy.hashCode());
+        result = prime * result + ((parallelConst == null) ? 1231 : 1237);
         return result;
     }
 
@@ -286,6 +297,9 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
         if (xgGroupBy == null) {
             if (other.xgGroupBy != null) return false;
         }else if (!xgGroupBy.equals(other.xgGroupBy)) return false;
+        if (parallelConst == null) {
+            if (other.parallelConst != null) return false;
+        } else if (!parallelConst.equals(other.parallelConst)) return false;
         return true;
     }
 
@@ -315,6 +329,7 @@ public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObj
             acceptChild(visitor, this.into);
             acceptChild(visitor, this.forUpdateOf);
             acceptChild(visitor, this.xgGroupBy);
+            acceptChild(visitor, this.parallelConst);
         }
 
         visitor.endVisit(this);

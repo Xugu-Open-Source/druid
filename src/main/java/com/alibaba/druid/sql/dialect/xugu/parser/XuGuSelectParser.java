@@ -232,6 +232,10 @@ public class XuGuSelectParser extends SQLSelectParser {
         if (lexer.token() == Token.LIMIT) {
             queryBlock.setLimit(this.exprParser.parseLimit());
         }
+        if (lexer.identifierEquals("PARALLEL")) {
+            lexer.nextToken();
+            queryBlock.setParallelConst(this.expr());
+        }
 
         return queryRest(queryBlock);
     }
