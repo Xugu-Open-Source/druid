@@ -611,7 +611,8 @@ public class SQLSelectParser extends SQLParser {
 
         SQLJoinTableSource.JoinType joinType = null;
 
-        boolean natural = lexer.identifierEquals(FnvHash.Constants.NATURAL) && JdbcConstants.MYSQL.equals(dbType);
+        boolean natural = lexer.identifierEquals(FnvHash.Constants.NATURAL) &&
+                (JdbcConstants.MYSQL.equals(dbType) || JdbcConstants.XUGU.equals(dbType));
         if (natural) {
             lexer.nextToken();
         }
