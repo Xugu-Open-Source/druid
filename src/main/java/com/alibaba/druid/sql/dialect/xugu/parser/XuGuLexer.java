@@ -410,11 +410,6 @@ public class XuGuLexer extends Lexer {
     }
 
 
-
-    protected final void scanString() {
-        scanString2();
-    }
-
     public void skipFirstHintsOrMultiCommentAndNextToken() {
         int starIndex = pos + 2;
 

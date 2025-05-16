@@ -645,58 +645,13 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
     }
 
     public boolean visit(SQLCharExpr x) {
-        if (this.appender == null) {
-            return false;
+        if (x.getText() != null && x.getText().length() == 0) {
+            print0(ucase ? "NULL" : "null");
+        } else {
+            super.visit(x);
         }
 
-        try {
-            if (this.parameterized) {
-                this.appender.append('?');
-                incrementReplaceCunt();
-                if (this.parameters != null) {
-                    ExportParameterVisitorUtils.exportParameter(this.parameters, x);
-                }
-                return false;
-            }
-
-            this.appender.append('\'');
-
-            String text = x.getText();
-
-            boolean hasSpecial = false;
-            for (int i = 0; i < text.length(); ++i) {
-                char ch = text.charAt(i);
-                if (ch == '\'' || ch == '\\' || ch == '\0') {
-                    hasSpecial = true;
-                    break;
-                }
-            }
-
-            if (hasSpecial) {
-                for (int i = 0; i < text.length(); ++i) {
-                    char ch = text.charAt(i);
-                    if (ch == '\'') {
-                        appender.append('\'');
-                        appender.append('\'');
-                    } else if (ch == '\\') {
-                        appender.append('\\');
-                        appender.append('\\');
-                    } else if (ch == '\0') {
-                        appender.append('\\');
-                        appender.append('0');
-                    } else {
-                        appender.append(ch);
-                    }
-                }
-            } else {
-                appender.append(text);
-            }
-
-            appender.append('\'');
         return false;
-        } catch (IOException e) {
-            throw new RuntimeException("println error", e);
-        }
     }
 
     public boolean visit(SQLVariantRefExpr x) {
