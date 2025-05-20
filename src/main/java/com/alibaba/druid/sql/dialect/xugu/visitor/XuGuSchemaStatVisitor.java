@@ -1768,4 +1768,14 @@ public class XuGuSchemaStatVisitor extends SchemaStatVisitor implements XuGuASTV
     public void endVisit(XuGuSelectGroupByClause.XgEmptyGroupItem x) {
 
     }
+
+    @Override
+    public boolean visit(XuGuCreatePackageStatement x) {
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuCreatePackageStatement x) {
+
+    }
 }

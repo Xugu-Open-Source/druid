@@ -18,6 +18,7 @@ package com.alibaba.druid.sql.ast.statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.SQLParameter;
 import com.alibaba.druid.sql.ast.SQLStatement;
@@ -39,6 +40,13 @@ public class SQLCreateProcedureStatement extends SQLStatementImpl implements SQL
 
     private SQLName            authid;
 
+    // for xugu
+    private boolean            force;
+    private boolean            exists;
+    private SQLName            comment;
+    private SQLName            languageWithC;
+    private SQLName            languageWithPl;
+
     // for mysql
     private boolean            deterministic;
     private boolean            containsSql;
@@ -55,6 +63,9 @@ public class SQLCreateProcedureStatement extends SQLStatementImpl implements SQL
             acceptChild(visitor, name);
             acceptChild(visitor, parameters);
             acceptChild(visitor, block);
+            acceptChild(visitor, comment);
+            acceptChild(visitor, languageWithC);
+            acceptChild(visitor, languageWithPl);
         }
         visitor.endVisit(this);
     }
@@ -95,6 +106,49 @@ public class SQLCreateProcedureStatement extends SQLStatementImpl implements SQL
             authid.setParent(this);
         }
         this.authid = authid;
+    }
+
+    public boolean isForce() {
+        return force;
+    }
+
+    public void setForce(boolean force) {
+        this.force = force;
+    }
+
+    public boolean isExists() {
+        return exists;
+    }
+
+    public void setExists(boolean exists) {
+        this.exists = exists;
+    }
+
+    public SQLExpr getComment() {
+        return comment;
+    }
+
+    public void setComment(SQLName comment) {
+        if (comment != null) {
+            comment.setParent(this);
+        }
+        this.comment = comment;
+    }
+
+    public SQLName getLanguageWithC() {
+        return languageWithC;
+    }
+
+    public void setLanguageWithC(SQLName languageWithC) {
+        this.languageWithC = languageWithC;
+    }
+
+    public SQLName getLanguageWithPl() {
+        return languageWithPl;
+    }
+
+    public void setLanguageWithPl(SQLName languageWithPl) {
+        this.languageWithPl = languageWithPl;
     }
 
     public boolean isOrReplace() {

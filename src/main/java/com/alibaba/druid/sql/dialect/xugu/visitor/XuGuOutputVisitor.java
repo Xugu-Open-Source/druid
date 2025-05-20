@@ -3093,7 +3093,13 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
         if (!x.isEndOfCommit()) {
             this.indentCount--;
             println();
-            print0(ucase ? "END;" : "end;");
+            if (parent instanceof SQLCreateProcedureStatement && x.getEndLabel() != null) {
+                print0(ucase ? "END " : "end ");
+                print0(x.getEndLabel());
+                print0(";");
+            } else {
+                print0(ucase ? "END;" : "end;");
+            }
             if (labelName != null && !labelName.equals("")) {
                 print(' ');
                 print0(labelName);
@@ -3514,11 +3520,23 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
      */
     @Override
     public boolean visit(SQLCreateProcedureStatement x) {
-        if (x.isOrReplace()) {
-            print0(ucase ? "CREATE OR REPLACE PROCEDURE " : "create or replace procedure ");
+        boolean create = x.isCreate();
+        if (!create) {
+            print0(ucase ? "PROCEDURE " : "procedure ");
+        } else if (x.isOrReplace()) {
+            print0(ucase ? "CREATE OR REPLACE " : "create or replace ");
+            if (x.isForce()) {
+                print0(ucase ? "FORCE " : "force ");
+            }
+            print0(ucase ? "PROCEDURE " : "procedure ");
         } else {
             print0(ucase ? "CREATE PROCEDURE " : "create procedure ");
         }
+
+        if (x.isExists()) {
+            print0(ucase ? "IF NOT EXISTS " : "if not exists ");
+        }
+
         x.getName().accept(this);
 
         int paramSize = x.getParameters().size();
@@ -3542,35 +3560,70 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
         }
         print(')');
 
-        if (x.isDeterministic()) {
-            println();
-            print(ucase ? "DETERMINISTIC" : "deterministic");
-        }
-
-        if (x.isContainsSql()) {
-            println();
-            print0(ucase ? "CONTAINS SQL" : "contains sql");
-        }
-
-        if (x.isNoSql()) {
-            println();
-            print(ucase ? "NO SQL" : "no sql");
-        }
-
-        if (x.isModifiesSqlData()) {
-            println();
-            print(ucase ? "MODIFIES SQL DATA" : "modifies sql data");
-        }
-
         SQLName authid = x.getAuthid();
         if (authid != null) {
-            println();
-            print(ucase ? "SQL SECURITY " : "sql security ");
+            print(ucase ? " AUTHID " : " authid ");
             authid.accept(this);
         }
 
-        println();
-        x.getBlock().accept(this);
+        if (x.getComment() != null) {
+            print(ucase ? " COMMENT " : " comment ");
+            x.getComment().accept(this);
+        }
+
+        SQLStatement block = x.getBlock();
+        String wrappedSource = x.getWrappedSource();
+        if (wrappedSource != null) {
+            print0(ucase ? " WRAPPED " : " wrapped ");
+            print0(wrappedSource);
+        } else {
+            if (block != null && !create) {
+                println();
+                print("IS");
+                println();
+            } else {
+                println();
+                if (block instanceof SQLBlockStatement) {
+                    SQLBlockStatement blockStatement = (SQLBlockStatement) block;
+                    if (!blockStatement.getParameters().isEmpty() || authid != null) {
+                        println(ucase ? "AS" : "as");
+                    } else {
+                        println(ucase ? "IS" : "is");
+                    }
+                }
+            }
+
+            String javaCallSpec = x.getJavaCallSpec();
+            SQLName languageWithC = x.getLanguageWithC();
+            SQLName languageWithPl = x.getLanguageWithPl();
+            if (languageWithC != null) {
+                print0(ucase ? "AS LANGUAGE C NAME " : "as language c name ");
+                languageWithC.accept(this);
+                return false;
+            } else if (languageWithPl != null) {
+                print0(ucase ? "AS LANGUAGE PLSQL NAME " : "as language plsql name ");
+                languageWithPl.accept(this);
+                return false;
+            } else if (javaCallSpec != null) {
+                print0(ucase ? "LANGUAGE JAVA NAME '" : "language java name '");
+                print0(javaCallSpec);
+                print('\'');
+                return false;
+            }
+        }
+
+        boolean afterSemi = false;
+        if (block != null) {
+            block.accept(this);
+            if (block instanceof SQLBlockStatement
+                    && !((SQLBlockStatement) block).getStatementList().isEmpty()) {
+                afterSemi = ((SQLBlockStatement) block).getStatementList().get(0).isAfterSemi();
+            }
+        }
+
+        if ((!afterSemi) && x.getParent() instanceof XuGuCreatePackageStatement) {
+            print(';');
+        }
         return false;
     }
 
@@ -5230,6 +5283,51 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuSelectGroupByClause.XgEmptyGroupItem x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuCreatePackageStatement x) {
+        if (x.isOrReplace()) {
+            print0(ucase ? "CREATE OR REPLACE PACKAGE " : "create or replace procedure ");
+        } else {
+            print0(ucase ? "CREATE PACKAGE " : "create procedure ");
+        }
+
+        if (x.isBody()) {
+            print0(ucase ? "BODY " : "body ");
+        }
+
+        x.getName().accept(this);
+
+        if (x.isBody()) {
+            println();
+            print0(ucase ? "BEGIN" : "begin");
+        }
+
+        this.indentCount++;
+
+        List<SQLStatement> statements = x.getStatements();
+        for (int i = 0, size = statements.size(); i < size; ++i) {
+            println();
+            SQLStatement stmt = statements.get(i);
+            stmt.accept(this);
+        }
+
+        this.indentCount--;
+
+        if (x.isBody() || statements.size() > 0) {
+            println();
+            print0(ucase ? "END " : "end ");
+            x.getName().accept(this);
+            print(';');
+        }
+
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuCreatePackageStatement x) {
 
     }
 }

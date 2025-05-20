@@ -243,6 +243,9 @@ public class XuGuStatementParser extends SQLStatementParser {
             lexer.nextToken();
             accept(Token.REPLACE);
             replace = true;
+            if (lexer.identifierEquals("FORCE")) {
+                lexer.nextToken();
+            }
         }
 
         List<SQLCommentHint> hints = this.exprParser.parseHints();
@@ -307,7 +310,9 @@ public class XuGuStatementParser extends SQLStatementParser {
             if (replace) {
                 lexer.reset(markBp, markChar, Token.CREATE);
             }
-            return parseCreateProcedure();
+            SQLCreateProcedureStatement stmt = parseCreateProcedure();
+            stmt.setCreate(true);
+            return stmt;
         }
 
         if (lexer.identifierEquals(FnvHash.Constants.DEFINER)) {
@@ -1156,6 +1161,61 @@ public class XuGuStatementParser extends SQLStatementParser {
             return block;
         }
         accept(Token.END);
+
+        return block;
+    }
+
+    public SQLStatement parsePlBlock() {
+        SQLBlockStatement block = new SQLBlockStatement();
+        block.setDbType(JdbcConstants.XUGU);
+
+        Lexer.SavePoint savePoint = lexer.mark();
+
+        if (lexer.token() == Token.DECLARE) {
+            lexer.nextToken();
+        }
+
+        if (lexer.token() == Token.IDENTIFIER || lexer.token() == Token.CURSOR) {
+            parserParameters(block.getParameters(), block);
+            for (SQLParameter param : block.getParameters()) {
+                param.setParent(block);
+            }
+        }
+
+        if (lexer.token() == Token.PROCEDURE) {
+            SQLCreateProcedureStatement stmt = this.parseCreateProcedure();
+            for (SQLParameter param : block.getParameters()) {
+                param.setParent(stmt);
+                stmt.getParameters().add(param);
+            }
+            return stmt;
+        }
+
+        if (lexer.token() == Token.FUNCTION) {
+            if (savePoint.token == Token.DECLARE) {
+                lexer.reset(savePoint);
+            }
+            return this.parseCreateFunction();
+        }
+
+        accept(Token.BEGIN);
+
+        parseStatementList(block.getStatementList(), -1, block);
+
+        accept(Token.END);
+
+        Token token = lexer.token();
+
+        if (token == Token.EOF) {
+            return block;
+        }
+
+        if (token != Token.SEMI) {
+            String endLabel = lexer.stringVal();
+            accept(Token.IDENTIFIER);
+            block.setEndLabel(endLabel);
+        }
+        accept(Token.SEMI);
 
         return block;
     }
@@ -4825,70 +4885,121 @@ public class XuGuStatementParser extends SQLStatementParser {
      * parse create procedure statement
      */
     public SQLCreateProcedureStatement parseCreateProcedure() {
-        /**
-         * CREATE OR REPALCE PROCEDURE SP_NAME(parameter_list) BEGIN block_statement END
-         */
         SQLCreateProcedureStatement stmt = new SQLCreateProcedureStatement();
         stmt.setDbType(dbType);
 
         if (lexer.token() == Token.CREATE) {
             lexer.nextToken();
-
             if (lexer.token() == Token.OR) {
                 lexer.nextToken();
                 accept(Token.REPLACE);
                 stmt.setOrReplace(true);
+                if (lexer.identifierEquals("FORCE")) {
+                    lexer.nextToken();
+                    stmt.setForce(true);
+                }
             }
-        }
-
-        if (lexer.identifierEquals(FnvHash.Constants.DEFINER)) {
-            lexer.nextToken();
-            accept(Token.EQ);
-            SQLName definer = this.getExprParser().userName();
-            stmt.setDefiner(definer);
+        } else {
+            stmt.setCreate(false);
         }
 
         accept(Token.PROCEDURE);
 
-        stmt.setName(this.exprParser.name());
+        if (lexer.token() == Token.IF) {
+            lexer.nextToken();
+            accept(Token.NOT);
+            accept(Token.EXISTS);
+            stmt.setExists(true);
+        }
 
-        if (lexer.token() == Token.LPAREN) {// match "("
+        SQLName procedureName = this.exprParser.name();
+        stmt.setName(procedureName);
+
+        if (lexer.token() == Token.LPAREN) {
             lexer.nextToken();
             parserParameters(stmt.getParameters(), stmt);
-            accept(Token.RPAREN);// match ")"
+            accept(Token.RPAREN);
         }
 
-        for (;;) {
-            if (lexer.identifierEquals(FnvHash.Constants.DETERMINISTIC)) {
+        if (lexer.identifierEquals("AUTHID")) {
+            lexer.nextToken();
+            String strVal = lexer.stringVal();
+            if (lexer.token() == Token.DEFAULT) {
                 lexer.nextToken();
-                stmt.setDeterministic(true);
-                continue;
-            }
-            if (lexer.identifierEquals(FnvHash.Constants.CONTAINS)) {
+            } else if (lexer.identifierEquals("DEFINER")) {
                 lexer.nextToken();
-                acceptIdentifier("SQL");
-                stmt.setContainsSql(true);
-                continue;
-            }
-
-            if (lexer.identifierEquals(FnvHash.Constants.SQL)) {
+            } else if (lexer.identifierEquals("CURRENT_USER")) {
                 lexer.nextToken();
-                acceptIdentifier("SECURITY");
-                SQLName authid = this.exprParser.name();
-                stmt.setAuthid(authid);
+            } else {
+                accept(Token.USER);
             }
-
-            break;
+            SQLName authid = new SQLIdentifierExpr(strVal);
+            stmt.setAuthid(authid);
         }
 
-        SQLStatement block;
-        if (lexer.token() == Token.BEGIN) {
-            block = this.parseBlock();
+        if (lexer.identifierEquals(FnvHash.Constants.WRAPPED)) {
+            lexer.nextToken();
+            int pos = lexer.text.indexOf(';', lexer.pos());
+            if (pos != -1) {
+                String wrappedString = lexer.subString(lexer.pos(), pos - lexer.pos());
+                stmt.setWrappedSource(wrappedString);
+                lexer.reset(pos, ';', Token.LITERAL_CHARS);
+                lexer.nextToken();
+                stmt.setAfterSemi(true);
+            } else {
+                String wrappedString = lexer.text.substring(lexer.pos());
+                stmt.setWrappedSource(wrappedString);
+                lexer.reset(lexer.text.length(), (char) LayoutCharacters.EOI, Token.EOF);
+            }
+            return stmt;
+        }
+
+        if (lexer.token() == Token.SEMI) {
+            lexer.nextToken();
+            return stmt;
+        }
+
+        if (lexer.token() == Token.COMMENT) {
+            lexer.nextToken();
+            SQLName expr = exprParser.name();
+            stmt.setComment(expr);
+        }
+
+        if (lexer.token() == Token.IS) {
+            lexer.nextToken();
         } else {
-            block = this.parseStatement();
+            accept(Token.AS);
         }
+
+        if (lexer.identifierEquals("LANGUAGE")) {
+            lexer.nextToken();
+            if (lexer.identifierEquals("C")) {
+                lexer.nextToken();
+                acceptIdentifier("NAME");
+                stmt.setLanguageWithC(exprParser.name());
+            } else if (lexer.identifierEquals("PLSQL")) {
+                lexer.nextToken();
+                acceptIdentifier("NAME");
+                stmt.setLanguageWithPl(exprParser.name());
+            } else if (lexer.identifierEquals("JAVA")) {
+                lexer.nextToken();
+                acceptIdentifier("NAME");
+                String javaCallSpec = lexer.stringVal();
+                accept(Token.LITERAL_CHARS);
+                stmt.setJavaCallSpec(javaCallSpec);
+            } else {
+                throw new ParserException("TODO : " + lexer.info());
+            }
+            return stmt;
+        }
+
+        SQLStatement block = this.parsePlBlock();
 
         stmt.setBlock(block);
+
+        if (lexer.identifierEquals(procedureName.getSimpleName())) {
+            lexer.nextToken();
+        }
 
         return stmt;
     }

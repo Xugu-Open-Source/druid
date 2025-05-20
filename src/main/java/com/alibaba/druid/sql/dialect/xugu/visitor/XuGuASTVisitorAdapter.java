@@ -1633,4 +1633,14 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
     public void endVisit(XuGuSelectGroupByClause.XgEmptyGroupItem x) {
 
     }
+
+    @Override
+    public boolean visit(XuGuCreatePackageStatement x) {
+        return true;
+    }
+
+    @Override
+    public void endVisit(XuGuCreatePackageStatement x) {
+
+    }
 }
