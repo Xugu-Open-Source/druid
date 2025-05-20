@@ -1145,6 +1145,14 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
     }
 
     @Override
+    public boolean visit(SQLAlterProcedureStatement x) {
+        print0(ucase ? "ALTER PROCEDURE " : "alter procedure ");
+        x.getName().accept(this);
+        print0(ucase ? " RECOMPILE" : " recompile");
+        return false;
+    }
+
+    @Override
     public boolean visit(SQLStartTransactionStatement x) {
         print0(ucase ? "START TRANSACTION" : "start transaction");
         if (x.isConsistentSnapshot()) {
