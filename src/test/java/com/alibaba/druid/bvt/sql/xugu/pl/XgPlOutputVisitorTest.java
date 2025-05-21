@@ -17,6 +17,7 @@ package com.alibaba.druid.bvt.sql.xugu.pl;
 
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.visitor.SchemaStatVisitor;
 import com.alibaba.druid.util.JdbcConstants;
 import junit.framework.TestCase;
 
@@ -66,11 +67,11 @@ public class XgPlOutputVisitorTest extends TestCase {
         String sql ="DECLARE\n" +
                 "\tCURSOR emp_cursor(t_id NUMBER, aa varchar) IS\n" +
                 "\t\tSELECT id, name\n" +
-                "\t\tFROM tb_top\n" +
+                "\t\tFROM tb_top1\n" +
                 "\t\tWHERE id = t_id;\n" +
                 "BEGIN\n" +
                 "\tSELECT *\n" +
-                "\tFROM tb_top;\n" +
+                "\tFROM tb_top1;\n" +
                 "END";
         List<SQLStatement> stmts = SQLUtils.parseStatements(sql, JdbcConstants.XUGU);
         String tempResult = SQLUtils.toSQLString(stmts, JdbcConstants.XUGU);
@@ -100,7 +101,7 @@ public class XgPlOutputVisitorTest extends TestCase {
                 "\t\t);\n" +
                 "\tTYPE type_table_var1 IS TABLE OF TYPE_RECORD INDEX BY int;\n" +
                 "BEGIN\n" +
-                "\tSELECT * FROM tb_top;\n" +
+                "\tSELECT * FROM tb_top1;\n" +
                 "END";
         List<SQLStatement> stmts = SQLUtils.parseStatements(sql, JdbcConstants.XUGU);
         String tempResult = SQLUtils.toSQLString(stmts, JdbcConstants.XUGU);
@@ -150,14 +151,14 @@ public class XgPlOutputVisitorTest extends TestCase {
                 "\tTYPE num_array IS TABLE OF NUMBER;\n" +
                 "\tCURSOR emp_cursor(t_id NUMBER) as\n" +
                 "\t\tSELECT id, name\n" +
-                "\t\tFROM tb_top\n" +
+                "\t\tFROM tb_top1\n" +
                 "\t\tWHERE id = t_id;\n" +
-                "\tSUBTYPE type_rowtype0 IS tb_top%ROWTYPE;\n" +
-                "\tSUBTYPE type_rowtype1 IS tb_top%ROW TYPE;\n" +
-                "\tSUBTYPE type_rowtype2 IS ROWTYPE OF tb_top;\n" +
-                "\tSUBTYPE type_rowtype3 IS ROW TYPE OF tb_top;\n" +
-                "\tSUBTYPE type_type0 IS tb_top.id%TYPE;\n" +
-                "\tSUBTYPE type_type1 IS TYPE OF tb_top.NAME;\n" +
+                "\tSUBTYPE type_rowtype0 IS tb_top1%ROWTYPE;\n" +
+                "\tSUBTYPE type_rowtype1 IS tb_top1%ROW TYPE;\n" +
+                "\tSUBTYPE type_rowtype2 IS ROWTYPE OF tb_top1;\n" +
+                "\tSUBTYPE type_rowtype3 IS ROW TYPE OF tb_top1;\n" +
+                "\tSUBTYPE type_type0 IS tb_top1.id%TYPE;\n" +
+                "\tSUBTYPE type_type1 IS TYPE OF tb_top1.NAME;\n" +
                 "\tSUBTYPE TYPE_CURSOR IS REF CURSOR;\n" +
                 "\tSUBTYPE TYPE_RECORD IS RECORD (\n" +
                 "\t\tid int, \n" +
@@ -167,7 +168,7 @@ public class XgPlOutputVisitorTest extends TestCase {
                 "\tTYPE type_var0 IS VARCHAR;\n" +
                 "\tTYPE type_table_var0 IS TABLE OF NVARCHAR2(10);\n" +
                 "\tTYPE type_table_var1 IS TABLE OF TYPE_RECORD INDEX BY int;\n" +
-                "\tTYPE type_table_var2 IS TABLE OF tb_top%ROWTYPE;\n" +
+                "\tTYPE type_table_var2 IS TABLE OF tb_top1%ROWTYPE;\n" +
                 "\tTYPE type_table_var3 IS TABLE OF interval day to second(3);\n" +
                 "\tTYPE type_var_arr0 IS VARRAY(10) OF VARCHAR;\n" +
                 "\tTYPE type_var_arr1 IS VARRAY(10) OF NUMBER(10);\n" +
@@ -193,7 +194,7 @@ public class XgPlOutputVisitorTest extends TestCase {
                 "\tSELECT NAME\n" +
                 "\tBULK COLLECT \n" +
                 "\tINTO var_arr0\n" +
-                "\tFROM tb_top\n" +
+                "\tFROM tb_top1\n" +
                 "\tLIMIT 10;\n" +
                 "\tFOR i IN var_arr0.FIRST..var_arr0.LAST\n" +
                 "\tLOOP\n" +
@@ -209,22 +210,22 @@ public class XgPlOutputVisitorTest extends TestCase {
                 "\t\n" +
                 "\tSELECT id\n" +
                 "\tINTO v_testRow.id\n" +
-                "\tFROM tb_top\n" +
+                "\tFROM tb_top1\n" +
                 "\tWHERE id IS NOT NULL\n" +
                 "\tORDER BY id DESC\n" +
                 "\tLIMIT 1;\n" +
                 "\tv_testRow.id := v_testRow.id + 1;\n" +
                 "\tv_testRow.NAME := '' || date1;\n" +
-                "\tinsert INTO tb_top\n" +
+                "\tinsert INTO tb_top1\n" +
                 "\tvalues v_testRow;\n" +
                 "\tv_testRow.id := v_testRow.id + 1;\n" +
                 "\tv_table_var(1).id := v_testRow.id;\n" +
                 "\tv_table_var(1).NAME := v_testRow.NAME;\n" +
                 "\tFOR i IN 1..v_table_var.count\n" +
                 "\tLOOP\n" +
-                "\t\tinsert INTO tb_top\n" +
+                "\t\tinsert INTO tb_top1\n" +
                 "\t\tvalues (v_table_var(i).id,v_table_var(i).NAME)\n" +
-                "\t\tRETURNING '(' || tb_top.id || ',' || v_table_var(i).NAME || ')' BULK COLLECT INTO table_var0;\n" +
+                "\t\tRETURNING '(' || tb_top1.id || ',' || v_table_var(i).NAME || ')' BULK COLLECT INTO table_var0;\n" +
                 "\t\tFOR j IN 1..table_var0.COUNT()\n" +
                 "\t\tLOOP\n" +
                 "\t\t\tSEND_MSG('test RETURNING---->' || table_var0(j));\n" +
@@ -239,7 +240,7 @@ public class XgPlOutputVisitorTest extends TestCase {
                 "\tCLOSE emp_cursor;\n" +
                 "\tOPEN T_CURSOR FOR \n" +
                 "\t\tSELECT id, name\n" +
-                "\t\tFROM tb_top\n" +
+                "\t\tFROM tb_top1\n" +
                 "\t\tORDER BY id DESC\n" +
                 "\t\tLIMIT 2;\n" +
                 "\tLOOP \n" +
@@ -252,7 +253,7 @@ public class XgPlOutputVisitorTest extends TestCase {
                 "\t\tDBMS_OUTPUT.PUT_LINE('num' || i);\n" +
                 "\tSELECT id, NAME\n" +
                 "\tINTO t_record\n" +
-                "\tFROM tb_top\n" +
+                "\tFROM tb_top1\n" +
                 "\tWHERE name = v_testRow.NAME;\n" +
                 "\tDBMS_OUTPUT.PUT_LINE('t_record.id=' || t_record.id);\n" +
                 "\tDBMS_OUTPUT.PUT_LINE('t_record.name=' || t_record.name);\n" +

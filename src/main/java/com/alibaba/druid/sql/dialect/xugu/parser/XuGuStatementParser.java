@@ -1010,7 +1010,8 @@ public class XuGuStatementParser extends SQLStatementParser {
 
                     return true;
                 }
-            } else if (expr instanceof SQLMethodInvokeExpr) {
+            } else if (expr instanceof SQLMethodInvokeExpr || expr instanceof SQLPropertyExpr) {
+                // oracle 解析集合方法
                 SQLExprStatement stmt = new SQLExprStatement(expr);
                 stmt.setDbType(dbType);
                 statementList.add(stmt);
@@ -5064,30 +5065,7 @@ public class XuGuStatementParser extends SQLStatementParser {
                 name = this.exprParser.name();
                 accept(Token.IS);
                 parameter.setXgPrintType(true);
-                if (lexer.token() == Token.TABLE) {
-                    lexer.nextToken();
-                    accept(Token.OF);
-
-                    dataType = exprParser.parseDataType(false);
-                    dataType.setName("TABLE OF " + dataType.getName());
-
-                    if (lexer.token() == Token.INDEX) {
-                        lexer.nextToken();
-                        accept(Token.BY);
-                        SQLExpr indexBy = this.exprParser.primary();
-                        ((SQLDataTypeImpl) dataType).setIndexBy(indexBy);
-                    }
-                    dataType.setDbType(dbType);
-                } else if (lexer.identifierEquals("VARRAY")) {
-                    lexer.nextToken();
-                    dataType = getSqlDataTypeVarray("VARRAY");
-                } else if (lexer.identifierEquals("VARYING")) {
-                    lexer.nextToken();
-                    acceptIdentifier("ARRAY");
-                    dataType = getSqlDataTypeVarray("VARYING ARRAY");
-                } else {
-                    dataType = exprParser.parseDataType(false);
-                }
+                dataType = parserSqlDataType();
 
             } else {
                 if (lexer.token() == Token.KEY) {
@@ -5191,7 +5169,7 @@ public class XuGuStatementParser extends SQLStatementParser {
                         procedureDataType.setBlock(block);
                     }
                 } else {
-                    dataType = this.exprParser.parseDataType(false);
+                    dataType = parserSqlDataType();
                 }
                 if (lexer.token() == Token.COLONEQ || lexer.token() == Token.DEFAULT) {
                     lexer.nextToken();
@@ -5219,6 +5197,35 @@ public class XuGuStatementParser extends SQLStatementParser {
 
             break;
         }
+    }
+
+    private SQLDataType parserSqlDataType() {
+        SQLDataType dataType;
+        if (lexer.token() == Token.TABLE) {
+            lexer.nextToken();
+            accept(Token.OF);
+
+            dataType = exprParser.parseDataType(false);
+            dataType.setName("TABLE OF " + dataType.getName());
+
+            if (lexer.token() == Token.INDEX) {
+                lexer.nextToken();
+                accept(Token.BY);
+                SQLExpr indexBy = this.exprParser.primary();
+                ((SQLDataTypeImpl) dataType).setIndexBy(indexBy);
+            }
+            dataType.setDbType(dbType);
+        } else if (lexer.identifierEquals("VARRAY")) {
+            lexer.nextToken();
+            dataType = getSqlDataTypeVarray("VARRAY");
+        } else if (lexer.identifierEquals("VARYING")) {
+            lexer.nextToken();
+            acceptIdentifier("ARRAY");
+            dataType = getSqlDataTypeVarray("VARYING ARRAY");
+        } else {
+            dataType = exprParser.parseDataType(false);
+        }
+        return dataType;
     }
 
     private SQLDataType getSqlDataTypeVarray(String typeName) {

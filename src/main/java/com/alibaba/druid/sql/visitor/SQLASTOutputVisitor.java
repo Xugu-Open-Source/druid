@@ -6125,7 +6125,12 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
 
     @Override
     public boolean visit(SQLRecordDataType x) {
-        print0(ucase ? "RECORD (" : "record (");
+        if (JdbcConstants.XUGU.equals(dbType)) {
+            print0(ucase ? x.getName().toUpperCase() : x.getName().toUpperCase().toLowerCase());
+            print0(" (");
+        }else {
+            print0(ucase ? "RECORD (" : "record (");
+        }
         indentCount++;
         println();
         List<SQLColumnDefinition> columns = x.getColumns();
