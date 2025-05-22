@@ -1768,8 +1768,18 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
 
     public boolean visit(SQLSelect x) {
         SQLWithSubqueryClause withSubQuery = x.getWithSubQuery();
+        SQLCreateFunctionStatement withFunction = x.getWithFunction();
+        SQLCreateProcedureStatement withProcedure = x.getWithProcedure();
         if (withSubQuery != null) {
             withSubQuery.accept(this);
+            println();
+        } else if (withProcedure != null) {
+            print0(ucase ? "WITH " : "with ");
+            withProcedure.accept(this);
+            println();
+        } else if (withFunction != null) {
+            print0(ucase ? "WITH " : "with ");
+            withFunction.accept(this);
             println();
         }
 

@@ -3228,12 +3228,31 @@ public class SQLStatementParser extends SQLParser {
     }
 
     public SQLStatement parseWith() {
-        SQLWithSubqueryClause with = this.parseWithQuery();
+
+        SQLWithSubqueryClause with = null;
+        SQLCreateFunctionStatement withFunction = null;
+        SQLCreateProcedureStatement withProcedure = null;
+        Lexer.SavePoint mark = lexer.mark();
+        accept(Token.WITH);
+        if (lexer.token == Token.FUNCTION && JdbcConstants.XUGU.equals(dbType)) {
+            withFunction = parseCreateFunction();
+        } else if (lexer.token == Token.PROCEDURE && JdbcConstants.XUGU.equals(dbType)) {
+            withProcedure = parseCreateProcedure();
+        } else {
+            lexer.reset(mark);
+            with = this.parseWithQuery();
+        }
 
         if (lexer.token == Token.SELECT) {
             SQLSelectParser selectParser = createSQLSelectParser();
             SQLSelect select = selectParser.select();
-            select.setWithSubQuery(with);
+            if (withFunction != null) {
+                select.setWithFunction(withFunction);
+            } else if (withProcedure != null) {
+                select.setWithProcedure(withProcedure);
+            } else {
+                select.setWithSubQuery(with);
+            }
             return new SQLSelectStatement(select, dbType);
         }
 

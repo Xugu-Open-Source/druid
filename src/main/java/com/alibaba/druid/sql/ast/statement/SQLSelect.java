@@ -28,6 +28,8 @@ import com.alibaba.druid.util.JdbcConstants;
 public class SQLSelect extends SQLObjectImpl {
 
     protected SQLWithSubqueryClause withSubQuery;
+    protected SQLCreateProcedureStatement withProcedure;
+    protected SQLCreateFunctionStatement withFunction;
     protected SQLSelectQuery        query;
     protected SQLOrderBy            orderBy;
 
@@ -72,6 +74,22 @@ public class SQLSelect extends SQLObjectImpl {
         this.withSubQuery = withSubQuery;
     }
 
+    public SQLCreateProcedureStatement getWithProcedure() {
+        return withProcedure;
+    }
+
+    public void setWithProcedure(SQLCreateProcedureStatement withProcedure) {
+        this.withProcedure = withProcedure;
+    }
+
+    public SQLCreateFunctionStatement getWithFunction() {
+        return withFunction;
+    }
+
+    public void setWithFunction(SQLCreateFunctionStatement withFunction) {
+        this.withFunction = withFunction;
+    }
+
     public SQLSelectQuery getQuery() {
         return this.query;
     }
@@ -105,6 +123,8 @@ public class SQLSelect extends SQLObjectImpl {
     protected void accept0(SQLASTVisitor visitor) {
         if (visitor.visit(this)) {
             acceptChild(visitor, this.withSubQuery);
+            acceptChild(visitor, this.withFunction);
+            acceptChild(visitor, this.withProcedure);
             acceptChild(visitor, this.query);
             acceptChild(visitor, this.restriction);
             acceptChild(visitor, this.orderBy);
@@ -123,6 +143,8 @@ public class SQLSelect extends SQLObjectImpl {
         result = prime * result + ((orderBy == null) ? 0 : orderBy.hashCode());
         result = prime * result + ((query == null) ? 0 : query.hashCode());
         result = prime * result + ((withSubQuery == null) ? 0 : withSubQuery.hashCode());
+        result = prime * result + ((withFunction == null) ? 0 : withFunction.hashCode());
+        result = prime * result + ((withProcedure == null) ? 0 : withProcedure.hashCode());
         return result;
     }
 
@@ -141,6 +163,12 @@ public class SQLSelect extends SQLObjectImpl {
         if (withSubQuery == null) {
             if (other.withSubQuery != null) return false;
         } else if (!withSubQuery.equals(other.withSubQuery)) return false;
+        if (withProcedure == null) {
+            if (other.withProcedure != null) return false;
+        } else if (!withProcedure.equals(other.withProcedure)) return false;
+        if (withFunction == null) {
+            if (other.withFunction != null) return false;
+        } else if (!withFunction.equals(other.withFunction)) return false;
         return true;
     }
 
@@ -193,6 +221,8 @@ public class SQLSelect extends SQLObjectImpl {
         SQLSelect x = new SQLSelect();
 
         x.withSubQuery = this.withSubQuery;
+        x.withFunction = this.withFunction;
+        x.withProcedure = this.withProcedure;
         if (query != null) {
             x.setQuery(query.clone());
         }
@@ -233,6 +263,8 @@ public class SQLSelect extends SQLObjectImpl {
 
     public boolean isSimple() {
         return withSubQuery == null
+                && withProcedure == null
+                && withFunction == null
                 && (hints == null || hints.size() == 0)
                 && restriction == null
                 && (!forBrowse)
