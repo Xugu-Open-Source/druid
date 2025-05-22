@@ -627,4 +627,7 @@ public interface XuGuASTVisitor extends SQLASTVisitor {
 
     boolean visit(XuGuCreatePackageStatement x);
     void endVisit(XuGuCreatePackageStatement x);
+
+    boolean visit(XuGuPipeRowStatement x);
+    void endVisit(XuGuPipeRowStatement x);
 }

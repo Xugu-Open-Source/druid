@@ -3101,7 +3101,9 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
         if (!x.isEndOfCommit()) {
             this.indentCount--;
             println();
-            if (parent instanceof SQLCreateProcedureStatement && x.getEndLabel() != null) {
+            if ((parent instanceof SQLCreateProcedureStatement ||
+                    parent instanceof SQLCreateFunctionStatement)
+                    && x.getEndLabel() != null) {
                 print0(ucase ? "END " : "end ");
                 print0(x.getEndLabel());
                 print0(";");
@@ -3637,13 +3639,29 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public boolean visit(SQLCreateFunctionStatement x) {
-        print0(ucase ? "CREATE FUNCTION " : "create function ");
+        boolean create = x.isCreate();
+        if (!create) {
+            print0(ucase ? "FUNCTION " : "function ");
+        } else if (x.isOrReplace()) {
+            print0(ucase ? "CREATE OR REPLACE " : "create or replace ");
+            if (x.isForce()) {
+                print0(ucase ? "FORCE " : "force ");
+            }
+            print0(ucase ? "FUNCTION " : "function ");
+        } else {
+            print0(ucase ? "CREATE FUNCTION " : "create function ");
+        }
+
+        if (x.isExists()) {
+            print0(ucase ? "IF NOT EXISTS " : "if not exists ");
+        }
+
         x.getName().accept(this);
 
         int paramSize = x.getParameters().size();
 
+        print0(" (");
         if (paramSize > 0) {
-            print0(" (");
             this.indentCount++;
             println();
 
@@ -3658,22 +3676,61 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
             this.indentCount--;
             println();
-            print(')');
         }
+        print(')');
 
         println();
-        print(ucase ? "RETURNS " : "returns ");
-        x.getReturnDataType().accept(this);
+        print(ucase ? "RETURN " : "return ");
+
+        if (x.isSelf()) {
+            print(ucase ? "SELF AS RESULT " : "self as result ");
+        } else {
+            x.getReturnDataType().accept(this);
+            if (x.isPipelined()) {
+                print(ucase ? " PIPELINED " : " pipelined ");
+            }
+        }
+
 
         if (x.isDeterministic()) {
             print(ucase ? " DETERMINISTIC" : " deterministic");
         }
 
+        SQLName authid = x.getAuthid();
+        if (authid != null) {
+            print(ucase ? " AUTHID " : " authid ");
+            authid.accept(this);
+        }
+
+        if (x.getComment() != null) {
+            print(ucase ? " COMMENT " : " comment ");
+            x.getComment().accept(this);
+        }
+
+        println(ucase ? " IS" : " is");
+
+        String javaCallSpec = x.getJavaCallSpec();
+        SQLName languageWithC = x.getLanguageWithC();
+        SQLName languageWithPl = x.getLanguageWithPl();
+        if (languageWithC != null) {
+            print0(ucase ? " LANGUAGE C NAME " : " language c name ");
+            languageWithC.accept(this);
+            return false;
+        } else if (languageWithPl != null) {
+            print0(ucase ? " LANGUAGE PLSQL NAME " : " language plsql name ");
+            languageWithPl.accept(this);
+            return false;
+        } else if (javaCallSpec != null) {
+            print0(ucase ? "LANGUAGE JAVA NAME '" : "language java name '");
+            print0(javaCallSpec);
+            print('\'');
+            return false;
+        }
+
         SQLStatement block = x.getBlock();
-
-        println();
-
-        block.accept(this);
+        if (block != null) {
+            block.accept(this);
+        }
         return false;
     }
 
@@ -5336,6 +5393,19 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuCreatePackageStatement x) {
+
+    }
+
+    @Override
+    public boolean visit(XuGuPipeRowStatement x) {
+        print0(ucase ? "PIPE ROW(" : "pipe row(");
+        printAndAccept(x.getParameters(), ", ");
+        print(')');
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuPipeRowStatement x) {
 
     }
 }

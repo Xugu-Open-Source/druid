@@ -492,7 +492,7 @@ public class XuGuSelectParser extends SQLSelectParser {
     }
 
     private void parseReturn(XuGuUpdateStatement update) {
-        if (lexer.identifierEquals("RETURN") || lexer.token() == Token.RETURNING) {
+        if (lexer.token() == Token.RETURN || lexer.token() == Token.RETURNING) {
             lexer.nextToken();
 
             for (;;) {

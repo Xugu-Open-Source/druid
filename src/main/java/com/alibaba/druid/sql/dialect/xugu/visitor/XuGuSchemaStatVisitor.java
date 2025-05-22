@@ -1778,4 +1778,14 @@ public class XuGuSchemaStatVisitor extends SchemaStatVisitor implements XuGuASTV
     public void endVisit(XuGuCreatePackageStatement x) {
 
     }
+
+    @Override
+    public boolean visit(XuGuPipeRowStatement x) {
+        return false;
+    }
+
+    @Override
+    public void endVisit(XuGuPipeRowStatement x) {
+
+    }
 }
