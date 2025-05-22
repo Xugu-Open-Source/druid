@@ -4140,6 +4140,10 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
 
         x.getName().accept(this);
 
+        if (JdbcConstants.XUGU.equals(dbType) && x.getBehavior() != null) {
+            print(' ');
+            x.getBehavior().accept(this);
+        }
         return false;
     }
 

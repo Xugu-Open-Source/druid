@@ -1676,6 +1676,10 @@ public class SQLStatementParser extends SQLParser {
         SQLName name = this.exprParser.name();
         stmt.setName(name);
 
+        if (JdbcConstants.XUGU.equals(dbType)
+                && (lexer.identifierEquals("CASCADE") || lexer.identifierEquals("RESTRICT"))) {
+            stmt.setBehavior(exprParser.expr());
+        }
         return stmt;
     }
 
