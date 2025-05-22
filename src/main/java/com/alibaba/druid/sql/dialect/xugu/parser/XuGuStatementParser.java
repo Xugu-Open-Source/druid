@@ -3766,31 +3766,31 @@ public class XuGuStatementParser extends SQLStatementParser {
 
         SQLName name = this.exprParser.name();
         stmt.setName(name);
-
+        acceptIdentifier("RECOMPILE");
         // for mysql
-        for (;;) {
-            if (lexer.token() == Token.COMMENT) {
-                lexer.nextToken();
-                SQLExpr comment = this.exprParser.primary();
-                stmt.setComment(comment);
-            } else if (lexer.identifierEquals(FnvHash.Constants.LANGUAGE)) {
-                lexer.nextToken();
-                acceptIdentifier("SQL");
-                stmt.setLanguageSql(true);
-            } else if (lexer.identifierEquals(FnvHash.Constants.SQL)) {
-                lexer.nextToken();
-                acceptIdentifier("SECURITY");
-
-                SQLExpr sqlSecurity = this.exprParser.name();
-                stmt.setSqlSecurity(sqlSecurity);
-            } else if (lexer.identifierEquals(FnvHash.Constants.CONTAINS)) {
-                lexer.nextToken();
-                acceptIdentifier("SQL");
-                stmt.setContainsSql(true);
-            } else {
-                break;
-            }
-        }
+        // for (;;) {
+        //     if (lexer.token() == Token.COMMENT) {
+        //         lexer.nextToken();
+        //         SQLExpr comment = this.exprParser.primary();
+        //         stmt.setComment(comment);
+        //     } else if (lexer.identifierEquals(FnvHash.Constants.LANGUAGE)) {
+        //         lexer.nextToken();
+        //         acceptIdentifier("SQL");
+        //         stmt.setLanguageSql(true);
+        //     } else if (lexer.identifierEquals(FnvHash.Constants.SQL)) {
+        //         lexer.nextToken();
+        //         acceptIdentifier("SECURITY");
+        //
+        //         SQLExpr sqlSecurity = this.exprParser.name();
+        //         stmt.setSqlSecurity(sqlSecurity);
+        //     } else if (lexer.identifierEquals(FnvHash.Constants.CONTAINS)) {
+        //         lexer.nextToken();
+        //         acceptIdentifier("SQL");
+        //         stmt.setContainsSql(true);
+        //     } else {
+        //         break;
+        //     }
+        // }
 
         return stmt;
     }
