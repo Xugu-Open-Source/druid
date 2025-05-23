@@ -54,6 +54,7 @@ import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuCharExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuExtractExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuMatchAgainstExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuOrderingExpr;
+import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuQ_EscapeExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuRangeExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuTypeCastExpr;
 import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuUserName;
@@ -517,6 +518,10 @@ public class XuGuExprParser extends SQLExprParser {
                 SQLExpr sqlExpr = expr();
                 sqlExpr = new SQLUnaryExpr(SQLUnaryOperator.Prior, sqlExpr);
                 return primaryRest(sqlExpr);
+            case Q_ESCAPE:
+                XuGuQ_EscapeExpr xuGuQEscapeExpr = new XuGuQ_EscapeExpr(lexer.stringVal());
+                lexer.nextToken();
+                return xuGuQEscapeExpr;
             default:
                 return super.primary();
         }

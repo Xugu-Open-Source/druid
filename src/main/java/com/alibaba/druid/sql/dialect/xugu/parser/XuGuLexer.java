@@ -318,6 +318,44 @@ public class XuGuLexer extends Lexer {
             }
         }
 
+        if ((ch == 'q' || ch == 'Q') && charAt(pos + 1) == '\'' &&
+                // xugu 仅支持以下6种转义符号
+                (charAt(pos + 2) == '!' || charAt(pos + 2) == '[' || charAt(pos + 2) == '{'
+                        || charAt(pos + 2) == '(' || charAt(pos + 2) == '<' || charAt(pos + 2) == '\\')) {
+            char quoteDelimiter = charAt(pos + 2);
+            switch (quoteDelimiter) {
+                case '[':
+                    quoteDelimiter = ']';
+                    break;
+                case '{':
+                    quoteDelimiter = '}';
+                    break;
+                case '(':
+                    quoteDelimiter = ')';
+                    break;
+                case '<':
+                    quoteDelimiter = '>';
+                    break;
+                default:
+                    break;
+            }
+            int i = 3;
+            int mark = pos + 3;
+            for (; ; ++i) {
+                char ch = charAt(pos + i);
+                if (ch == quoteDelimiter && charAt(pos + (i + 1)) == '\''){
+                    bufPos += (i + 1);
+                    pos += (i + 2);
+                    stringVal = subString(mark, i - 3);
+                    this.ch = charAt(pos);
+                    token = Token.Q_ESCAPE;
+                    return;
+                } else if (ch == EOI) {
+                    throw new ParserException("illegal identifier. " + info());
+                }
+            }
+        }
+
         if (ch == '`') {
             mark = pos;
             bufPos = 1;

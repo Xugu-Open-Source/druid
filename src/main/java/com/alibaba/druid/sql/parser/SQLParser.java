@@ -174,6 +174,9 @@ public class SQLParser {
         } else if (lexer.token == Token.LITERAL_CHARS) {
             alias = "'" + lexer.stringVal() + "'";
             lexer.nextToken();
+        } else if (lexer.token == Token.Q_ESCAPE) {
+            alias = "q'!" + lexer.stringVal() + "!'";
+            lexer.nextToken();
         } else {
             switch (lexer.token) {
                 case CASE:
