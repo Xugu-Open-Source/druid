@@ -25,9 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SQLReplaceStatement extends SQLStatementImpl {
-    protected boolean             lowPriority = false;
-    protected boolean             delayed     = false;
-    private boolean               defaultValues = false;
+    protected boolean             lowPriority    = false;
+    protected boolean             delayed        = false;
+    private boolean               defaultValues  = false;
+    private boolean               xgSubPartition = false;
+    private List<SQLName>         partitions;
 
     protected SQLExprTableSource  tableSource;
     protected final List<SQLExpr> columns     = new ArrayList<SQLExpr>();
@@ -91,6 +93,32 @@ public class SQLReplaceStatement extends SQLStatementImpl {
 
     public void setDefaultValues(boolean defaultValues) {
         this.defaultValues = defaultValues;
+    }
+
+    public boolean isXgSubPartition() {
+        return xgSubPartition;
+    }
+
+    public void setXgSubPartition(boolean xgSubPartition) {
+        this.xgSubPartition = xgSubPartition;
+    }
+
+    public List<SQLName> getPartitions() {
+        if (this.partitions == null) {
+            this.partitions = new ArrayList<SQLName>(2);
+        }
+        return partitions;
+    }
+
+    public void addPartition(SQLName partition) {
+        if (partition != null) {
+            partition.setParent(this);
+        }
+
+        if (this.partitions == null) {
+            this.partitions = new ArrayList<SQLName>(2);
+        }
+        this.partitions.add(partition);
     }
 
     public SQLQueryExpr getQuery() {

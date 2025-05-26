@@ -2523,6 +2523,19 @@ public class XuGuStatementParser extends SQLStatementParser {
         SQLName tableName = exprParser.name();
         stmt.setTableName(tableName);
 
+        if (lexer.token() == Token.PARTITION) {
+            lexer.nextToken();
+            accept(Token.LPAREN);
+            this.exprParser.names(stmt.getPartitions(), stmt);
+            accept(Token.RPAREN);
+        } else if (lexer.token() == Token.SUBPARTITION) {
+            lexer.nextToken();
+            accept(Token.LPAREN);
+            this.exprParser.names(stmt.getPartitions(), stmt);
+            stmt.setXgSubPartition(true);
+            accept(Token.RPAREN);
+        }
+
         boolean useSelectStmt = false;
         if (lexer.token() == Token.LPAREN) {
             Lexer.SavePoint mark = lexer.mark();
@@ -2887,6 +2900,19 @@ public class XuGuStatementParser extends SQLStatementParser {
             tableName = this.exprParser.name();
             stmt.setTableName(tableName);
 
+            if (lexer.token() == Token.PARTITION) {
+                lexer.nextToken();
+                accept(Token.LPAREN);
+                this.exprParser.names(stmt.getPartitions(), stmt);
+                accept(Token.RPAREN);
+            } else if (lexer.token() == Token.SUBPARTITION) {
+                lexer.nextToken();
+                accept(Token.LPAREN);
+                this.exprParser.names(stmt.getPartitions(), stmt);
+                stmt.setXgSubPartition(true);
+                accept(Token.RPAREN);
+            }
+
             if (lexer.token() == Token.HINT) {
                 String comment = "/*" + lexer.stringVal() + "*/";
                 lexer.nextToken();
@@ -3134,7 +3160,8 @@ public class XuGuStatementParser extends SQLStatementParser {
                 item.setWhen(this.exprParser.expr());
                 accept(Token.THEN);
                 XuGuMultiInsertStatement.InsertIntoClause insertInto = new XuGuMultiInsertStatement.InsertIntoClause();
-                parseInsert0(insertInto);
+                // select 只能出现在语句末尾
+                parseInsert0(insertInto, false);
                 item.setThen(insertInto);
 
                 clause.addItem(item);

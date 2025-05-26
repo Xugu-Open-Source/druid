@@ -29,6 +29,7 @@ import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlSelectQueryBlock;
 import com.alibaba.druid.sql.dialect.mysql.parser.MySqlExprParser;
 import com.alibaba.druid.sql.dialect.oracle.parser.OracleExprParser;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuDropSchemaStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuMultiInsertStatement;
 import com.alibaba.druid.util.FnvHash;
 import com.alibaba.druid.util.JdbcConstants;
 
@@ -1877,6 +1878,18 @@ public class SQLStatementParser extends SQLParser {
             SQLName tableName = this.exprParser.name();
             insertStatement.setTableName(tableName);
 
+            if (lexer.token == Token.PARTITION && JdbcConstants.XUGU.equals(dbType)) {
+                lexer.nextToken();
+                accept(Token.LPAREN);
+                this.exprParser.names(((XuGuMultiInsertStatement.InsertIntoClause) insertStatement).getPartitions(), insertStatement);
+                accept(Token.RPAREN);
+            } else if (lexer.token == Token.SUBPARTITION && JdbcConstants.XUGU.equals(dbType)) {
+                lexer.nextToken();
+                accept(Token.LPAREN);
+                this.exprParser.names(((XuGuMultiInsertStatement.InsertIntoClause) insertStatement).getPartitions(), insertStatement);
+                ((XuGuMultiInsertStatement.InsertIntoClause) insertStatement).setXgSubPartition(true);
+                accept(Token.RPAREN);
+            }
             if (lexer.token == Token.LITERAL_ALIAS) {
                 insertStatement.setAlias(tableAlias());
             }

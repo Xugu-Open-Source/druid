@@ -898,6 +898,16 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
             tableSource.accept(this);
         }
 
+        if (!x.getPartitions().isEmpty()) {
+            if (x.isXgSubPartition()) {
+                print0(ucase ? " SUBPARTITION (" : " subpartition (");
+            } else {
+                print0(ucase ? " PARTITION (" : " partition (");
+            }
+            printlnAndAccept(x.getPartitions(), ", ");
+            print(')');
+        }
+
         String columnsString = x.getColumnsString();
         if (columnsString != null) {
             if (!isEnabled(VisitorFeature.OutputSkipInsertColumnsString)) {
@@ -1101,6 +1111,16 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
         print0(ucase ? "INTO " : "into ");
 
         printTableSourceExpr(x.getTableName());
+
+        if (!x.getPartitions().isEmpty()) {
+            if (x.isXgSubPartition()) {
+                print0(ucase ? " SUBPARTITION (" : " subpartition (");
+            } else {
+                print0(ucase ? " PARTITION (" : " partition (");
+            }
+            printlnAndAccept(x.getPartitions(), ", ");
+            print(')');
+        }
 
         List<SQLExpr> columns = x.getColumns();
         if (columns.size() > 0) {
@@ -2599,6 +2619,16 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
     public boolean visit(SQLExprTableSource x) {
         printTableSourceExpr(x.getExpr());
 
+        if (x.getPartitionSize() > 0) {
+            if (x.isXgSubPartition()) {
+                print0(ucase ? " SUBPARTITION (" : " subpartition (");
+            } else {
+                print0(ucase ? " PARTITION (" : " partition (");
+            }
+            printlnAndAccept(x.getPartitions(), ", ");
+            print(')');
+        }
+
         String alias = x.getAlias();
         if (alias != null) {
             print(' ');
@@ -2608,12 +2638,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
         for (int i = 0; i < x.getHintsSize(); ++i) {
             print(' ');
             x.getHints().get(i).accept(this);
-        }
-
-        if (x.getPartitionSize() > 0) {
-            print0(ucase ? " PARTITION (" : " partition (");
-            printlnAndAccept(x.getPartitions(), ", ");
-            print(')');
         }
 
         return false;
@@ -5191,6 +5215,16 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
         print0(ucase ? "INTO " : "into ");
 
         x.getTableSource().accept(this);
+
+        if (!x.getPartitions().isEmpty()) {
+            if (x.isXgSubPartition()) {
+                print0(ucase ? " SUBPARTITION (" : " subpartition (");
+            } else {
+                print0(ucase ? " PARTITION (" : " partition (");
+            }
+            printlnAndAccept(x.getPartitions(), ", ");
+            print(')');
+        }
 
         if (x.getColumns().size() > 0) {
             this.indentCount++;

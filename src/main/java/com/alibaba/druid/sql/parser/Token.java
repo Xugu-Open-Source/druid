@@ -269,6 +269,7 @@ public enum Token {
     ENDFOR("ENDFOR"),
     ENDLOOP("ENDLOOP"),
     Q_ESCAPE("q'"),
+    SUBPARTITION("SUBPARTITION"),
     
     // Oracle
     BINARY_FLOAT,

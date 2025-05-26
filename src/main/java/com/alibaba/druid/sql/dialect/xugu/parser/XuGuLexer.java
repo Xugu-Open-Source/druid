@@ -72,6 +72,7 @@ public class XuGuLexer extends Lexer {
         map.put("MATCHED", Token.MATCHED);
         map.put("PRIOR", Token.PRIOR);
         map.put("RETURN", Token.RETURN);
+        map.put("SUBPARTITION", Token.SUBPARTITION);
         DEFAULT_XUGU_KEYWORDS = new Keywords(map);
     }
 

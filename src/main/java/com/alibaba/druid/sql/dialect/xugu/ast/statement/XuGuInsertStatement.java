@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.alibaba.druid.sql.ast.SQLExpr;
+import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.statement.SQLInsertStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuReturningClause;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
@@ -35,6 +36,8 @@ public class XuGuInsertStatement extends SQLInsertStatement implements XuGuState
     private boolean             ignore             = false;
     private boolean             rollbackOnFail     = false;
     private boolean             defaultValues      = false;
+    private boolean             xgSubPartition     = false;
+    private List<SQLName>       partitions;
 
     private final List<SQLExpr> duplicateKeyUpdate = new ArrayList<SQLExpr>();
 
@@ -53,10 +56,17 @@ public class XuGuInsertStatement extends SQLInsertStatement implements XuGuState
         x.ignore = ignore;
         x.rollbackOnFail = rollbackOnFail;
         x.defaultValues = defaultValues;
+        x.xgSubPartition = xgSubPartition;
         for (SQLExpr e : duplicateKeyUpdate) {
             SQLExpr e2 = e.clone();
             e2.setParent(x);
             x.duplicateKeyUpdate.add(e2);
+        }
+        if (partitions != null) {
+            for (SQLName p : partitions) {
+                SQLName p1 = p.clone();
+                x.addPartition(p1);
+            }
         }
     }
 
@@ -118,6 +128,32 @@ public class XuGuInsertStatement extends SQLInsertStatement implements XuGuState
 
     public void setReturning(XuGuReturningClause returning) {
         this.returning = returning;
+    }
+
+    public boolean isXgSubPartition() {
+        return xgSubPartition;
+    }
+
+    public void setXgSubPartition(boolean xgSubPartition) {
+        this.xgSubPartition = xgSubPartition;
+    }
+
+    public List<SQLName> getPartitions() {
+        if (this.partitions == null) {
+            this.partitions = new ArrayList<SQLName>(2);
+        }
+        return partitions;
+    }
+
+    public void addPartition(SQLName partition) {
+        if (partition != null) {
+            partition.setParent(this);
+        }
+
+        if (this.partitions == null) {
+            this.partitions = new ArrayList<SQLName>(2);
+        }
+        this.partitions.add(partition);
     }
 
     @Override

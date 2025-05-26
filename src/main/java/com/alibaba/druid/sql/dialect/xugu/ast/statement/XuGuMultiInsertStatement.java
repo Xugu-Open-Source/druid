@@ -17,6 +17,7 @@ package com.alibaba.druid.sql.dialect.xugu.ast.statement;
 
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLHint;
+import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.statement.SQLErrorLoggingClause;
 import com.alibaba.druid.sql.ast.statement.SQLInsertInto;
 import com.alibaba.druid.sql.ast.statement.SQLSelect;
@@ -159,6 +160,8 @@ public class XuGuMultiInsertStatement extends XuGuStatementImpl {
 
         private XuGuReturningClause returning;
         private SQLErrorLoggingClause errorLogging;
+        private boolean             xgSubPartition = false;
+        private List<SQLName>       partitions;
 
         public InsertIntoClause(){
 
@@ -178,6 +181,32 @@ public class XuGuMultiInsertStatement extends XuGuStatementImpl {
 
         public void setErrorLogging(SQLErrorLoggingClause errorLogging) {
             this.errorLogging = errorLogging;
+        }
+
+        public boolean isXgSubPartition() {
+            return xgSubPartition;
+        }
+
+        public void setXgSubPartition(boolean xgSubPartition) {
+            this.xgSubPartition = xgSubPartition;
+        }
+
+        public List<SQLName> getPartitions() {
+            if (this.partitions == null) {
+                this.partitions = new ArrayList<SQLName>(2);
+            }
+            return partitions;
+        }
+
+        public void addPartition(SQLName partition) {
+            if (partition != null) {
+                partition.setParent(this);
+            }
+
+            if (this.partitions == null) {
+                this.partitions = new ArrayList<SQLName>(2);
+            }
+            this.partitions.add(partition);
         }
 
         @Override
@@ -206,6 +235,13 @@ public class XuGuMultiInsertStatement extends XuGuStatementImpl {
             }
             if (errorLogging != null) {
                 x.setErrorLogging(errorLogging.clone());
+            }
+            x.xgSubPartition = xgSubPartition;
+            if (partitions != null) {
+                for (SQLName p : partitions) {
+                    SQLName p1 = p.clone();
+                    x.addPartition(p1);
+                }
             }
         }
 

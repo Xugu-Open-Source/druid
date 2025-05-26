@@ -582,6 +582,12 @@ public class XuGuSelectParser extends SQLSelectParser {
             accept(Token.LPAREN);
             this.exprParser.names(((SQLExprTableSource) tableSource).getPartitions(), tableSource);
             accept(Token.RPAREN);
+        } else if (lexer.token() == Token.SUBPARTITION) {
+            lexer.nextToken();
+            accept(Token.LPAREN);
+            this.exprParser.names(((SQLExprTableSource) tableSource).getPartitions(), tableSource);
+            ((SQLExprTableSource) tableSource).setXgSubPartition(true);
+            accept(Token.RPAREN);
         }
 
         return super.parseTableSourceRest(tableSource);
