@@ -540,7 +540,7 @@ public class XuGuSelectParser extends SQLSelectParser {
     protected void parseInto(SQLSelectQueryBlock queryBlock) {
         if (lexer.token() == (Token.INTO)) {
             lexer.nextToken();
-            SQLExpr intoExpr = this.exprParser.name();
+            SQLExpr intoExpr = this.exprParser.expr();
             if (lexer.token() == Token.COMMA) {
                 SQLListExpr list = new SQLListExpr();
                 list.addItem(intoExpr);
