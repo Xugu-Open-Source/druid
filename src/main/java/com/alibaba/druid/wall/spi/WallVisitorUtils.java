@@ -40,6 +40,7 @@ import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuBackupSystemDatabase
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuBackupUserSchemaTableStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuHintStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuLockTableStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuMultiInsertStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuOptimizeStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuRenameTableStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuRestoreDatabaseStatement;
@@ -2504,7 +2505,8 @@ public class WallVisitorUtils {
             allow = config.isUpdateAllow();
             denyMessage = "update not allow";
             errorCode = ErrorCode.UPDATE_NOT_ALLOW;
-        } else if (x instanceof OracleMultiInsertStatement) {
+        } else if (x instanceof OracleMultiInsertStatement
+                || x instanceof XuGuMultiInsertStatement) {
             allow = true;
             denyMessage = "multi-insert not allow";
             errorCode = ErrorCode.INSERT_NOT_ALLOW;
