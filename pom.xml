@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.alibaba</groupId>
 	<artifactId>druid</artifactId>
-	<version>1.1.9-preview_1</version>
+	<version>1.1.9</version>
 
 	<packaging>jar</packaging>
 	<name>druid</name>
@@ -351,6 +351,12 @@
 	</profiles>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.xugudb</groupId>
+			<artifactId>xugu-jdbc</artifactId>
+			<version>12.3.4</version>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>simple-jndi</groupId>
 			<artifactId>simple-jndi</artifactId>
