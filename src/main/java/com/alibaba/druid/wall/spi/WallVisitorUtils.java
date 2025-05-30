@@ -48,6 +48,7 @@ import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuRestoreSchemaStateme
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuRestoreSystemStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuRestoreTableStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuRestoreUserStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuSelectGroupByClause;
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuShowStatement;
 import com.alibaba.druid.sql.parser.SQLStatementParser;
 import com.alibaba.druid.sql.visitor.ExportParameterVisitor;
@@ -2598,6 +2599,11 @@ public class WallVisitorUtils {
             allow = true;
             errorCode = 0;
             denyMessage = null;
+        } else if (x instanceof XuGuSelectGroupByClause) {
+            // 原生 SQLSelectGroupByClause 不属于 SQLStatement 上面判断直接 return
+            allow = true;
+            denyMessage = "group by not allow";
+            errorCode = ErrorCode.OTHER;
         } else if (x instanceof XuGuBackupSystemDatabaseStatement
                 || x instanceof XuGuBackupUserSchemaTableStatement) {
             allow = config.isBackupAllow();
