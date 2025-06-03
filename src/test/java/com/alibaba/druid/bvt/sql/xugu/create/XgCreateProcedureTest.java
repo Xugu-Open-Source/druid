@@ -113,6 +113,30 @@ public class XgCreateProcedureTest extends TestCase {
 		System.out.println(xuGuString);
 	}
 
+	public void testDeclare() {
+		String sql = "CREATE OR REPLACE PROCEDURE IF NOT EXISTS proc_test_parameterless () COMMENT '无参数存储过''程1'\n" +
+				"AS DECLARE\n" +
+				"\tloop_num INT;\n" +
+				"BEGIN\n" +
+				"\tloop_num := 0;\n" +
+				"\tFOR i IN 1..10\n" +
+				"\tLOOP\n" +
+				"\t\tUPDATE tb_top\n" +
+				"\t\tSET NAME = NAME || i\n" +
+				"\t\tWHERE id = i;\n" +
+				"\t\tloop_num := loop_num + 1;\n" +
+				"\tEND LOOP;\n" +
+				"\tSEND_MSG('过程执行完成' || loop_num || '次');\n" +
+				"\tCOMMIT;\n" +
+				"END proc_test_parameterless;";
+		List<SQLStatement> statementList = SQLUtils.parseStatements(sql, JdbcConstants.XUGU, true);
+		SQLStatement stmt = statementList.get(0);
+		SchemaStatVisitor visitor = SQLUtils.createSchemaStatVisitor(JdbcConstants.XUGU);
+		stmt.accept(visitor);
+		String xuGuString = SQLUtils.toSQLString(stmt, JdbcConstants.XUGU, null);
+		System.out.println(xuGuString);
+	}
+
 	public void testInputTypeParameters() {
 		String sql = "CREATE OR REPLACE FORCE PROCEDURE proc_test_Input (parameter INTEGER)\n" +
 				"AS\n" +
