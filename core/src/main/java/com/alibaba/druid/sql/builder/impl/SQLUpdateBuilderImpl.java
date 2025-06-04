@@ -29,6 +29,7 @@ import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlUpdateStatement;
 import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleUpdateStatement;
 import com.alibaba.druid.sql.dialect.postgresql.ast.stmt.PGUpdateStatement;
 import com.alibaba.druid.sql.dialect.sqlserver.ast.stmt.SQLServerUpdateStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuUpdateStatement;
 
 import java.util.List;
 import java.util.Map;
@@ -171,6 +172,8 @@ public class SQLUpdateBuilderImpl extends SQLBuilderImpl implements SQLUpdateBui
                 return new PGUpdateStatement();
             case sqlserver:
                 return new SQLServerUpdateStatement();
+            case xugu:
+                return new XuGuUpdateStatement();
             default:
                 return new SQLUpdateStatement();
         }

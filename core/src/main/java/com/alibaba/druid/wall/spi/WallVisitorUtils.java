@@ -29,6 +29,19 @@ import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleExecuteImmediateState
 import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleMultiInsertStatement;
 import com.alibaba.druid.sql.dialect.sqlserver.ast.stmt.SQLServerExecStatement;
 import com.alibaba.druid.sql.dialect.sqlserver.ast.stmt.SQLServerInsertStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.expr.XuGuOutFileExpr;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuBackupSystemDatabaseStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuBackupUserSchemaTableStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuHintStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuMultiInsertStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuOptimizeStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuRenameTableStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuRestoreDatabaseStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuRestoreSchemaStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuRestoreSystemStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuRestoreTableStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuRestoreUserStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuSelectGroupByClause;
 import com.alibaba.druid.sql.parser.SQLStatementParser;
 import com.alibaba.druid.sql.visitor.ExportParameterVisitor;
 import com.alibaba.druid.sql.visitor.SQLEvalVisitor;
@@ -2162,6 +2175,14 @@ public class WallVisitorUtils {
         return isTopSelectStatement(tableSource.getParent());
     }
 
+    public static boolean isTopSelectOutFile(XuGuOutFileExpr x) {
+        if (!(x.getParent() instanceof SQLExprTableSource)) {
+            return false;
+        }
+        SQLExprTableSource tableSource = (SQLExprTableSource) x.getParent();
+        return isTopSelectStatement(tableSource.getParent());
+    }
+
     public static boolean check(WallVisitor visitor, SQLExprTableSource x) {
         final WallTopStatementContext topStatementContext = wallTopStatementContextLocal.get();
 
@@ -2560,7 +2581,9 @@ public class WallVisitorUtils {
             denyMessage = "update not allow";
             errorCode = ErrorCode.UPDATE_NOT_ALLOW;
         } else if (x instanceof OracleMultiInsertStatement
-                || x instanceof OracleMultiInsertStatement.InsertIntoClause) {
+                || x instanceof OracleMultiInsertStatement.InsertIntoClause
+                || x instanceof XuGuMultiInsertStatement
+                || x instanceof XuGuMultiInsertStatement.InsertIntoClause) {
             allow = true;
             denyMessage = "multi-insert not allow";
             errorCode = ErrorCode.INSERT_NOT_ALLOW;
@@ -2582,7 +2605,8 @@ public class WallVisitorUtils {
             allow = config.isCreateTableAllow();
             denyMessage = "create table not allow";
             errorCode = ErrorCode.CREATE_TABLE_NOT_ALLOW;
-        } else if (x instanceof MySqlRenameTableStatement) {
+        } else if (x instanceof MySqlRenameTableStatement
+                || x instanceof XuGuRenameTableStatement) {
             allow = config.isRenameTableAllow();
             denyMessage = "rename table not allow";
             errorCode = ErrorCode.RENAME_TABLE_NOT_ALLOW;
@@ -2623,7 +2647,8 @@ public class WallVisitorUtils {
             allow = config.isUseAllow();
             denyMessage = "use not allow";
             errorCode = ErrorCode.USE_NOT_ALLOW;
-        } else if (x instanceof MySqlHintStatement) {
+        } else if (x instanceof MySqlHintStatement
+                || x instanceof XuGuHintStatement) {
             allow = config.isHintAllow();
             denyMessage = "hint not allow";
             errorCode = ErrorCode.HINT_NOT_ALLOW;
@@ -2641,11 +2666,30 @@ public class WallVisitorUtils {
             errorCode = ErrorCode.BLOCK_NOT_ALLOW;
         } else if (x instanceof SQLExplainStatement
                 || x instanceof MySqlOptimizeStatement
+                || x instanceof XuGuOptimizeStatement
                 || x instanceof SQLRefreshMaterializedViewStatement
         ) {
             allow = true;
             errorCode = 0;
             denyMessage = null;
+        } else if (x instanceof XuGuSelectGroupByClause) {
+            // 原生 SQLSelectGroupByClause 不属于 SQLStatement 上面判断直接 return
+            allow = true;
+            denyMessage = "group by not allow";
+            errorCode = ErrorCode.OTHER;
+        } else if (x instanceof XuGuBackupSystemDatabaseStatement
+                || x instanceof XuGuBackupUserSchemaTableStatement) {
+            allow = config.isBackupAllow();
+            denyMessage = "xugu backup statement not allow";
+            errorCode = ErrorCode.OTHER;
+        } else if (x instanceof XuGuRestoreSystemStatement
+                || x instanceof XuGuRestoreDatabaseStatement
+                || x instanceof XuGuRestoreUserStatement
+                || x instanceof XuGuRestoreSchemaStatement
+                || x instanceof XuGuRestoreTableStatement) {
+            allow = config.isRestoreAllow();
+            denyMessage = "xugu restore statement not allow";
+            errorCode = ErrorCode.OTHER;
         } else {
             allow = config.isNoneBaseStatementAllow();
             errorCode = ErrorCode.NONE_BASE_STATEMENT_NOT_ALLOW;

@@ -39,6 +39,7 @@ import com.alibaba.druid.sql.dialect.oracle.parser.OracleFunctionDataType;
 import com.alibaba.druid.sql.dialect.oracle.parser.OracleProcedureDataType;
 import com.alibaba.druid.sql.template.SQLSelectQueryTemplate;
 import com.alibaba.druid.util.FnvHash;
+import com.alibaba.druid.util.JdbcConstants;
 import com.alibaba.druid.util.JdbcUtils;
 
 import java.io.InputStream;
@@ -2533,8 +2534,18 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
         }
 
         SQLWithSubqueryClause withSubQuery = x.getWithSubQuery();
+        SQLCreateFunctionStatement withFunction = x.getWithFunction();
+        SQLCreateProcedureStatement withProcedure = x.getWithProcedure();
         if (withSubQuery != null) {
             withSubQuery.accept(this);
+            println();
+        } else if (withProcedure != null) {
+            print0(ucase ? "WITH " : "with ");
+            withProcedure.accept(this);
+            println();
+        } else if (withFunction != null) {
+            print0(ucase ? "WITH " : "with ");
+            withFunction.accept(this);
             println();
         }
 
@@ -4369,7 +4380,8 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
 
         SQLSetStatement.Option option = x.getOption();
 
-        boolean printSet = Boolean.TRUE.equals(x.getAttribute("parser.set")) || !JdbcUtils.isOracleDbType(dbType);
+        boolean printSet = Boolean.TRUE.equals(x.getAttribute("parser.set"))
+                || !(JdbcUtils.isOracleDbType(dbType) || DbType.xugu == dbType);
         if (printSet) {
             if (option == SQLSetStatement.Option.PROJECT) {
                 print0(ucase ? "SETPROJECT " : "setproject ");
@@ -4666,7 +4678,9 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
             return false;
         }
 
-        print('(');
+        if (!(JdbcConstants.XUGU.equals(dbType) && x.isInPlSql())) {
+            print('(');
+        }
         this.indentCount++;
 
         for (int i = 0, size = values.size(); i < size; ++i) {
@@ -4732,7 +4746,9 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
         }
 
         this.indentCount--;
-        print(')');
+        if (!(JdbcConstants.XUGU.equals(dbType) && x.isInPlSql())) {
+            print(')');
+        }
         return false;
     }
 
@@ -5256,6 +5272,25 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
         if (collate != null) {
             print0(ucase ? " COLLATE " : " collate ");
             print0(collate);
+        }
+
+        if (x.getXgCharSet() != null) {
+            print0(ucase ? " CHARACTER SET " : " character set ");
+            x.getXgCharSet().accept(this);
+        }
+
+        if (x.getTimeZone() != null) {
+            print0(ucase ? " TIME ZONE " : " time zone ");
+            x.getTimeZone().accept(this);
+        }
+
+        if (x.isEncrypt()) {
+            print0(ucase ? " ENABLE ENCRYPT" : " enable encrypt");
+        }
+
+        if (x.getEncryptor() != null) {
+            print0(ucase ? " ENCRYPT BY " : " encrypt by ");
+            x.getEncryptor().accept(this);
         }
 
         final SQLExpr comment = x.getComment();
@@ -6651,6 +6686,10 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
             }
             print(')');
         }
+        if (DbType.xugu == dbType && x.getBehavior() != null) {
+            print(' ');
+            x.getBehavior().accept(this);
+        }
         return false;
     }
 
@@ -6683,6 +6722,10 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
 
         x.getName().accept(this);
 
+        if (DbType.xugu == dbType && x.getBehavior() != null) {
+            print(' ');
+            x.getBehavior().accept(this);
+        }
         return false;
     }
 
@@ -7693,6 +7736,17 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
         if (x.getDataType().getName().equalsIgnoreCase("CURSOR")) {
             print0(ucase ? "CURSOR " : "cursor ");
             x.getName().accept(this);
+            if (DbType.xugu == dbType && !x.getCursorParameters().isEmpty()) {
+                print0("(");
+                List<SQLParameter> parameters = x.getCursorParameters();
+                for (int i = 0; i < parameters.size(); i++) {
+                    parameters.get(i).accept(this);
+                    if (i != parameters.size() - 1) {
+                        print0(", ");
+                    }
+                }
+                print0(")");
+            }
             print0(ucase ? " IS" : " is");
             this.indentCount++;
             println();
@@ -7711,6 +7765,7 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
             SQLDataType dataType = x.getDataType();
 
             if (DbType.oracle == dbType
+                    || DbType.xugu == dbType
                     || dataType instanceof OracleFunctionDataType
                     || dataType instanceof OracleProcedureDataType) {
                 if (dataType instanceof OracleFunctionDataType) {
@@ -7726,9 +7781,14 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
                 }
 
                 String dataTypeName = dataType.getName();
-                boolean printType = (dataTypeName.startsWith("TABLE OF") && x.getDefaultValue() == null)
-                        || dataTypeName.equalsIgnoreCase("REF CURSOR")
-                        || dataTypeName.startsWith("VARRAY(");
+                boolean printType;
+                if (DbType.xugu == dbType) {
+                    printType = x.isXgPrintType();
+                } else {
+                    printType = (dataTypeName.startsWith("TABLE OF") && x.getDefaultValue() == null)
+                            || dataTypeName.equalsIgnoreCase("REF CURSOR")
+                            || dataTypeName.startsWith("VARRAY(");
+                }
                 if (printType) {
                     print0(ucase ? "TYPE " : "type ");
                 }
@@ -8475,6 +8535,10 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
     @Override
     public boolean visit(MergeInsertClause x) {
         print0(ucase ? "WHEN NOT MATCHED THEN INSERT" : "when not matched then insert");
+        if (DbType.xugu == dbType && x.isXgDefault()) {
+            print0(ucase ? " DEFAULT VALUES" : " default values");
+            return false;
+        }
         if (x.getColumns().size() > 0) {
             printAndAccept(" (", ")", x.getColumns(), ", ", 5);
         }
@@ -8985,7 +9049,7 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
             }
         }
         println();
-        print0(ucase ? "END LOOP" : "end loop");
+        print0(ucase ? "END LOOP;" : "end loop;");
         if (label != null && !label.isEmpty()) {
             print(' ');
             print0(label);
@@ -9603,7 +9667,12 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
 
     @Override
     public boolean visit(SQLRecordDataType x) {
-        print0(ucase ? "RECORD (" : "record (");
+        if (DbType.xugu == dbType) {
+            print0(ucase ? x.getName().toUpperCase() : x.getName().toUpperCase().toLowerCase());
+            print0(" (");
+        } else {
+            print0(ucase ? "RECORD (" : "record (");
+        }
         indentCount++;
         println();
         List<SQLColumnDefinition> columns = x.getColumns();

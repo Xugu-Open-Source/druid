@@ -24,9 +24,12 @@ import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class SQLSelect extends SQLObjectImpl implements SQLDbTypedObject {
     protected SQLWithSubqueryClause withSubQuery;
+    protected SQLCreateProcedureStatement withProcedure;
+    protected SQLCreateFunctionStatement withFunction;
     protected SQLSelectQuery query;
     protected SQLOrderBy orderBy;
     protected SQLLimit limit;
@@ -76,6 +79,22 @@ public class SQLSelect extends SQLObjectImpl implements SQLDbTypedObject {
         this.withSubQuery = x;
     }
 
+    public SQLCreateProcedureStatement getWithProcedure() {
+        return withProcedure;
+    }
+
+    public void setWithProcedure(SQLCreateProcedureStatement withProcedure) {
+        this.withProcedure = withProcedure;
+    }
+
+    public SQLCreateFunctionStatement getWithFunction() {
+        return withFunction;
+    }
+
+    public void setWithFunction(SQLCreateFunctionStatement withFunction) {
+        this.withFunction = withFunction;
+    }
+
     public SQLSelectQuery getQuery() {
         return this.query;
     }
@@ -110,6 +129,13 @@ public class SQLSelect extends SQLObjectImpl implements SQLDbTypedObject {
         if (v.visit(this)) {
             if (withSubQuery != null) {
                 withSubQuery.accept0(v);
+            }
+
+            if (withFunction != null) {
+                withFunction.accept0(v);
+            }
+            if (withProcedure != null) {
+                withProcedure.accept0(v);
             }
 
             if (this.query != null) {
@@ -172,6 +198,13 @@ public class SQLSelect extends SQLObjectImpl implements SQLDbTypedObject {
             x.withSubQuery = withSubQuery.clone();
         }
 
+        if (withFunction != null) {
+            x.withFunction = withFunction.clone();
+        }
+        if (withProcedure != null) {
+            x.withProcedure = withProcedure.clone();
+        }
+
         if (query != null) {
             x.setQuery(query.clone());
         }
@@ -216,6 +249,8 @@ public class SQLSelect extends SQLObjectImpl implements SQLDbTypedObject {
 
     public boolean isSimple() {
         return withSubQuery == null
+                && withProcedure == null
+                && withFunction == null
                 && (hints == null || hints.isEmpty())
                 && restriction == null
                 && (!forBrowse)
@@ -343,6 +378,12 @@ public class SQLSelect extends SQLObjectImpl implements SQLDbTypedObject {
         if (withSubQuery != null ? !withSubQuery.equals(sqlSelect.withSubQuery) : sqlSelect.withSubQuery != null) {
             return false;
         }
+        if (!Objects.equals(withProcedure, sqlSelect.withProcedure)) {
+            return false;
+        }
+        if (!Objects.equals(withFunction, sqlSelect.withFunction)) {
+            return false;
+        }
         if (query != null ? !query.equals(sqlSelect.query) : sqlSelect.query != null) {
             return false;
         }
@@ -376,6 +417,8 @@ public class SQLSelect extends SQLObjectImpl implements SQLDbTypedObject {
     @Override
     public int hashCode() {
         int result = withSubQuery != null ? withSubQuery.hashCode() : 0;
+        result = 31 * result + ((withFunction == null) ? 0 : withFunction.hashCode());
+        result = 31 * result + ((withProcedure == null) ? 0 : withProcedure.hashCode());
         result = 31 * result + (query != null ? query.hashCode() : 0);
         result = 31 * result + (orderBy != null ? orderBy.hashCode() : 0);
         result = 31 * result + (limit != null ? limit.hashCode() : 0);

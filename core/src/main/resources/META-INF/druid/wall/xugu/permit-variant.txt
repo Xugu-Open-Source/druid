@@ -1,0 +1,8 @@
+auto_commit
+char_set
+last_insert_id
+read_only
+lob_ret
+identity_mode
+iso_level
+identity

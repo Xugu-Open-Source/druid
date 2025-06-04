@@ -28,6 +28,7 @@ import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleSelectQueryBlock;
 import com.alibaba.druid.sql.dialect.oracle.visitor.OracleASTVisitorAdapter;
 import com.alibaba.druid.sql.dialect.postgresql.ast.stmt.PGSelectQueryBlock;
 import com.alibaba.druid.sql.dialect.sqlserver.ast.SQLServerSelectQueryBlock;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuSelectQueryBlock;
 import com.alibaba.druid.util.JdbcUtils;
 
 import java.util.List;
@@ -551,6 +552,8 @@ public class PagerUtils {
             case ads:
             case polardbx:
                 return new MySqlSelectQueryBlock();
+            case xugu:
+                return new XuGuSelectQueryBlock();
             case oracle:
                 return new OracleSelectQueryBlock();
             case postgresql:

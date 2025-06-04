@@ -48,6 +48,12 @@ public class SQLCreateDatabaseStatement extends SQLStatementImpl implements SQLC
     //adb
     protected boolean physical;
 
+    // xugu
+    private SQLExpr xgCharSet;
+    private SQLExpr timeZone;
+    private SQLExpr encryptor;
+    private boolean encrypt;
+
     public SQLCreateDatabaseStatement() {
     }
 
@@ -267,6 +273,38 @@ public class SQLCreateDatabaseStatement extends SQLStatementImpl implements SQLC
 
     public void setPhysical(boolean physical) {
         this.physical = physical;
+    }
+
+    public SQLExpr getXgCharSet() {
+        return xgCharSet;
+    }
+
+    public void setXgCharSet(SQLExpr xgCharSet) {
+        this.xgCharSet = xgCharSet;
+    }
+
+    public SQLExpr getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(SQLExpr timeZone) {
+        this.timeZone = timeZone;
+    }
+
+    public SQLExpr getEncryptor() {
+        return encryptor;
+    }
+
+    public void setEncryptor(SQLExpr encryptor) {
+        this.encryptor = encryptor;
+    }
+
+    public boolean isEncrypt() {
+        return encrypt;
+    }
+
+    public void setEncrypt(boolean encrypt) {
+        this.encrypt = encrypt;
     }
 
     @Override

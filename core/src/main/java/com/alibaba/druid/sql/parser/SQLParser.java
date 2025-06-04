@@ -475,6 +475,27 @@ public class SQLParser {
                     alias += ('.' + lexer.token.name());
                     lexer.nextToken();
                 }
+                if (DbType.xugu == dbType && lexer.token == Token.LPAREN) {
+                    StringBuilder builder = new StringBuilder();
+                    builder.append("(");
+                    lexer.nextToken();
+                    for (; ; ) {
+                        if (lexer.token == Token.RPAREN) {
+                            builder.append(")");
+                            lexer.nextToken();
+                            break;
+                        } else if (lexer.token == Token.COMMA) {
+                            builder.append(",");
+                            lexer.nextToken();
+                        } else if (lexer.token == Token.IDENTIFIER) {
+                            builder.append(lexer.stringVal());
+                            lexer.nextToken();
+                        } else {
+                            throw new ParserException("Error : " + lexer.info());
+                        }
+                    }
+                    alias += builder.toString();
+                }
 
                 return alias;
             }
@@ -502,6 +523,9 @@ public class SQLParser {
             }
         } else if (lexer.token == Token.LITERAL_CHARS) {
             alias = "'" + lexer.stringVal() + "'";
+            lexer.nextToken();
+        } else if (lexer.token == Token.Q_ESCAPE) {
+            alias = "q'!" + lexer.stringVal() + "!'";
             lexer.nextToken();
         } else {
             switch (lexer.token) {

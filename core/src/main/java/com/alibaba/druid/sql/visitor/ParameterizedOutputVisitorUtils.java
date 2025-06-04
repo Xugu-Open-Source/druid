@@ -40,6 +40,7 @@ import com.alibaba.druid.sql.dialect.phoenix.visitor.PhoenixOutputVisitor;
 import com.alibaba.druid.sql.dialect.postgresql.visitor.PGOutputVisitor;
 import com.alibaba.druid.sql.dialect.presto.visitor.PrestoOutputVisitor;
 import com.alibaba.druid.sql.dialect.sqlserver.visitor.SQLServerOutputVisitor;
+import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuOutputVisitor;
 import com.alibaba.druid.sql.parser.SQLParserFeature;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.SQLSelectListCache;
@@ -444,6 +445,8 @@ public class ParameterizedOutputVisitorUtils {
                 return new CKOutputVisitor(out, true);
             case bigquery:
                 return new BigQueryOutputVisitor(out, true);
+            case xugu:
+                return new XuGuOutputVisitor(out, true);
             default:
                 return new SQLASTOutputVisitor(out, true);
         }

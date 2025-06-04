@@ -69,6 +69,8 @@ import com.alibaba.druid.sql.dialect.sqlserver.visitor.SQLServerOutputVisitor;
 import com.alibaba.druid.sql.dialect.sqlserver.visitor.SQLServerSchemaStatVisitor;
 import com.alibaba.druid.sql.dialect.starrocks.visitor.StarRocksOutputVisitor;
 import com.alibaba.druid.sql.dialect.teradata.visitor.TDOutputVisitor;
+import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuOutputVisitor;
+import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuSchemaStatVisitor;
 import com.alibaba.druid.sql.parser.*;
 import com.alibaba.druid.sql.repository.SchemaRepository;
 import com.alibaba.druid.sql.visitor.*;
@@ -180,6 +182,9 @@ public class SQLUtils {
         return toMySqlString(sqlObject, (FormatOption) null);
     }
 
+    public static String toXuGuString(SQLObject sqlObject) {
+        return toXuGuString(sqlObject, (FormatOption) null);
+    }
     public static String toMySqlStringIfNotNull(SQLObject sqlObject, String defaultStr) {
         if (sqlObject == null) {
             return defaultStr;
@@ -201,6 +206,10 @@ public class SQLUtils {
 
     public static String toMySqlString(SQLObject sqlObject, FormatOption option) {
         return toSQLString(sqlObject, DbType.mysql, option);
+    }
+
+    public static String toXuGuString(SQLObject sqlObject, FormatOption option) {
+        return toSQLString(sqlObject, JdbcConstants.XUGU, option);
     }
 
     public static SQLExpr toMySqlExpr(String sql) {
@@ -585,6 +594,8 @@ public class SQLUtils {
                 return new DorisOutputVisitor(out);
             case teradata:
                 return new TDOutputVisitor(out);
+            case xugu:
+                return new XuGuOutputVisitor(out);
             default:
                 return new SQLASTOutputVisitor(out, dbType);
         }
@@ -641,6 +652,8 @@ public class SQLUtils {
                 return new SparkSchemaStatVisitor(repository);
             case clickhouse:
                 return new CKStatVisitor(repository);
+            case xugu:
+                return new XuGuSchemaStatVisitor(repository);
             default:
                 return new SchemaStatVisitor(repository);
         }

@@ -30,6 +30,7 @@ public class SQLDropFunctionStatement extends SQLStatementImpl implements SQLDro
     private boolean ifExists;
     protected List<SQLParameter> parameters;
     private boolean temporary;
+    private SQLExpr behavior;
 
     public SQLDropFunctionStatement() {
     }
@@ -43,6 +44,7 @@ public class SQLDropFunctionStatement extends SQLStatementImpl implements SQLDro
         if (visitor.visit(this)) {
             acceptChild(visitor, name);
             acceptChild(visitor, parameters);
+            acceptChild(visitor, behavior);
         }
         visitor.endVisit(this);
     }
@@ -80,6 +82,14 @@ public class SQLDropFunctionStatement extends SQLStatementImpl implements SQLDro
 
     public void setTemporary(boolean temporary) {
         this.temporary = temporary;
+    }
+
+    public SQLExpr getBehavior() {
+        return behavior;
+    }
+
+    public void setBehavior(SQLExpr behavior) {
+        this.behavior = behavior;
     }
 
     public boolean replace(SQLExpr expr, SQLExpr target) {

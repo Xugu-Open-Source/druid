@@ -8320,7 +8320,7 @@ public class MySqlStatementParser extends SQLStatementParser {
 
             if (lexer.token() == Token.COMMENT) {
                 lexer.nextToken();
-                stmt.setComment(lexer.stringVal());
+                stmt.setComment(exprParser.name());
                 lexer.nextToken();
                 continue;
             }

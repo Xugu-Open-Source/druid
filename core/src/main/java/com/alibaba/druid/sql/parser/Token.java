@@ -280,6 +280,13 @@ public enum Token {
     LINE_COMMENT,
     MULTI_LINE_COMMENT,
 
+    // xugu
+    BULK("BULK"),
+    ENDFOR("ENDFOR"),
+    ENDLOOP("ENDLOOP"),
+    Q_ESCAPE("q'"),
+    SUBPARTITION("SUBPARTITION"),
+
     // Oracle
     BINARY_FLOAT,
     BINARY_DOUBLE,

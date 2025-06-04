@@ -33,6 +33,7 @@ public final class SQLParameter extends SQLObjectImpl implements SQLObjectWithDa
     private boolean order;
     private boolean map;
     private boolean member;
+    private boolean xgPrintType;
 
     public SQLParameter() {
     }
@@ -194,5 +195,13 @@ public final class SQLParameter extends SQLObjectImpl implements SQLObjectWithDa
 
     public void setMember(boolean member) {
         this.member = member;
+    }
+
+    public boolean isXgPrintType() {
+        return xgPrintType;
+    }
+
+    public void setXgPrintType(boolean xgPrintType) {
+        this.xgPrintType = xgPrintType;
     }
 }

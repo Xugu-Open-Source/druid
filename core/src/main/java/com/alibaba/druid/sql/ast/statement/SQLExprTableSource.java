@@ -33,6 +33,7 @@ public class SQLExprTableSource extends SQLTableSourceImpl implements SQLReplace
     protected List<SQLName> partitions;
     protected SQLTableSampling sampling;
     protected SchemaObject schemaObject;
+    private boolean xgSubPartition;
 
     protected List<SQLName> columns;
 
@@ -290,6 +291,7 @@ public class SQLExprTableSource extends SQLTableSourceImpl implements SQLReplace
     public void cloneTo(SQLExprTableSource x) {
         x.alias = alias;
 
+        x.xgSubPartition = xgSubPartition;
         if (expr != null) {
             x.setExpr(expr.clone());
         }
@@ -339,6 +341,14 @@ public class SQLExprTableSource extends SQLTableSourceImpl implements SQLReplace
 
     public void setSchemaObject(SchemaObject schemaObject) {
         this.schemaObject = schemaObject;
+    }
+
+    public boolean isXgSubPartition() {
+        return xgSubPartition;
+    }
+
+    public void setXgSubPartition(boolean xgSubPartition) {
+        this.xgSubPartition = xgSubPartition;
     }
 
     public boolean containsAlias(String alias) {
@@ -526,7 +536,9 @@ public class SQLExprTableSource extends SQLTableSourceImpl implements SQLReplace
         }
 
         SQLExprTableSource that = (SQLExprTableSource) o;
-
+        if (xgSubPartition != that.xgSubPartition) {
+            return false;
+        }
         if (expr != null ? !expr.equals(that.expr) : that.expr != null) {
             return false;
         }
@@ -550,6 +562,7 @@ public class SQLExprTableSource extends SQLTableSourceImpl implements SQLReplace
         result = 31 * result + (sampling != null ? sampling.hashCode() : 0);
         result = 31 * result + (schemaObject != null ? schemaObject.hashCode() : 0);
         result = 31 * result + (columns != null ? columns.hashCode() : 0);
+        result = 31 * result + (xgSubPartition ? 1 : 0);
         return result;
     }
 }

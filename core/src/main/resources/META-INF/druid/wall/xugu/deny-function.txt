@@ -1,0 +1,10 @@
+version
+database
+schema
+user
+system_user
+session_user
+benchmark
+current_user
+sleep
+xmltype

@@ -18,6 +18,8 @@ package com.alibaba.druid.sql.ast.statement;
 import com.alibaba.druid.sql.ast.*;
 import com.alibaba.druid.sql.dialect.mysql.ast.MySqlKey;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlTableIndex;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuKey;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuTableIndex;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 
 import java.util.List;
@@ -114,7 +116,15 @@ public class SQLAlterTableAddIndex extends SQLObjectImpl implements SQLAlterTabl
         indexDefinition.cloneTo(x.getIndexDefinition());
     }
 
+    public void cloneTo(XuGuTableIndex x) {
+        // indexDefinition.cloneTo(x.getIndexDefinition());
+    }
+
     public void cloneTo(MySqlKey x) {
+        indexDefinition.cloneTo(x.getIndexDefinition());
+    }
+
+    public void cloneTo(XuGuKey x) {
         indexDefinition.cloneTo(x.getIndexDefinition());
     }
 

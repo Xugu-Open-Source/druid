@@ -30,15 +30,18 @@ import com.alibaba.druid.sql.dialect.mysql.ast.FullTextType;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.mysql.parser.MySqlExprParser;
 import com.alibaba.druid.sql.dialect.oracle.parser.OracleExprParser;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuMultiInsertStatement;
 import com.alibaba.druid.sql.repository.SchemaRepository;
 import com.alibaba.druid.util.FnvHash;
 import com.alibaba.druid.util.FnvHash.Constants;
+import com.alibaba.druid.util.JdbcConstants;
 import com.alibaba.druid.util.MySqlUtils;
 import com.alibaba.druid.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -473,6 +476,15 @@ public class SQLStatementParser extends SQLParser {
                 }
                 default:
                     break;
+            }
+
+            if ((lexer.token == Token.ENDFOR || lexer.token == Token.ENDLOOP)
+                    && DbType.xugu == dbType) {
+                if (lexer.isKeepComments() && lexer.hasComment() && !statementList.isEmpty()) {
+                    SQLStatement stmt = statementList.get(statementList.size() - 1);
+                    stmt.addAfterComment(lexer.readAndResetComments());
+                }
+                return;
             }
 
             if (lexer.token == Token.LBRACE || lexer.identifierEquals("CALL")) {
@@ -3490,6 +3502,11 @@ public class SQLStatementParser extends SQLParser {
             parserParameters(stmt.getParameters(), stmt);
             accept(Token.RPAREN); // match ")"
         }
+
+        if (DbType.xugu == dbType
+                && (lexer.identifierEquals("CASCADE") || lexer.identifierEquals("RESTRICT"))) {
+            stmt.setBehavior(exprParser.expr());
+        }
         return stmt;
     }
 
@@ -3545,6 +3562,10 @@ public class SQLStatementParser extends SQLParser {
         SQLName name = this.exprParser.name();
         stmt.setName(name);
 
+        if (JdbcConstants.XUGU.equals(dbType)
+                && (lexer.identifierEquals("CASCADE") || lexer.identifierEquals("RESTRICT"))) {
+            stmt.setBehavior(exprParser.expr());
+        }
         return stmt;
     }
 
@@ -3732,7 +3753,18 @@ public class SQLStatementParser extends SQLParser {
 
             SQLName tableName = this.exprParser.name();
             insertStatement.setTableName(tableName);
-
+            if (lexer.token == Token.PARTITION && dbType.xugu == dbType) {
+                lexer.nextToken();
+                accept(Token.LPAREN);
+                this.exprParser.names(((XuGuMultiInsertStatement.InsertIntoClause) insertStatement).getXgPartitions(), insertStatement);
+                accept(Token.RPAREN);
+            } else if (lexer.token == Token.SUBPARTITION && dbType.xugu == dbType) {
+                lexer.nextToken();
+                accept(Token.LPAREN);
+                this.exprParser.names(((XuGuMultiInsertStatement.InsertIntoClause) insertStatement).getXgPartitions(), insertStatement);
+                ((XuGuMultiInsertStatement.InsertIntoClause) insertStatement).setXgSubPartition(true);
+                accept(Token.RPAREN);
+            }
             if (lexer.token == Token.LITERAL_ALIAS) {
                 insertStatement.setAlias(tableAlias());
             }
@@ -5626,23 +5658,29 @@ public class SQLStatementParser extends SQLParser {
                 accept(Token.THEN);
                 accept(Token.INSERT);
 
-                if (lexer.token == Token.LPAREN) {
-                    accept(Token.LPAREN);
-                    exprParser.exprList(insertClause.getColumns(), insertClause);
-                    accept(Token.RPAREN);
-                }
-                if (lexer.nextIfIdentifier("ROW")) {
-                    insertClause.getValues().add(new SQLIdentifierExpr("ROW"));
-                } else {
-                    accept(Token.VALUES);
-                    accept(Token.LPAREN);
-                    exprParser.exprList(insertClause.getValues(), insertClause);
-                    accept(Token.RPAREN);
-                }
-
-                if (lexer.token == Token.WHERE) {
+                if (DbType.xugu == dbType && lexer.token == Token.DEFAULT) {
                     lexer.nextToken();
-                    insertClause.setWhere(exprParser.expr());
+                    accept(Token.VALUES);
+                    insertClause.setXgDefault(true);
+                } else {
+                    if (lexer.token == Token.LPAREN) {
+                        accept(Token.LPAREN);
+                        exprParser.exprList(insertClause.getColumns(), insertClause);
+                        accept(Token.RPAREN);
+                    }
+                    if (lexer.nextIfIdentifier("ROW")) {
+                        insertClause.getValues().add(new SQLIdentifierExpr("ROW"));
+                    } else {
+                        accept(Token.VALUES);
+                        accept(Token.LPAREN);
+                        exprParser.exprList(insertClause.getValues(), insertClause);
+                        accept(Token.RPAREN);
+                    }
+
+                    if (lexer.token == Token.WHERE) {
+                        lexer.nextToken();
+                        insertClause.setWhere(exprParser.expr());
+                    }
                 }
 
                 stmt.setInsertClause(insertClause);
@@ -5873,13 +5911,31 @@ public class SQLStatementParser extends SQLParser {
     }
 
     public SQLStatement parseWith() {
-        SQLWithSubqueryClause with = this.parseWithQuery();
+        SQLWithSubqueryClause with = null;
+        SQLCreateFunctionStatement withFunction = null;
+        SQLCreateProcedureStatement withProcedure = null;
+        Lexer.SavePoint mark = lexer.mark();
+        accept(Token.WITH);
+        if (lexer.token == Token.FUNCTION && JdbcConstants.XUGU.equals(dbType)) {
+            withFunction = parseCreateFunction();
+        } else if (lexer.token == Token.PROCEDURE && JdbcConstants.XUGU.equals(dbType)) {
+            withProcedure = parseCreateProcedure();
+        } else {
+            lexer.reset(mark);
+            with = this.parseWithQuery();
+        }
 
         SQLStatement stmt = null;
         if (lexer.token == Token.SELECT || lexer.token == Token.LPAREN) {
             SQLSelectParser selectParser = createSQLSelectParser();
             SQLSelect select = selectParser.select();
-            select.setWithSubQuery(with);
+            if (withFunction != null) {
+                select.setWithFunction(withFunction);
+            } else if (withProcedure != null) {
+                select.setWithProcedure(withProcedure);
+            } else {
+                select.setWithSubQuery(with);
+            }
             stmt = new SQLSelectStatement(select, dbType);
         } else if (lexer.token == Token.INSERT) {
             SQLInsertStatement insert = (SQLInsertStatement) this.parseInsert();
@@ -6529,6 +6585,14 @@ public class SQLStatementParser extends SQLParser {
     ) {
         final boolean optimizedForParameterized = lexer.isEnabled(SQLParserFeature.OptimizedForForParameterizedSkipValue);
 
+        if (JdbcConstants.XUGU.equals(lexer.dbType) && lexer.token != Token.LPAREN
+                && lexer.token == Token.IDENTIFIER && (lexer.text.contains("BEGIN") && lexer.text.contains("END"))) {
+            SQLExpr expr = exprParser.expr();
+            SQLInsertStatement.ValuesClause values = new SQLInsertStatement.ValuesClause(Collections.singletonList(expr));
+            values.setInPlSql(true);
+            valueClauseList.add(values);
+            return;
+        }
         SQLInsertStatement.ValuesClause values;
         for (int i = 0; ; ++i) {
             int startPos = lexer.pos - 1;
@@ -6778,6 +6842,8 @@ public class SQLStatementParser extends SQLParser {
                 if (values != null) {
                     columnSize = values.getValues().size();
                 }
+                continue;
+            } else if (DbType.xugu == lexer.dbType && lexer.token == Token.LPAREN) {
                 continue;
             } else {
                 break;

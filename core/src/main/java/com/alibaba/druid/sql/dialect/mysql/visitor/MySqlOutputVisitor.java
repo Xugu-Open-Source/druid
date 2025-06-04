@@ -4729,10 +4729,10 @@ public class MySqlOutputVisitor extends SQLASTOutputVisitor implements MySqlASTV
     protected void printCreateFunctionBody(SQLCreateFunctionStatement x) {
         printCreateFunctionReturns(x);
 
-        String comment = x.getComment();
+        SQLName comment = x.getComment();
         if (comment != null) {
             print(ucase ? " COMMENT " : " comment ");
-            print(ucase ? comment.toUpperCase() : comment.toLowerCase());
+            x.getComment().accept(this);
         }
 
         if (x.isDeterministic()) {

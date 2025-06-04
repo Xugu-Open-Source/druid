@@ -42,9 +42,16 @@ public class SQLCreateFunctionStatement extends SQLStatementImpl implements SQLC
 
     SQLDataType returnDataType;
 
+    // for xugu
+    private boolean force;
+    private boolean exists;
+    private boolean self;
+    private SQLName languageWithC;
+    private SQLName languageWithPl;
+
     // for mysql
 
-    private String comment;
+    private SQLName comment;
     private boolean deterministic;
     private boolean parallelEnable;
     private boolean aggregate;
@@ -85,9 +92,18 @@ public class SQLCreateFunctionStatement extends SQLStatementImpl implements SQLC
         if (returnDataType != null) {
             x.setReturnDataType(returnDataType.clone());
         }
-        x.comment = comment;
+        x.comment = comment.clone();
         x.deterministic = deterministic;
         x.pipelined = pipelined;
+        x.force = force;
+        x.exists = exists;
+        x.self = self;
+        if (languageWithC != null) {
+            x.languageWithC = languageWithC;
+        }
+        if (languageWithPl != null) {
+            x.languageWithPl = languageWithPl;
+        }
         x.language = language;
 
         return x;
@@ -101,6 +117,8 @@ public class SQLCreateFunctionStatement extends SQLStatementImpl implements SQLC
             acceptChild(visitor, parameters);
             acceptChild(visitor, returnDataType);
             acceptChild(visitor, block);
+            acceptChild(visitor, languageWithC);
+            acceptChild(visitor, languageWithPl);
         }
         visitor.endVisit(this);
     }
@@ -201,11 +219,51 @@ public class SQLCreateFunctionStatement extends SQLStatementImpl implements SQLC
         this.returnDataType = returnDataType;
     }
 
-    public String getComment() {
+    public boolean isForce() {
+        return force;
+    }
+
+    public void setForce(boolean force) {
+        this.force = force;
+    }
+
+    public boolean isExists() {
+        return exists;
+    }
+
+    public void setExists(boolean exists) {
+        this.exists = exists;
+    }
+
+    public boolean isSelf() {
+        return self;
+    }
+
+    public void setSelf(boolean self) {
+        this.self = self;
+    }
+
+    public SQLName getLanguageWithC() {
+        return languageWithC;
+    }
+
+    public void setLanguageWithC(SQLName languageWithC) {
+        this.languageWithC = languageWithC;
+    }
+
+    public SQLName getLanguageWithPl() {
+        return languageWithPl;
+    }
+
+    public void setLanguageWithPl(SQLName languageWithPl) {
+        this.languageWithPl = languageWithPl;
+    }
+
+    public SQLName getComment() {
         return comment;
     }
 
-    public void setComment(String comment) {
+    public void setComment(SQLName comment) {
         this.comment = comment;
     }
 

@@ -26,8 +26,8 @@ import static com.alibaba.druid.util.Utils.getInteger;
 import static com.alibaba.druid.wall.spi.WallVisitorUtils.loadResource;
 
 public class WallConfig implements WallConfigMBean {
-    private boolean noneBaseStatementAllow;
 
+    private boolean noneBaseStatementAllow;
     private boolean callAllow = true;
     private boolean selectAllow = true;
     private boolean selectIntoAllow = true;
@@ -93,6 +93,9 @@ public class WallConfig implements WallConfigMBean {
     private boolean mustParameterized;
 
     private boolean doPrivilegedAllow;
+
+    private boolean backupAllow;
+    private boolean restoreAllow;
 
     protected final Set<String> denyFunctions = new ConcurrentSkipListSet<String>();
     protected final Set<String> denyTables = new ConcurrentSkipListSet<String>();
@@ -536,6 +539,22 @@ public class WallConfig implements WallConfigMBean {
 
     public void setVariantCheck(boolean variantCheck) {
         this.variantCheck = variantCheck;
+    }
+
+    public boolean isBackupAllow() {
+        return backupAllow;
+    }
+
+    public void setBackupAllow(boolean backupAllow) {
+        this.backupAllow = backupAllow;
+    }
+
+    public boolean isRestoreAllow() {
+        return restoreAllow;
+    }
+
+    public void setRestoreAllow(boolean restoreAllow) {
+        this.restoreAllow = restoreAllow;
     }
 
     public boolean isObjectCheck() {

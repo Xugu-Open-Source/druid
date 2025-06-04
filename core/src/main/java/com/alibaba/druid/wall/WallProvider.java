@@ -22,6 +22,7 @@ import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
 import com.alibaba.druid.sql.ast.statement.SQLUpdateStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlHintStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuHintStatement;
 import com.alibaba.druid.sql.parser.*;
 import com.alibaba.druid.sql.visitor.ExportParameterVisitor;
 import com.alibaba.druid.sql.visitor.ParameterizedOutputVisitorUtils;
@@ -525,7 +526,7 @@ public abstract class WallProvider {
             boolean lastIsHint = false;
             for (int i = 0; i < statementList.size(); i++) {
                 SQLStatement stmt = statementList.get(i);
-                if ((i == 0 || lastIsHint) && stmt instanceof MySqlHintStatement) {
+                if ((i == 0 || lastIsHint) && (stmt instanceof MySqlHintStatement || stmt instanceof XuGuHintStatement)) {
                     lastIsHint = true;
                     continue;
                 }

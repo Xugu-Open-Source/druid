@@ -48,6 +48,16 @@ public class WallUtils {
         return provider.checkValid(sql);
     }
 
+    public static boolean isValidateXuGu(String sql) {
+        XuGuWallProvider provider = new XuGuWallProvider();
+        return provider.checkValid(sql);
+    }
+
+    public static boolean isValidateXuGu(String sql, WallConfig config) {
+        XuGuWallProvider provider = new XuGuWallProvider(config);
+        return provider.checkValid(sql);
+    }
+
     public static boolean isValidateOracle(String sql) {
         OracleWallProvider provider = new OracleWallProvider();
         return provider.checkValid(sql);

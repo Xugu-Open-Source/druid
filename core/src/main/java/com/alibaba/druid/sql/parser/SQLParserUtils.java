@@ -98,6 +98,10 @@ import com.alibaba.druid.sql.dialect.starrocks.parser.StarRocksStatementParser;
 import com.alibaba.druid.sql.dialect.teradata.parser.TDExprParser;
 import com.alibaba.druid.sql.dialect.teradata.parser.TDLexer;
 import com.alibaba.druid.sql.dialect.teradata.parser.TDStatementParser;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuSelectQueryBlock;
+import com.alibaba.druid.sql.dialect.xugu.parser.XuGuExprParser;
+import com.alibaba.druid.sql.dialect.xugu.parser.XuGuLexer;
+import com.alibaba.druid.sql.dialect.xugu.parser.XuGuStatementParser;
 import com.alibaba.druid.sql.visitor.SQLASTOutputVisitor;
 import com.alibaba.druid.sql.visitor.VisitorFeature;
 import com.alibaba.druid.util.StringUtils;
@@ -107,7 +111,7 @@ import java.util.*;
 public class SQLParserUtils {
     public static SQLStatementParser createSQLStatementParser(String sql, DbType dbType) {
         SQLParserFeature[] features;
-        if (DbType.odps == dbType || DbType.mysql == dbType) {
+        if (DbType.odps == dbType || DbType.mysql == dbType || DbType.xugu == dbType) {
             features = new SQLParserFeature[]{SQLParserFeature.KeepComments};
         } else {
             features = new SQLParserFeature[]{};
@@ -210,6 +214,8 @@ public class SQLParserUtils {
                 return new OscarStatementParser(sql, features);
             case teradata:
                 return new TDStatementParser(sql, features);
+            case xugu:
+                return new XuGuStatementParser(sql, features);
             default:
                 return new SQLStatementParser(sql, dbType, features);
         }
@@ -276,6 +282,8 @@ public class SQLParserUtils {
                 return new DorisExprParser(sql, features);
             case teradata:
                 return new TDExprParser(sql, features);
+            case xugu:
+                return new XuGuExprParser(sql, features);
             default:
                 return new SQLExprParser(sql, dbType, features);
         }
@@ -345,6 +353,8 @@ public class SQLParserUtils {
                 return new DorisLexer(sql, features);
             case teradata:
                 return new TDLexer(sql, features);
+            case xugu:
+                return new XuGuLexer(sql, features);
             default: {
                 Lexer lexer = new Lexer(sql, null, dbType);
                 for (SQLParserFeature feature : features) {
@@ -379,6 +389,8 @@ public class SQLParserUtils {
                 return new SQLServerSelectQueryBlock();
             case oscar:
                 return new OscarSelectQueryBlock();
+            case xugu:
+                return new XuGuSelectQueryBlock();
             default:
                 return new SQLSelectQueryBlock(dbType);
         }

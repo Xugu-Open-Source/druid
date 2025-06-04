@@ -43,6 +43,16 @@ import com.alibaba.druid.sql.dialect.sqlserver.ast.SQLServerSelectQueryBlock;
 import com.alibaba.druid.sql.dialect.sqlserver.ast.stmt.SQLServerInsertStatement;
 import com.alibaba.druid.sql.dialect.sqlserver.ast.stmt.SQLServerUpdateStatement;
 import com.alibaba.druid.sql.dialect.sqlserver.visitor.SQLServerASTVisitorAdapter;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuForeignKey;
+import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuCursorDeclareStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuDeclareStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.clause.XuGuRepeatStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuCreateTableStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuDeleteStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuInsertStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuSelectQueryBlock;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuUpdateStatement;
+import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitorAdapter;
 import com.alibaba.druid.sql.visitor.SQLASTVisitorAdapter;
 import com.alibaba.druid.util.FnvHash;
 import com.alibaba.druid.util.PGUtils;
@@ -130,6 +140,200 @@ class SchemaResolveVisitorFactory {
             return (options & option.mask) != 0;
         }
 
+        public int getOptions() {
+            return options;
+        }
+
+        @Override
+        public Context getContext() {
+            return context;
+        }
+
+        public Context createContext(SQLObject object) {
+            return this.context = new Context(object, context);
+        }
+
+        @Override
+        public void popContext() {
+            if (context != null) {
+                context = context.parent;
+            }
+        }
+
+        public SchemaRepository getRepository() {
+            return repository;
+        }
+    }
+
+    static class XuGuResolveVisitor extends XuGuASTVisitorAdapter implements SchemaResolveVisitor {
+        private SchemaRepository repository;
+        private int options;
+        private Context context;
+
+        public XuGuResolveVisitor(SchemaRepository repository, int options) {
+            this.repository = repository;
+            this.options = options;
+        }
+
+        public boolean visit(SQLSelectStatement x) {
+            resolve(this, x.getSelect());
+            return false;
+        }
+
+        public boolean visit(XuGuRepeatStatement x) {
+            return true;
+        }
+
+        public boolean visit(XuGuDeclareStatement x) {
+            for (SQLDeclareItem declareItem : x.getVarList()) {
+                visit(declareItem);
+            }
+            return false;
+        }
+
+        public boolean visit(XuGuCursorDeclareStatement x) {
+            return true;
+        }
+
+        public boolean visit(XuGuForeignKey x) {
+            resolve(this, x);
+            return false;
+        }
+
+        public boolean visit(SQLExprTableSource x) {
+            resolve(this, x);
+            return false;
+        }
+
+        public boolean visit(XuGuSelectQueryBlock x) {
+            resolve(this, x);
+            return false;
+        }
+
+        public boolean visit(SQLSelectQueryBlock x) {
+            resolve(this, x);
+            return false;
+        }
+
+        public boolean visit(SQLSelectItem x) {
+            SQLExpr expr = x.getExpr();
+            if (expr instanceof SQLIdentifierExpr) {
+                resolveIdent(this, (SQLIdentifierExpr) expr);
+                return false;
+            }
+
+            if (expr instanceof SQLPropertyExpr) {
+                resolve(this, (SQLPropertyExpr) expr);
+                return false;
+            }
+
+            return true;
+        }
+
+        public boolean visit(SQLIdentifierExpr x) {
+            // ROWNUM 不解析为某个表的列名
+            if (x.nameHashCode64() == FnvHash.Constants.ROWNUM) {
+                return false;
+            }
+            resolveIdent(this, x);
+            return true;
+        }
+
+        public boolean visit(SQLPropertyExpr x) {
+            resolve(this, x);
+            return false;
+        }
+
+        public boolean visit(SQLAllColumnExpr x) {
+            resolve(this, x);
+            return false;
+        }
+
+        public boolean visit(XuGuCreateTableStatement x) {
+            resolve(this, x);
+            SQLExprTableSource like = x.getLike();
+            if (like != null) {
+                like.accept(this);
+            }
+            return false;
+        }
+
+        public boolean visit(XuGuUpdateStatement x) {
+            resolve(this, x);
+            return false;
+        }
+
+        public boolean visit(XuGuDeleteStatement x) {
+            resolve(this, x);
+            return false;
+        }
+
+        public boolean visit(SQLSelect x) {
+            resolve(this, x);
+            return false;
+        }
+
+        public boolean visit(SQLWithSubqueryClause x) {
+            resolve(this, x);
+            return false;
+        }
+
+        public boolean visit(SQLAlterTableStatement x) {
+            resolve(this, x);
+            return false;
+        }
+
+        public boolean visit(XuGuInsertStatement x) {
+            resolve(this, x);
+            return false;
+        }
+
+        public boolean visit(SQLInsertStatement x) {
+            resolve(this, x);
+            return false;
+        }
+
+        public boolean visit(SQLReplaceStatement x) {
+            resolve(this, x);
+            return false;
+        }
+
+        public boolean visit(SQLMergeStatement x) {
+            resolve(this, x);
+            return false;
+        }
+
+        public boolean visit(SQLCreateProcedureStatement x) {
+            resolve(this, x);
+            return false;
+        }
+
+        public boolean visit(SQLBlockStatement x) {
+            resolve(this, x);
+            return false;
+        }
+
+        public boolean visit(SQLParameter x) {
+            resolve(this, x);
+            return false;
+        }
+
+        public boolean visit(SQLDeclareItem x) {
+            resolve(this, x);
+            return false;
+        }
+
+        public boolean visit(SQLOver x) {
+            resolve(this, x);
+            return false;
+        }
+
+        @Override
+        public boolean isEnabled(Option option) {
+            return (options & option.mask) != 0;
+        }
+
+        @Override
         public int getOptions() {
             return options;
         }

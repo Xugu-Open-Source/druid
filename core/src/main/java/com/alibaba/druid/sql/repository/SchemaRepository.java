@@ -439,6 +439,9 @@ public class SchemaRepository {
             case sqlserver:
                 resolveVisitor = new SchemaResolveVisitorFactory.SQLServerResolveVisitor(this, optionsValue);
                 break;
+            case xugu:
+                resolveVisitor = new SchemaResolveVisitorFactory.XuGuResolveVisitor(this, optionsValue);
+                break;
             default:
                 resolveVisitor = new SchemaResolveVisitorFactory.SQLResolveVisitor(this, optionsValue);
                 break;

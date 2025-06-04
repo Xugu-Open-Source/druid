@@ -193,6 +193,12 @@ public class WallFilter extends FilterAdapter implements WallFilterMBean {
                 }
                 provider = new CKWallProvider(config);
                 break;
+            case xugu:
+                if (config == null) {
+                    config = new WallConfig(XuGuWallProvider.DEFAULT_CONFIG_DIR);
+                }
+                provider = new XuGuWallProvider(config);
+                break;
             default:
                 provider = initWallProviderWithSPI(dataSource, config, dbType);
                 if (provider == null) {

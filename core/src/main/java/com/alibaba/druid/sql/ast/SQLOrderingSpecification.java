@@ -16,7 +16,9 @@
 package com.alibaba.druid.sql.ast;
 
 public enum SQLOrderingSpecification {
-    ASC("ASC"), DESC("DESC");
+    ASC("ASC"), DESC("DESC"),
+    USING_LT("USING <"), USING_GT("USING >"), USING_EQ("USING ="),
+    USING_LTEQ("USING <="), USING_GTEQ("USING >="), USING_LTGT("USING <>");
 
     public final String name;
     public final String nameLCase;

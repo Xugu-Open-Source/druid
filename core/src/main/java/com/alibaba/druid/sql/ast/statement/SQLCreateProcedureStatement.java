@@ -39,6 +39,12 @@ public class SQLCreateProcedureStatement extends SQLStatementImpl implements SQL
 
     private SQLName authid;
 
+    // for xugu
+    private boolean force;
+    private boolean exists;
+    private SQLName languageWithC;
+    private SQLName languageWithPl;
+
     // for mysql
     private boolean deterministic;
     private boolean containsSql;
@@ -59,8 +65,52 @@ public class SQLCreateProcedureStatement extends SQLStatementImpl implements SQL
             acceptChild(visitor, parameters);
             acceptChild(visitor, block);
             acceptChild(visitor, comment);
+            acceptChild(visitor, languageWithC);
+            acceptChild(visitor, languageWithPl);
         }
         visitor.endVisit(this);
+    }
+
+    @Override
+    public SQLCreateProcedureStatement clone() {
+        SQLCreateProcedureStatement x = new SQLCreateProcedureStatement();
+        if (definer != null) {
+            x.setDefiner(definer.clone());
+        }
+        x.create = create;
+        x.orReplace = orReplace;
+        if (name != null) {
+            x.setName(name.clone());
+        }
+        if (block != null) {
+            x.setBlock(block);
+        }
+        for (SQLParameter p : parameters) {
+            SQLParameter p2 = p.clone();
+            p2.setParent(x);
+            x.parameters.add(p2);
+        }
+        x.javaCallSpec = javaCallSpec;
+        if (authid != null) {
+            x.setAuthid(authid);
+        }
+        x.force = force;
+        x.exists = exists;
+        if (languageWithC != null) {
+            x.languageWithC = languageWithC;
+        }
+        if (languageWithPl != null) {
+            x.languageWithPl = languageWithPl;
+        }
+        x.deterministic = deterministic;
+        x.containsSql = containsSql;
+        x.noSql = noSql;
+        x.readSqlData = readSqlData;
+        x.modifiesSqlData = modifiesSqlData;
+        x.languageSql = languageSql;
+        x.wrappedSource = wrappedSource;
+        x.comment = comment;
+        return x;
     }
 
     public List<SQLParameter> getParameters() {
@@ -131,6 +181,38 @@ public class SQLCreateProcedureStatement extends SQLStatementImpl implements SQL
 
     public void setJavaCallSpec(String javaCallSpec) {
         this.javaCallSpec = javaCallSpec;
+    }
+
+    public boolean isExists() {
+        return exists;
+    }
+
+    public void setExists(boolean exists) {
+        this.exists = exists;
+    }
+
+    public boolean isForce() {
+        return force;
+    }
+
+    public void setForce(boolean force) {
+        this.force = force;
+    }
+
+    public SQLName getLanguageWithC() {
+        return languageWithC;
+    }
+
+    public void setLanguageWithC(SQLName languageWithC) {
+        this.languageWithC = languageWithC;
+    }
+
+    public SQLName getLanguageWithPl() {
+        return languageWithPl;
+    }
+
+    public void setLanguageWithPl(SQLName languageWithPl) {
+        this.languageWithPl = languageWithPl;
     }
 
     public boolean isDeterministic() {
