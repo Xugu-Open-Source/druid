@@ -5800,7 +5800,7 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
         }
         println();
         if (JdbcConstants.XUGU.equals(dbType)) {
-            print0(ucase ? "END LOOP" : "end loop");
+            print0(ucase ? "END LOOP;" : "end loop;");
         } else {
             print0(ucase ? "END WHILE" : "end while");
         }
