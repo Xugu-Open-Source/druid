@@ -1232,7 +1232,7 @@ public class XuGuStatementParser extends SQLStatementParser {
             block.setEndLabel(endLabel);
         }
         accept(Token.SEMI);
-
+        block.setAfterSemi(true);
         return block;
     }
 
@@ -5833,6 +5833,7 @@ public class XuGuStatementParser extends SQLStatementParser {
             block.setEndLabel(endLabel);
         }
         accept(Token.SEMI);
+        block.setAfterSemi(true);
         return block;
     }
 

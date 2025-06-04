@@ -3139,9 +3139,8 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
                     && x.getEndLabel() != null) {
                 print0(ucase ? "END " : "end ");
                 print0(x.getEndLabel());
-                print0(";");
             } else {
-                print0(ucase ? "END;" : "end;");
+                print0(ucase ? "END" : "end");
             }
             if (labelName != null && !labelName.equals("")) {
                 print(' ');

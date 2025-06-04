@@ -102,7 +102,7 @@ public class XgPlOutputVisitorTest extends TestCase {
                 "\tTYPE type_table_var1 IS TABLE OF TYPE_RECORD INDEX BY int;\n" +
                 "BEGIN\n" +
                 "\tSELECT * FROM tb_top1;\n" +
-                "END";
+                "END;";
         List<SQLStatement> stmts = SQLUtils.parseStatements(sql, JdbcConstants.XUGU);
         String tempResult = SQLUtils.toSQLString(stmts, JdbcConstants.XUGU);
         System.out.println(tempResult);
