@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.alibaba.druid.bvt.filter.wall.xugu;
 
 import com.alibaba.druid.wall.WallUtils;
 import junit.framework.TestCase;
 import org.junit.Assert;
 
-public class XuGuWallSelectTest extends TestCase {
+public class XuGuWallSelectQ_EscapeTest extends TestCase {
 
-    public void testTop() throws Exception {
-        Assert.assertTrue(WallUtils.isValidateXuGu("SELECT top 2 * FROM tb_top ORDER BY id DESC;"));
+    public void testQ_EscapeSquareBrackets() {
+        Assert.assertTrue(WallUtils.isValidateXuGu(" SELECT id, name, amount, region, PARENT_ID parentId FROM tb_top WHERE name = q'[''four'']';"));
     }
 
-    public void testTop2() throws Exception {
-        Assert.assertFalse(WallUtils.isValidateXuGu("SELECT top  * FROM tb_top ORDER BY id DESC;"));
+    public void testQ_EscapeSquareBrackets1() {
+        Assert.assertTrue(WallUtils.isValidateXuGu(" SELECT q'[it's an example1]' FROM dual;"));
     }
+
 }

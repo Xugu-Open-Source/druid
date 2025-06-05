@@ -28,6 +28,7 @@ import com.alibaba.druid.sql.dialect.mysql.visitor.MySqlEvalVisitorImpl;
 import com.alibaba.druid.sql.dialect.oracle.visitor.OracleEvalVisitor;
 import com.alibaba.druid.sql.dialect.postgresql.visitor.PGEvalVisitor;
 import com.alibaba.druid.sql.dialect.sqlserver.visitor.SQLServerEvalVisitor;
+import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuEvalVisitorImpl;
 import com.alibaba.druid.sql.visitor.functions.*;
 import com.alibaba.druid.util.HexBin;
 import com.alibaba.druid.util.Utils;
@@ -128,6 +129,8 @@ public class SQLEvalVisitorUtils {
                 return new SQLServerEvalVisitor();
             case db2:
                 return new DB2EvalVisitor();
+            case xugu:
+                return new XuGuEvalVisitorImpl();
             default:
                 return new SQLEvalVisitorImpl();
         }

@@ -20,7 +20,7 @@ import com.alibaba.druid.wall.WallUtils;
 import junit.framework.TestCase;
 import org.junit.Assert;
 
-public class XuGuWallSelectTest_0 extends TestCase {
+public class XuGuWallSelectBulkTest extends TestCase {
 
     public void testBulk() throws Exception {
         Assert.assertTrue(WallUtils.isValidateXuGu("SELECT * BULK COLLECT FROM tb_top ORDER BY id DESC;"));

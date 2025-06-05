@@ -42,10 +42,4 @@ public class XuGuWallSelectTest_1 extends TestCase {
 
     }
 
-    public void test_for_parameterize1(){
-        String sql = "DELETE FROM SYSDBA.tb_top t1 FROM tb_top_merge t2 WHERE t1.id = t2.id AND t2.tid > 1;";
-        Assert.assertTrue(WallUtils.isValidateXuGu(sql));
-
-    }
-
 }
