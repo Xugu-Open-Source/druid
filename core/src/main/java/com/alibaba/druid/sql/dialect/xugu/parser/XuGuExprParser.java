@@ -536,6 +536,11 @@ public class XuGuExprParser extends SQLExprParser {
                 XuGuQ_EscapeExpr xuGuQEscapeExpr = new XuGuQ_EscapeExpr(lexer.stringVal());
                 lexer.nextToken();
                 return xuGuQEscapeExpr;
+            case LITERAL_ALIAS:
+                // xugu 双引号"id" 默认为 字段变量或函数
+                String alias = lexer.stringVal();
+                lexer.nextToken();
+                return primaryRest(new SQLIdentifierExpr(alias));
             default:
                 return super.primary();
         }
