@@ -42,7 +42,7 @@ public class XgSelectTargetListForStringTest extends TestCase {
     }
 
     /**
-     * todo：xugu 非兼容模式下，id为tb_top中列名
+     * xugu 非兼容模式下，id为tb_top中列名
      */
     public void test_string_quotation_mark1() {
         String sql = "select \"id\" from tb_top;";
