@@ -32,6 +32,7 @@ public final class SQLParameter extends SQLObjectImpl implements SQLObjectWithDa
     private boolean                  order;
     private boolean                  map;
     private boolean                  member;
+    private boolean xgPrintType;
 
     public SQLExpr getDefaultValue() {
         return defaultValue;
@@ -138,6 +139,7 @@ public final class SQLParameter extends SQLObjectImpl implements SQLObjectWithDa
         x.constant = constant;
         x.order = order;
         x.map = map;
+        x.xgPrintType = xgPrintType;
         if (cursorName != null) {
             x.setCursorName(cursorName.clone());
         }
@@ -171,5 +173,13 @@ public final class SQLParameter extends SQLObjectImpl implements SQLObjectWithDa
 
     public void setMember(boolean member) {
         this.member = member;
+    }
+
+    public boolean isXgPrintType() {
+        return xgPrintType;
+    }
+
+    public void setXgPrintType(boolean xgPrintType) {
+        this.xgPrintType = xgPrintType;
     }
 }

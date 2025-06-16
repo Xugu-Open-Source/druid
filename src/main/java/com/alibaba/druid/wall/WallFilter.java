@@ -55,6 +55,7 @@ import com.alibaba.druid.sql.ast.expr.SQLValuableExpr;
 import com.alibaba.druid.sql.ast.expr.SQLVariantRefExpr;
 import com.alibaba.druid.support.logging.Log;
 import com.alibaba.druid.support.logging.LogFactory;
+import com.alibaba.druid.util.JdbcConstants;
 import com.alibaba.druid.util.JdbcUtils;
 import com.alibaba.druid.util.ServletPathMatcher;
 import com.alibaba.druid.util.StringUtils;
@@ -65,6 +66,7 @@ import com.alibaba.druid.wall.spi.MySqlWallProvider;
 import com.alibaba.druid.wall.spi.OracleWallProvider;
 import com.alibaba.druid.wall.spi.PGWallProvider;
 import com.alibaba.druid.wall.spi.SQLServerWallProvider;
+import com.alibaba.druid.wall.spi.XuGuWallProvider;
 import com.alibaba.druid.wall.violation.SyntaxErrorViolation;
 
 public class WallFilter extends FilterAdapter implements WallFilterMBean {
@@ -136,6 +138,11 @@ public class WallFilter extends FilterAdapter implements WallFilterMBean {
             }
 
             provider = new MySqlWallProvider(config);
+        } else if (JdbcConstants.XUGU.equals(dbType)) {
+            if (config == null) {
+                config = new WallConfig(XuGuWallProvider.DEFAULT_CONFIG_DIR);
+            }
+            provider = new XuGuWallProvider(config);
         } else if (JdbcUtils.isOracleDbType(dbType)) {
             if (config == null) {
                 config = new WallConfig(OracleWallProvider.DEFAULT_CONFIG_DIR);

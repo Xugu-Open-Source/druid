@@ -45,6 +45,9 @@ import com.alibaba.druid.sql.dialect.sqlserver.ast.SQLServerSelectQueryBlock;
 import com.alibaba.druid.sql.dialect.sqlserver.parser.SQLServerExprParser;
 import com.alibaba.druid.sql.dialect.sqlserver.parser.SQLServerLexer;
 import com.alibaba.druid.sql.dialect.sqlserver.parser.SQLServerStatementParser;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuSelectQueryBlock;
+import com.alibaba.druid.sql.dialect.xugu.parser.XuGuExprParser;
+import com.alibaba.druid.sql.dialect.xugu.parser.XuGuStatementParser;
 import com.alibaba.druid.util.JdbcConstants;
 import com.alibaba.druid.util.JdbcUtils;
 
@@ -52,7 +55,7 @@ public class SQLParserUtils {
 
     public static SQLStatementParser createSQLStatementParser(String sql, String dbType) {
         SQLParserFeature[] features;
-        if (JdbcConstants.ODPS.equals(dbType) || JdbcConstants.MYSQL.equals(dbType)) {
+        if (JdbcConstants.ODPS.equals(dbType) || JdbcConstants.MYSQL.equals(dbType) || JdbcConstants.XUGU.startsWith(dbType)) {
             features = new SQLParserFeature[] {SQLParserFeature.KeepComments};
         } else {
             features = new SQLParserFeature[] {};
@@ -82,6 +85,10 @@ public class SQLParserUtils {
 
         if (JdbcUtils.isMysqlDbType(dbType)) {
             return new MySqlStatementParser(sql, features);
+        }
+
+        if (JdbcUtils.XUGU.equals(dbType)) {
+            return new XuGuStatementParser(sql, features);
         }
 
         if (JdbcUtils.isPgsqlDbType(dbType)) {
@@ -122,6 +129,10 @@ public class SQLParserUtils {
 
         if (JdbcUtils.isMysqlDbType(dbType)) {
             return new MySqlExprParser(sql);
+        }
+
+        if (JdbcUtils.XUGU.equals(dbType)) {
+            return new XuGuExprParser(sql);
         }
 
         if (JdbcUtils.isPgsqlDbType(dbType)) {
@@ -186,6 +197,10 @@ public class SQLParserUtils {
 
         if (JdbcUtils.isMysqlDbType(dbType)) {
             return new MySqlSelectQueryBlock();
+        }
+
+        if (JdbcUtils.XUGU.equals(dbType)) {
+            return new XuGuSelectQueryBlock();
         }
 
         if (JdbcUtils.isPgsqlDbType(dbType)) {

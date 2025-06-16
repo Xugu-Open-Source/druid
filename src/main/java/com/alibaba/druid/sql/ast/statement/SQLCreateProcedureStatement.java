@@ -18,6 +18,7 @@ package com.alibaba.druid.sql.ast.statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.SQLParameter;
 import com.alibaba.druid.sql.ast.SQLStatement;
@@ -39,6 +40,13 @@ public class SQLCreateProcedureStatement extends SQLStatementImpl implements SQL
 
     private SQLName            authid;
 
+    // for xugu
+    private boolean force;
+    private boolean exists;
+    private SQLName languageWithC;
+    private SQLName languageWithPl;
+    private SQLName comment;
+
     // for mysql
     private boolean            deterministic;
     private boolean            containsSql;
@@ -55,8 +63,52 @@ public class SQLCreateProcedureStatement extends SQLStatementImpl implements SQL
             acceptChild(visitor, name);
             acceptChild(visitor, parameters);
             acceptChild(visitor, block);
+            acceptChild(visitor, languageWithC);
+            acceptChild(visitor, languageWithPl);
+            acceptChild(visitor, comment);
         }
         visitor.endVisit(this);
+    }
+
+    @Override
+    public SQLCreateProcedureStatement clone() {
+        SQLCreateProcedureStatement x = new SQLCreateProcedureStatement();
+        if (definer != null) {
+            x.setDefiner(definer.clone());
+        }
+        x.create = create;
+        x.orReplace = orReplace;
+        if (name != null) {
+            x.setName(name.clone());
+        }
+        if (block != null) {
+            x.setBlock(block);
+        }
+        for (SQLParameter p : parameters) {
+            SQLParameter p2 = p.clone();
+            p2.setParent(x);
+            x.parameters.add(p2);
+        }
+        x.javaCallSpec = javaCallSpec;
+        if (authid != null) {
+            x.setAuthid(authid);
+        }
+        x.force = force;
+        x.exists = exists;
+        if (languageWithC != null) {
+            x.languageWithC = languageWithC;
+        }
+        if (languageWithPl != null) {
+            x.languageWithPl = languageWithPl;
+        }
+        x.deterministic = deterministic;
+        x.containsSql = containsSql;
+        x.noSql = noSql;
+        x.readSqlData = readSqlData;
+        x.modifiesSqlData = modifiesSqlData;
+        x.wrappedSource = wrappedSource;
+        x.comment = comment.clone();
+        return x;
     }
 
     public List<SQLParameter> getParameters() {
@@ -127,6 +179,49 @@ public class SQLCreateProcedureStatement extends SQLStatementImpl implements SQL
 
     public void setJavaCallSpec(String javaCallSpec) {
         this.javaCallSpec = javaCallSpec;
+    }
+
+    public boolean isExists() {
+        return exists;
+    }
+
+    public void setExists(boolean exists) {
+        this.exists = exists;
+    }
+
+    public boolean isForce() {
+        return force;
+    }
+
+    public void setForce(boolean force) {
+        this.force = force;
+    }
+
+    public SQLName getLanguageWithC() {
+        return languageWithC;
+    }
+
+    public void setLanguageWithC(SQLName languageWithC) {
+        this.languageWithC = languageWithC;
+    }
+
+    public SQLName getLanguageWithPl() {
+        return languageWithPl;
+    }
+
+    public void setLanguageWithPl(SQLName languageWithPl) {
+        this.languageWithPl = languageWithPl;
+    }
+
+    public SQLExpr getComment() {
+        return comment;
+    }
+
+    public void setComment(SQLName comment) {
+        if (comment != null) {
+            comment.setParent(this);
+        }
+        this.comment = comment;
     }
 
     public boolean isDeterministic() {

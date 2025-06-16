@@ -20,6 +20,7 @@ import com.alibaba.druid.wall.spi.MySqlWallProvider;
 import com.alibaba.druid.wall.spi.OracleWallProvider;
 import com.alibaba.druid.wall.spi.PGWallProvider;
 import com.alibaba.druid.wall.spi.SQLServerWallProvider;
+import com.alibaba.druid.wall.spi.XuGuWallProvider;
 
 public class WallUtils {
     public static boolean isValidateDB2(String sql) {
@@ -49,6 +50,16 @@ public class WallUtils {
 
     public static boolean isValidateMySql(String sql, WallConfig config) {
         MySqlWallProvider provider = new MySqlWallProvider(config);
+        return provider.checkValid(sql);
+    }
+
+    public static boolean isValidateXuGu(String sql) {
+        XuGuWallProvider provider = new XuGuWallProvider();
+        return provider.checkValid(sql);
+    }
+
+    public static boolean isValidateXuGu(String sql, WallConfig config) {
+        XuGuWallProvider provider = new XuGuWallProvider(config);
         return provider.checkValid(sql);
     }
 

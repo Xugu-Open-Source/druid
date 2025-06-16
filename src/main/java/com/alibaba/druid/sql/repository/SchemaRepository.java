@@ -286,6 +286,8 @@ public class SchemaRepository {
             resolveVisitor = new SchemaResolveVisitorFactory.MySqlResolveVisitor(this, optionsValue);
         } else if (JdbcUtils.isOracleDbType(dbType)) {
             resolveVisitor = new SchemaResolveVisitorFactory.OracleResolveVisitor(this, optionsValue);
+        } else if (JdbcUtils.XUGU.equals(dbType)) {
+            resolveVisitor = new SchemaResolveVisitorFactory.XuGuResolveVisitor(this, optionsValue);
         } else if (JdbcUtils.isPgsqlDbType(dbType)) {
             resolveVisitor = new SchemaResolveVisitorFactory.PGResolveVisitor(this, optionsValue);
         } else if (JdbcUtils.isSqlserverDbType(dbType)) {

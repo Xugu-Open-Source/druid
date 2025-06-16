@@ -27,6 +27,9 @@ import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 public class SQLReplaceStatement extends SQLStatementImpl {
     protected boolean             lowPriority = false;
     protected boolean             delayed     = false;
+    private boolean defaultValues;
+    private boolean xgSubPartition;
+    private List<SQLName> xgPartitions;
 
     protected SQLExprTableSource  tableSource;
     protected final List<SQLExpr> columns     = new ArrayList<SQLExpr>();
@@ -82,6 +85,40 @@ public class SQLReplaceStatement extends SQLStatementImpl {
 
     public void setDelayed(boolean delayed) {
         this.delayed = delayed;
+    }
+
+    public boolean isDefaultValues() {
+        return defaultValues;
+    }
+
+    public void setDefaultValues(boolean defaultValues) {
+        this.defaultValues = defaultValues;
+    }
+
+    public boolean isXgSubPartition() {
+        return xgSubPartition;
+    }
+
+    public void setXgSubPartition(boolean xgSubPartition) {
+        this.xgSubPartition = xgSubPartition;
+    }
+
+    public List<SQLName> getXgPartitions() {
+        if (this.xgPartitions == null) {
+            this.xgPartitions = new ArrayList<SQLName>(2);
+        }
+        return xgPartitions;
+    }
+
+    public void addXgPartition(SQLName xgPartitions) {
+        if (xgPartitions != null) {
+            xgPartitions.setParent(this);
+        }
+
+        if (this.xgPartitions == null) {
+            this.xgPartitions = new ArrayList<SQLName>(2);
+        }
+        this.xgPartitions.add(xgPartitions);
     }
 
     public SQLQueryExpr getQuery() {

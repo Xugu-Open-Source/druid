@@ -28,6 +28,7 @@ import com.alibaba.druid.sql.builder.SQLDeleteBuilder;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlDeleteStatement;
 import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleDeleteStatement;
 import com.alibaba.druid.sql.dialect.postgresql.ast.stmt.PGDeleteStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuDeleteStatement;
 import com.alibaba.druid.util.JdbcConstants;
 import com.alibaba.druid.util.JdbcUtils;
 
@@ -134,6 +135,10 @@ public class SQLDeleteBuilderImpl implements SQLDeleteBuilder {
 
         if (JdbcUtils.isPgsqlDbType(dbType)) {
             return new PGDeleteStatement();
+        }
+
+        if (JdbcUtils.XUGU.equals(dbType)) {
+            return new XuGuDeleteStatement();
         }
         
         return new SQLDeleteStatement();

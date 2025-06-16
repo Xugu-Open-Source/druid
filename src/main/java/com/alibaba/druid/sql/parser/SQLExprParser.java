@@ -1500,6 +1500,10 @@ public class SQLExprParser extends SQLParser {
         } else if (lexer.token == Token.VARIANT) {
             identName = lexer.stringVal();
             lexer.nextToken();
+        } else if (lexer.token == Token.LITERAL_INT && JdbcConstants.XUGU.equals(dbType)) {
+            // PL/SQL 中解析游标参数为 NUMBER 类型
+            identName = lexer.numberString();
+            lexer.nextToken();
         } else {
             switch (lexer.token) {
                 case MODEL:
@@ -1823,6 +1827,27 @@ public class SQLExprParser extends SQLParser {
         } else if (lexer.token == Token.DESC) {
             lexer.nextToken();
             item.setType(SQLOrderingSpecification.DESC);
+        } else if (lexer.token == Token.USING) {
+            lexer.nextToken();
+            if (lexer.token == Token.LT) {
+                lexer.nextToken();
+                item.setType(SQLOrderingSpecification.USING_LT);
+            } else if (lexer.token == Token.GT) {
+                lexer.nextToken();
+                item.setType(SQLOrderingSpecification.USING_GT);
+            } else if (lexer.token == Token.EQ) {
+                lexer.nextToken();
+                item.setType(SQLOrderingSpecification.USING_EQ);
+            } else if (lexer.token == Token.LTEQ) {
+                lexer.nextToken();
+                item.setType(SQLOrderingSpecification.USING_LTEQ);
+            } else if (lexer.token == Token.GTEQ) {
+                lexer.nextToken();
+                item.setType(SQLOrderingSpecification.USING_GTEQ);
+            } else if (lexer.token == Token.LTGT || lexer.token == Token.BANGEQ) {
+                lexer.nextToken();
+                item.setType(SQLOrderingSpecification.USING_LTGT);
+            }
         }
 
         if (lexer.identifierEquals(FnvHash.Constants.NULLS)) {
@@ -3616,6 +3641,7 @@ public class SQLExprParser extends SQLParser {
             SQLLimit limit = new SQLLimit();
 
             SQLExpr temp;
+            boolean xgRowCountAll = false;
             if (lexer.token == Token.LITERAL_INT) {
                 temp = new SQLIntegerExpr(lexer.integerValue());
                 lexer.nextTokenComma();
@@ -3623,11 +3649,20 @@ public class SQLExprParser extends SQLParser {
                     temp = this.primaryRest(temp);
                     temp = this.exprRest(temp);
                 }
+            } else if (JdbcConstants.XUGU.equals(dbType) && lexer.token == Token.ALL) {
+                String ident = lexer.stringVal();
+                long hash_lower = lexer.hash_lower();
+                temp = new SQLIdentifierExpr(ident, hash_lower);
+                xgRowCountAll = true;
+                lexer.nextTokenComma();
             } else {
                 temp = this.expr();
             }
 
             if (lexer.token == (Token.COMMA)) {
+                if (xgRowCountAll) {
+                    throw new ParserException("syntax error. " + lexer.info());
+                }
                 limit.setOffset(temp);
                 lexer.nextTokenValue();
 
@@ -3639,7 +3674,13 @@ public class SQLExprParser extends SQLParser {
                         rowCount = this.primaryRest(rowCount);
                         rowCount = this.exprRest(rowCount);
                     }
-                } else {
+                } else if (JdbcConstants.XUGU.equals(dbType) && lexer.token == Token.ALL) {
+                    String ident = lexer.stringVal();
+                    long hash_lower = lexer.hash_lower();
+                    rowCount = new SQLIdentifierExpr(ident, hash_lower);
+                    xgRowCountAll = true;
+                    lexer.nextTokenComma();
+                }  else {
                     rowCount = this.expr();
                 }
 

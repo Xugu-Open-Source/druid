@@ -99,6 +99,10 @@ public class WallConfig implements WallConfigMBean {
 
     private boolean             doPrivilegedAllow           = false;
 
+    // xugu
+    private boolean backupAllow;
+    private boolean restoreAllow;
+
     protected final Set<String> denyFunctions               = new ConcurrentSkipListSet<String>();
     protected final Set<String> denyTables                  = new ConcurrentSkipListSet<String>();
     protected final Set<String> denySchemas                 = new ConcurrentSkipListSet<String>();
@@ -541,6 +545,22 @@ public class WallConfig implements WallConfigMBean {
 
     public void setVariantCheck(boolean variantCheck) {
         this.variantCheck = variantCheck;
+    }
+
+    public boolean isBackupAllow() {
+        return backupAllow;
+    }
+
+    public void setBackupAllow(boolean backupAllow) {
+        this.backupAllow = backupAllow;
+    }
+
+    public boolean isRestoreAllow() {
+        return restoreAllow;
+    }
+
+    public void setRestoreAllow(boolean restoreAllow) {
+        this.restoreAllow = restoreAllow;
     }
 
     public boolean isObjectCheck() {

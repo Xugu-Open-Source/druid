@@ -29,6 +29,7 @@ import com.alibaba.druid.sql.dialect.oracle.visitor.OracleParameterizedOutputVis
 import com.alibaba.druid.sql.dialect.phoenix.visitor.PhoenixOutputVisitor;
 import com.alibaba.druid.sql.dialect.postgresql.visitor.PGOutputVisitor;
 import com.alibaba.druid.sql.dialect.sqlserver.visitor.SQLServerOutputVisitor;
+import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuOutputVisitor;
 import com.alibaba.druid.sql.parser.SQLParserFeature;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.SQLSelectListCache;
@@ -273,6 +274,9 @@ public class ParameterizedOutputVisitorUtils {
             return new MySqlOutputVisitor(out, true);
         }
 
+        if (JdbcUtils.XUGU.equals(dbType)) {
+            return new XuGuOutputVisitor(out, true);
+        }
 
         if (JdbcUtils.isPgsqlDbType(dbType)) {
             return new PGOutputVisitor(out, true);

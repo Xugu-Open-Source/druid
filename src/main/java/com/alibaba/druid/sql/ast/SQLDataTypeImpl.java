@@ -34,7 +34,7 @@ public class SQLDataTypeImpl extends SQLObjectImpl implements SQLDataType {
 
     private         boolean       unsigned;
     private         boolean       zerofill;
-
+    private         SQLExpr       indexBy;
     public SQLDataTypeImpl(){
 
     }
@@ -159,6 +159,9 @@ public class SQLDataTypeImpl extends SQLObjectImpl implements SQLDataType {
         x.withLocalTimeZone = withLocalTimeZone;
         x.zerofill = zerofill;
         x.unsigned = unsigned;
+        if (this.indexBy != null) {
+            x.setIndexBy(this.indexBy.clone());
+        }
     }
 
     public String toString() {
@@ -179,5 +182,17 @@ public class SQLDataTypeImpl extends SQLObjectImpl implements SQLDataType {
 
     public void setZerofill(boolean zerofill) {
         this.zerofill = zerofill;
+    }
+
+    public SQLExpr getIndexBy() {
+        return this.indexBy;
+    }
+
+    public void setIndexBy(SQLExpr x) {
+        if (x != null) {
+            x.setParent(this);
+        }
+
+        this.indexBy = x;
     }
 }

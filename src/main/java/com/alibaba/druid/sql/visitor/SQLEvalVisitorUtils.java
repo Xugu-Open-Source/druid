@@ -62,6 +62,7 @@ import com.alibaba.druid.sql.dialect.mysql.visitor.MySqlEvalVisitorImpl;
 import com.alibaba.druid.sql.dialect.oracle.visitor.OracleEvalVisitor;
 import com.alibaba.druid.sql.dialect.postgresql.visitor.PGEvalVisitor;
 import com.alibaba.druid.sql.dialect.sqlserver.visitor.SQLServerEvalVisitor;
+import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuEvalVisitorImpl;
 import com.alibaba.druid.sql.visitor.functions.Ascii;
 import com.alibaba.druid.sql.visitor.functions.Bin;
 import com.alibaba.druid.sql.visitor.functions.BitLength;
@@ -166,6 +167,10 @@ public class SQLEvalVisitorUtils {
 
         if (JdbcUtils.isOracleDbType(dbType)) {
             return new OracleEvalVisitor();
+        }
+
+        if (JdbcConstants.XUGU.equals(dbType)) {
+            return new XuGuEvalVisitorImpl();
         }
 
         if (JdbcUtils.isPgsqlDbType(dbType)) {

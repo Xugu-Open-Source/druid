@@ -153,6 +153,13 @@ public enum Token {
     SQLSTATE("SQLSTATE"),
     CONDITION("CONDITION"),
     DIV("DIV"),
+
+    // xugu
+    BULK("BULK"),
+    ENDFOR("ENDFOR"),
+    ENDLOOP("ENDLOOP"),
+    Q_ESCAPE("q'"),
+    SUBPARTITION("SUBPARTITION"),
     
     //postgresql
     WINDOW("WINDOW"),

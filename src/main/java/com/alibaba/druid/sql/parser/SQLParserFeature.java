@@ -28,7 +28,7 @@ public enum SQLParserFeature {
     EnableMultiUnion,
     IgnoreNameQuotes,
     EnableCurrentUserExpr,
-
+    KeepNameQuotes,
     PipesAsConcat, // for mysql
     ;
 

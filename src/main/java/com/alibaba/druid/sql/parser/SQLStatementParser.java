@@ -16,6 +16,7 @@
 package com.alibaba.druid.sql.parser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.alibaba.druid.sql.ast.SQLCommentHint;
@@ -126,6 +127,8 @@ import com.alibaba.druid.sql.dialect.hive.ast.HiveInsertStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlSelectQueryBlock;
 import com.alibaba.druid.sql.dialect.mysql.parser.MySqlExprParser;
 import com.alibaba.druid.sql.dialect.oracle.parser.OracleExprParser;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuDropSchemaStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuMultiInsertStatement;
 import com.alibaba.druid.util.FnvHash;
 import com.alibaba.druid.util.JdbcConstants;
 
@@ -419,6 +422,15 @@ public class SQLStatementParser extends SQLParser {
                     break;
             }
 
+            if ((lexer.token == Token.ENDFOR || lexer.token == Token.ENDLOOP)
+                    && JdbcConstants.XUGU.equals(dbType)) {
+                if (lexer.isKeepComments() && lexer.hasComment() && !statementList.isEmpty()) {
+                    SQLStatement stmt = statementList.get(statementList.size() - 1);
+                    stmt.addAfterComment(lexer.readAndResetComments());
+                }
+                return;
+            }
+
             if (lexer.token == Token.LBRACE || lexer.identifierEquals("CALL")) {
                 SQLCallStatement stmt = parseCall();
                 statementList.add(stmt);
@@ -583,6 +595,8 @@ public class SQLStatementParser extends SQLParser {
             stmt = parseDropView(false);
         } else if (lexer.token == Token.TRIGGER) {
             stmt = parseDropTrigger(false);
+        } else if (lexer.token == Token.SCHEMA && JdbcConstants.XUGU.equals(lexer.dbType)) {
+            stmt = parseDropXuGuSchema();
         } else if (lexer.token == Token.DATABASE || lexer.token == Token.SCHEMA) {
             stmt = parseDropDatabase(false);
         } else if (lexer.token == Token.FUNCTION) {
@@ -1734,6 +1748,21 @@ public class SQLStatementParser extends SQLParser {
         return stmt;
     }
 
+    protected XuGuDropSchemaStatement parseDropXuGuSchema() {
+        XuGuDropSchemaStatement stmt = new XuGuDropSchemaStatement();
+        accept(Token.SCHEMA);
+        SQLName schemaName = exprParser.name();
+        stmt.setSchemaName(schemaName);
+        if (lexer.identifierEquals("CASCADE")) {
+            lexer.nextToken();
+            stmt.setCascade(true);
+        } else if (lexer.identifierEquals("RESTRICT")) {
+            lexer.nextToken();
+            stmt.setRestrict(true);
+        }
+        return stmt;
+    }
+
     protected SQLDropDatabaseStatement parseDropDatabase(boolean acceptDrop) {
         if (acceptDrop) {
             accept(Token.DROP);
@@ -1777,6 +1806,10 @@ public class SQLStatementParser extends SQLParser {
         SQLName name = this.exprParser.name();
         stmt.setName(name);
 
+        if (JdbcConstants.XUGU.equals(dbType)
+                && (lexer.identifierEquals("CASCADE") || lexer.identifierEquals("RESTRICT"))) {
+            stmt.setBehavior(exprParser.expr());
+        }
         return stmt;
     }
 
@@ -1832,6 +1865,10 @@ public class SQLStatementParser extends SQLParser {
         SQLName name = this.exprParser.name();
         stmt.setName(name);
 
+        if (JdbcConstants.XUGU.equals(dbType)
+                && (lexer.identifierEquals("CASCADE") || lexer.identifierEquals("RESTRICT"))) {
+            stmt.setBehavior(exprParser.expr());
+        }
         return stmt;
     }
 
@@ -1969,6 +2006,19 @@ public class SQLStatementParser extends SQLParser {
 
             SQLName tableName = this.exprParser.name();
             insertStatement.setTableName(tableName);
+
+            if (lexer.token == Token.PARTITION && JdbcConstants.XUGU.equals(dbType)) {
+                lexer.nextToken();
+                accept(Token.LPAREN);
+                this.exprParser.names(((XuGuMultiInsertStatement.InsertIntoClause) insertStatement).getXgPartitions(), insertStatement);
+                accept(Token.RPAREN);
+            } else if (lexer.token == Token.SUBPARTITION && JdbcConstants.XUGU.equals(dbType)) {
+                lexer.nextToken();
+                accept(Token.LPAREN);
+                this.exprParser.names(((XuGuMultiInsertStatement.InsertIntoClause) insertStatement).getXgPartitions(), insertStatement);
+                ((XuGuMultiInsertStatement.InsertIntoClause) insertStatement).setXgSubPartition(true);
+                accept(Token.RPAREN);
+            }
 
             if (lexer.token == Token.LITERAL_ALIAS) {
                 insertStatement.setAlias(tableAlias());
@@ -3148,19 +3198,25 @@ public class SQLStatementParser extends SQLParser {
                 accept(Token.THEN);
                 accept(Token.INSERT);
 
-                if (lexer.token == Token.LPAREN) {
-                    accept(Token.LPAREN);
-                    exprParser.exprList(insertClause.getColumns(), insertClause);
-                    accept(Token.RPAREN);
-                }
-                accept(Token.VALUES);
-                accept(Token.LPAREN);
-                exprParser.exprList(insertClause.getValues(), insertClause);
-                accept(Token.RPAREN);
-
-                if (lexer.token == Token.WHERE) {
+                if (JdbcConstants.XUGU.equals(dbType) && lexer.token == Token.DEFAULT) {
                     lexer.nextToken();
-                    insertClause.setWhere(exprParser.expr());
+                    accept(Token.VALUES);
+                    insertClause.setXgDefault(true);
+                } else {
+                    if (lexer.token == Token.LPAREN) {
+                        accept(Token.LPAREN);
+                        exprParser.exprList(insertClause.getColumns(), insertClause);
+                        accept(Token.RPAREN);
+                    }
+                    accept(Token.VALUES);
+                    accept(Token.LPAREN);
+                    exprParser.exprList(insertClause.getValues(), insertClause);
+                    accept(Token.RPAREN);
+
+                    if (lexer.token == Token.WHERE) {
+                        lexer.nextToken();
+                        insertClause.setWhere(exprParser.expr());
+                    }
                 }
 
                 stmt.setInsertClause(insertClause);
@@ -3324,12 +3380,30 @@ public class SQLStatementParser extends SQLParser {
     }
 
     public SQLStatement parseWith() {
-        SQLWithSubqueryClause with = this.parseWithQuery();
+        SQLWithSubqueryClause with = null;
+        SQLCreateFunctionStatement withFunction = null;
+        SQLCreateProcedureStatement withProcedure = null;
+        Lexer.SavePoint mark = lexer.mark();
+        accept(Token.WITH);
+        if (lexer.token == Token.FUNCTION && JdbcConstants.XUGU.equals(dbType)) {
+            withFunction = parseCreateFunction();
+        } else if (lexer.token == Token.PROCEDURE && JdbcConstants.XUGU.equals(dbType)) {
+            withProcedure = parseCreateProcedure();
+        } else {
+            lexer.reset(mark);
+            with = this.parseWithQuery();
+        }
 
         if (lexer.token == Token.SELECT) {
             SQLSelectParser selectParser = createSQLSelectParser();
             SQLSelect select = selectParser.select();
-            select.setWithSubQuery(with);
+            if (withFunction != null) {
+                select.setWithFunction(withFunction);
+            } else if (withProcedure != null) {
+                select.setWithProcedure(withProcedure);
+            } else {
+                select.setWithSubQuery(with);
+            }
             return new SQLSelectStatement(select, dbType);
         }
 
@@ -3338,6 +3412,14 @@ public class SQLStatementParser extends SQLParser {
 
     protected void parseValueClause(List<SQLInsertStatement.ValuesClause> valueClauseList, int columnSize, SQLObject parent) {
         final boolean optimizedForParameterized = lexer.isEnabled(SQLParserFeature.OptimizedForForParameterizedSkipValue);
+        if (JdbcConstants.XUGU.equals(lexer.dbType) && lexer.token != Token.LPAREN
+                && lexer.token == Token.IDENTIFIER && (lexer.text.contains("BEGIN") && lexer.text.contains("END"))) {
+            SQLExpr expr = exprParser.expr();
+            SQLInsertStatement.ValuesClause values = new SQLInsertStatement.ValuesClause(Collections.singletonList(expr));
+            values.setInPlSql(true);
+            valueClauseList.add(values);
+            return;
+        }
 
         for (int i = 0; ; ++i) {
             int startPos = lexer.pos() - 1;
@@ -3457,6 +3539,8 @@ public class SQLStatementParser extends SQLParser {
             lexer.nextTokenComma();
             if (lexer.token() == Token.COMMA) {
                 lexer.nextTokenLParen();
+                continue;
+            } else if (JdbcConstants.XUGU.equals(lexer.dbType) && lexer.token == Token.LPAREN) {
                 continue;
             } else {
                 break;

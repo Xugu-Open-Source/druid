@@ -31,6 +31,7 @@ import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlUpdateStatement;
 import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleUpdateStatement;
 import com.alibaba.druid.sql.dialect.postgresql.ast.stmt.PGUpdateStatement;
 import com.alibaba.druid.sql.dialect.sqlserver.ast.stmt.SQLServerUpdateStatement;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuUpdateStatement;
 import com.alibaba.druid.util.JdbcConstants;
 import com.alibaba.druid.util.JdbcUtils;
 
@@ -174,6 +175,10 @@ public class SQLUpdateBuilderImpl extends SQLBuilderImpl implements SQLUpdateBui
         
         if (JdbcUtils.isSqlserverDbType(dbType)) {
             return new SQLServerUpdateStatement();
+        }
+
+        if (JdbcUtils.XUGU.equals(dbType)) {
+            return new XuGuUpdateStatement();
         }
         
         return new SQLUpdateStatement();

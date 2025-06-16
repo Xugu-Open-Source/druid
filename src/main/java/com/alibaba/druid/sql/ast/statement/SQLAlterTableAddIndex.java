@@ -23,6 +23,8 @@ import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.SQLObjectImpl;
 import com.alibaba.druid.sql.dialect.mysql.ast.MySqlKey;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlTableIndex;
+import com.alibaba.druid.sql.dialect.xugu.ast.XuGuKey;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuTableIndex;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 
 public class SQLAlterTableAddIndex extends SQLObjectImpl implements SQLAlterTableItem {
@@ -113,7 +115,31 @@ public class SQLAlterTableAddIndex extends SQLObjectImpl implements SQLAlterTabl
         x.setIndexType(type);
     }
 
+    public void cloneTo(XuGuTableIndex x) {
+        if (name != null) {
+            x.setName(name.clone());
+        }
+        for (SQLSelectOrderByItem item : items) {
+            SQLSelectOrderByItem item2 = item.clone();
+            item2.setParent(x);
+            x.getColumns().add(item);
+        }
+        x.setIndexType(type);
+    }
+
     public void cloneTo(MySqlKey x) {
+        if (name != null) {
+            x.setName(name.clone());
+        }
+        for (SQLSelectOrderByItem item : items) {
+            SQLSelectOrderByItem item2 = item.clone();
+            item2.setParent(x);
+            x.getColumns().add(item);
+        }
+        x.setIndexType(type);
+    }
+
+    public void cloneTo(XuGuKey x) {
         if (name != null) {
             x.setName(name.clone());
         }

@@ -17,6 +17,7 @@ package com.alibaba.druid.sql.ast.statement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLExpr;
@@ -35,6 +36,8 @@ import com.alibaba.druid.util.JdbcConstants;
 public class SQLSelect extends SQLObjectImpl {
 
     protected SQLWithSubqueryClause withSubQuery;
+    protected SQLCreateProcedureStatement withProcedure;
+    protected SQLCreateFunctionStatement withFunction;
     protected SQLSelectQuery        query;
     protected SQLOrderBy            orderBy;
     protected SQLLimit              limit;
@@ -80,6 +83,22 @@ public class SQLSelect extends SQLObjectImpl {
         this.withSubQuery = withSubQuery;
     }
 
+    public SQLCreateProcedureStatement getWithProcedure() {
+        return withProcedure;
+    }
+
+    public void setWithProcedure(SQLCreateProcedureStatement withProcedure) {
+        this.withProcedure = withProcedure;
+    }
+
+    public SQLCreateFunctionStatement getWithFunction() {
+        return withFunction;
+    }
+
+    public void setWithFunction(SQLCreateFunctionStatement withFunction) {
+        this.withFunction = withFunction;
+    }
+
     public SQLSelectQuery getQuery() {
         return this.query;
     }
@@ -113,6 +132,8 @@ public class SQLSelect extends SQLObjectImpl {
     protected void accept0(SQLASTVisitor visitor) {
         if (visitor.visit(this)) {
             acceptChild(visitor, this.withSubQuery);
+            acceptChild(visitor, this.withFunction);
+            acceptChild(visitor, this.withProcedure);
             acceptChild(visitor, this.query);
             acceptChild(visitor, this.restriction);
             acceptChild(visitor, this.orderBy);
@@ -140,6 +161,12 @@ public class SQLSelect extends SQLObjectImpl {
             return false;
         }
         if (withSubQuery != null ? !withSubQuery.equals(sqlSelect.withSubQuery) : sqlSelect.withSubQuery != null) {
+            return false;
+        }
+        if (withProcedure != null ? !withProcedure.equals(sqlSelect.withProcedure) : sqlSelect.withProcedure != null) {
+            return false;
+        }
+        if (withFunction != null ? !withFunction.equals(sqlSelect.withFunction) : sqlSelect.withFunction != null) {
             return false;
         }
         if (query != null ? !query.equals(sqlSelect.query) : sqlSelect.query != null) {
@@ -173,6 +200,8 @@ public class SQLSelect extends SQLObjectImpl {
     public int hashCode()
     {
         int result = withSubQuery != null ? withSubQuery.hashCode() : 0;
+        result = 31 * result + ((withFunction == null) ? 0 : withFunction.hashCode());
+        result = 31 * result + ((withProcedure == null) ? 0 : withProcedure.hashCode());
         result = 31 * result + (query != null ? query.hashCode() : 0);
         result = 31 * result + (orderBy != null ? orderBy.hashCode() : 0);
         result = 31 * result + (limit != null ? limit.hashCode() : 0);
@@ -239,6 +268,13 @@ public class SQLSelect extends SQLObjectImpl {
             x.setQuery(query.clone());
         }
 
+        if (withFunction != null) {
+            x.withFunction = withFunction.clone();
+        }
+        if (withProcedure != null) {
+            x.withProcedure = withProcedure.clone();
+        }
+
         if (orderBy != null) {
             x.setOrderBy(this.orderBy.clone());
         }
@@ -273,6 +309,8 @@ public class SQLSelect extends SQLObjectImpl {
 
     public boolean isSimple() {
         return withSubQuery == null
+                && withProcedure == null
+                && withFunction == null
                 && (hints == null || hints.size() == 0)
                 && restriction == null
                 && (!forBrowse)

@@ -55,6 +55,7 @@ import com.alibaba.druid.sql.dialect.oracle.visitor.OracleASTVisitorAdapter;
 import com.alibaba.druid.sql.dialect.postgresql.ast.stmt.PGSelectQueryBlock;
 import com.alibaba.druid.sql.dialect.sqlserver.ast.SQLServerSelectQueryBlock;
 import com.alibaba.druid.sql.dialect.sqlserver.ast.SQLServerTop;
+import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuSelectQueryBlock;
 import com.alibaba.druid.util.JdbcConstants;
 import com.alibaba.druid.util.JdbcUtils;
 
@@ -525,6 +526,10 @@ public class PagerUtils {
 
         if (JdbcUtils.isOracleDbType(dbType)) {
             return new OracleSelectQueryBlock();
+        }
+
+        if (JdbcUtils.XUGU.equals(dbType)) {
+            return new XuGuSelectQueryBlock();
         }
 
         if (JdbcUtils.isPgsqlDbType(dbType)) {

@@ -15,6 +15,7 @@
  */
 package com.alibaba.druid.sql.ast.statement;
 
+import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.SQLStatementImpl;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
@@ -23,6 +24,7 @@ public class SQLDropFunctionStatement extends SQLStatementImpl implements SQLDro
 
     private SQLName name;
     private boolean ifExists;
+    private SQLExpr behavior;
     
     public SQLDropFunctionStatement() {
         
@@ -36,6 +38,7 @@ public class SQLDropFunctionStatement extends SQLStatementImpl implements SQLDro
     protected void accept0(SQLASTVisitor visitor) {
         if (visitor.visit(this)) {
             acceptChild(visitor, name);
+            acceptChild(visitor, behavior);
         }
         visitor.endVisit(this);
     }
@@ -57,6 +60,14 @@ public class SQLDropFunctionStatement extends SQLStatementImpl implements SQLDro
 
     public void setIfExists(boolean ifExists) {
         this.ifExists = ifExists;
+    }
+
+    public SQLExpr getBehavior() {
+        return behavior;
+    }
+
+    public void setBehavior(SQLExpr behavior) {
+        this.behavior = behavior;
     }
 
 }

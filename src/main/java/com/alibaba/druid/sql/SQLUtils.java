@@ -57,6 +57,8 @@ import com.alibaba.druid.sql.dialect.postgresql.visitor.PGOutputVisitor;
 import com.alibaba.druid.sql.dialect.postgresql.visitor.PGSchemaStatVisitor;
 import com.alibaba.druid.sql.dialect.sqlserver.visitor.SQLServerOutputVisitor;
 import com.alibaba.druid.sql.dialect.sqlserver.visitor.SQLServerSchemaStatVisitor;
+import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuOutputVisitor;
+import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuSchemaStatVisitor;
 import com.alibaba.druid.sql.parser.Lexer;
 import com.alibaba.druid.sql.parser.ParserException;
 import com.alibaba.druid.sql.parser.SQLExprParser;
@@ -119,6 +121,14 @@ public class SQLUtils {
 
     public static String toOdpsString(SQLObject sqlObject, FormatOption option) {
         return toSQLString(sqlObject, JdbcConstants.ODPS, option);
+    }
+
+    public static String toXuGuString(SQLObject sqlObject) {
+        return toXuGuString(sqlObject, (FormatOption) null);
+    }
+
+    public static String toXuGuString(SQLObject sqlObject, FormatOption option) {
+        return toSQLString(sqlObject, JdbcConstants.XUGU, option);
     }
 
     public static String toMySqlString(SQLObject sqlObject) {
@@ -410,6 +420,10 @@ public class SQLUtils {
             return new MySqlOutputVisitor(out);
         }
 
+        if (JdbcConstants.XUGU.equals(dbType)) {
+            return new XuGuOutputVisitor(out);
+        }
+
         if (JdbcUtils.isPgsqlDbType(dbType)) {
             return new PGOutputVisitor(out);
         }
@@ -453,6 +467,10 @@ public class SQLUtils {
 
         if (JdbcUtils.isMysqlDbType(dbType)) {
             return new MySqlSchemaStatVisitor();
+        }
+
+        if (JdbcConstants.XUGU.equals(dbType)) {
+            return new XuGuSchemaStatVisitor();
         }
 
         if (JdbcUtils.isPgsqlDbType(dbType)) {

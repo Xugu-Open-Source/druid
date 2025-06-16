@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.alibaba.druid.sql.ast.SQLCommentHint;
+import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.SQLObject;
 import com.alibaba.druid.sql.ast.SQLStatementImpl;
@@ -34,6 +35,12 @@ public class SQLCreateDatabaseStatement extends SQLStatementImpl implements SQLC
     private List<SQLCommentHint> hints;
     
     protected boolean            ifNotExists = false;
+
+    // xugu
+    private SQLExpr xgCharSet;
+    private SQLExpr timeZone;
+    private SQLExpr encryptor;
+    private boolean encrypt;
 
     public SQLCreateDatabaseStatement(){
     }
@@ -97,6 +104,38 @@ public class SQLCreateDatabaseStatement extends SQLStatementImpl implements SQLC
     
     public void setIfNotExists(boolean ifNotExists) {
         this.ifNotExists = ifNotExists;
+    }
+
+    public SQLExpr getXgCharSet() {
+        return xgCharSet;
+    }
+
+    public void setXgCharSet(SQLExpr xgCharSet) {
+        this.xgCharSet = xgCharSet;
+    }
+
+    public SQLExpr getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(SQLExpr timeZone) {
+        this.timeZone = timeZone;
+    }
+
+    public SQLExpr getEncryptor() {
+        return encryptor;
+    }
+
+    public void setEncryptor(SQLExpr encryptor) {
+        this.encryptor = encryptor;
+    }
+
+    public boolean isEncrypt() {
+        return encrypt;
+    }
+
+    public void setEncrypt(boolean encrypt) {
+        this.encrypt = encrypt;
     }
 
 }

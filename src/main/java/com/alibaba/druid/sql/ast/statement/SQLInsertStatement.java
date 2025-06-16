@@ -97,6 +97,7 @@ public class SQLInsertStatement extends SQLInsertInto implements SQLStatement {
         private final     List<SQLExpr> values;
         private transient String        originalString;
         private transient int           replaceCount;
+        private boolean inPlSql;
 
         public ValuesClause(){
             this(new ArrayList<SQLExpr>());
@@ -160,6 +161,14 @@ public class SQLInsertStatement extends SQLInsertInto implements SQLStatement {
 
         public void incrementReplaceCount() {
             this.replaceCount++;
+        }
+
+        public boolean isInPlSql() {
+            return inPlSql;
+        }
+
+        public void setInPlSql(boolean inPlSql) {
+            this.inPlSql = inPlSql;
         }
     }
 
