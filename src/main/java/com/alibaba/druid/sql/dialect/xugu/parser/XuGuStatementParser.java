@@ -1174,6 +1174,17 @@ public class XuGuStatementParser extends SQLStatementParser {
             return true;
         }
 
+        if (lexer.token() == Token.PROCEDURE) {
+            statementList.add(this.parseCreateProcedure());
+            return true;
+        }
+
+        if (lexer.token() == Token.FUNCTION) {
+            statementList.add(this.parseCreateFunction());
+            return true;
+        }
+
+
         if (lexer.token() == Token.IDENTIFIER) {
             String label = lexer.stringVal();
             char ch = lexer.current();
@@ -1423,8 +1434,10 @@ public class XuGuStatementParser extends SQLStatementParser {
             accept(Token.IDENTIFIER);
             block.setEndLabel(endLabel);
         }
-        accept(Token.SEMI);
-        block.setAfterSemi(true);
+        if (token == Token.SEMI) {
+            lexer.nextToken();
+            block.setAfterSemi(true);
+        }
         return block;
     }
 
