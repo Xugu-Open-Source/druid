@@ -161,7 +161,7 @@ public class XuGuInsertStatement extends SQLInsertStatement implements XuGuState
         if (visitor instanceof XuGuASTVisitor) {
             accept0((XuGuASTVisitor) visitor);
         } else {
-            throw new IllegalArgumentException("not support visitor type : " + visitor.getClass().getName());
+            super.accept0(visitor);
         }
     }
 

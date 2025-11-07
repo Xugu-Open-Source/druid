@@ -85,7 +85,7 @@ public class XuGuCreateTableStatement extends SQLCreateTableStatement implements
         if (visitor instanceof XuGuASTVisitor) {
             accept0((XuGuASTVisitor) visitor);
         } else {
-            throw new IllegalArgumentException("not support visitor type : " + visitor.getClass().getName());
+            super.accept0(visitor);
         }
     }
 
