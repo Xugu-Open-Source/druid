@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuAnalyzeStatement extends XuGuStatementImpl {
-
     private boolean noWriteToBinlog;
     private boolean local;
 

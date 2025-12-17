@@ -44,7 +44,6 @@ import java.util.List;
 import java.util.Map;
 
 public class XuGuCreateTableStatement extends SQLCreateTableStatement implements XuGuStatement {
-
     private Map<String, SQLObject> tableOptions = new LinkedHashMap<String, SQLObject>();
 
     private List<SQLCommentHint> hints = new ArrayList<SQLCommentHint>();
@@ -56,7 +55,6 @@ public class XuGuCreateTableStatement extends SQLCreateTableStatement implements
     public XuGuCreateTableStatement() {
         super(DbType.xugu);
     }
-
 
     public List<SQLCommentHint> getHints() {
         return hints;
@@ -101,7 +99,6 @@ public class XuGuCreateTableStatement extends SQLCreateTableStatement implements
     }
 
     public static class TableSpaceOption extends XuGuObjectImpl {
-
         private SQLName name;
         private SQLExpr storage;
 
@@ -159,7 +156,6 @@ public class XuGuCreateTableStatement extends SQLCreateTableStatement implements
     public void setOptionHints(List<SQLCommentHint> optionHints) {
         this.optionHints = optionHints;
     }
-
 
     public SQLName getTableGroup() {
         return tableGroup;

@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuSubPartitionByList extends SQLSubPartitionBy implements XuGuObject {
-
     private SQLExpr expr;
 
     private List<SQLColumnDefinition> columns = new ArrayList<SQLColumnDefinition>();

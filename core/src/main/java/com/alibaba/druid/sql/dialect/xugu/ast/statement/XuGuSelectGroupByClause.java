@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class XuGuSelectGroupByClause extends XuGuStatementImpl {
-
     private List<GroupItem> groupItems;
     private SQLExpr having;
 
@@ -157,7 +156,6 @@ public class XuGuSelectGroupByClause extends XuGuStatementImpl {
      * GROUP BY的三种扩展
      */
     public static class XgCompositeGroupItem extends SQLExprImpl implements GroupItem {
-
         private GroupType type;
         private final List<GroupItem> groupItems = new ArrayList<GroupItem>();
 

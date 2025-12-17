@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuCreateUserStatement extends XuGuStatementImpl implements SQLCreateStatement {
-
     private List<UserSpecification> users = new ArrayList<UserSpecification>(2);
 
     public List<UserSpecification> getUsers() {
@@ -47,7 +46,6 @@ public class XuGuCreateUserStatement extends XuGuStatementImpl implements SQLCre
     }
 
     public static class UserSpecification extends XuGuObjectImpl {
-
         private SQLExpr user;
         private boolean passwordHash;
         private SQLExpr password;

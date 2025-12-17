@@ -28,7 +28,6 @@ public class XuGuChecksumTableStatement extends XuGuStatementImpl {
     private boolean extended;
 
     public XuGuChecksumTableStatement() {
-
     }
 
     public void addTable(SQLExprTableSource table) {

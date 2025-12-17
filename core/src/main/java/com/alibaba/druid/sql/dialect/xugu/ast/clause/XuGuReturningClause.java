@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuReturningClause extends XuGuObjectImpl {
-
     private List<SQLExpr> items = new ArrayList<SQLExpr>();
     private List<SQLExpr> values = new ArrayList<SQLExpr>();
     private boolean optBulk;

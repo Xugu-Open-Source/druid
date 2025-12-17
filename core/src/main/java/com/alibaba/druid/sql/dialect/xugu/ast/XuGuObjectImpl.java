@@ -20,7 +20,6 @@ import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 
 public abstract class XuGuObjectImpl extends SQLObjectImpl implements XuGuObject {
-
     @Override
     protected void accept0(SQLASTVisitor visitor) {
         if (visitor instanceof XuGuASTVisitor) {

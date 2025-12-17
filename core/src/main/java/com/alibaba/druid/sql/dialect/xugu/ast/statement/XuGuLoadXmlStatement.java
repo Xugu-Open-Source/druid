@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuLoadXmlStatement extends XuGuStatementImpl {
-
     private boolean lowPriority;
     private boolean concurrent;
     private boolean local;

@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuShowProfileStatement extends XuGuStatementImpl implements XuGuShowStatement {
-
     private List<Type> types = new ArrayList<Type>();
 
     private SQLExpr forQuery;

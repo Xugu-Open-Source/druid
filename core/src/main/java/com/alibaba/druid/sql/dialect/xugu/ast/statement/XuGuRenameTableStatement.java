@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuRenameTableStatement extends XuGuStatementImpl {
-
     private List<Item> items = new ArrayList<Item>(2);
 
     public List<Item> getItems() {
@@ -45,7 +44,6 @@ public class XuGuRenameTableStatement extends XuGuStatementImpl {
     }
 
     public static class Item extends XuGuObjectImpl {
-
         private SQLName name;
         private SQLName to;
 

@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuAlterUserStatement extends XuGuStatementImpl implements SQLAlterStatement {
-
     private final List<SQLExpr> users = new ArrayList<SQLExpr>();
 
     public void accept0(XuGuASTVisitor visitor) {

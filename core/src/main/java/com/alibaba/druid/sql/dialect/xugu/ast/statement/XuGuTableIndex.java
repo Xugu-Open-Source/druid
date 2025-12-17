@@ -28,13 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuTableIndex extends XuGuObjectImpl implements SQLTableElement {
-
     private SQLName name;
     private String indexType;
     private List<SQLSelectOrderByItem> columns = new ArrayList<SQLSelectOrderByItem>();
 
     public XuGuTableIndex() {
-
     }
 
     public SQLName getName() {

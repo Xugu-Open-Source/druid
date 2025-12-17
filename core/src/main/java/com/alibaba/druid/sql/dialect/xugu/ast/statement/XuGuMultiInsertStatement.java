@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuMultiInsertStatement extends XuGuStatementImpl {
-
     public static enum Option {
         ALL, FIRST
     }
@@ -86,11 +85,9 @@ public class XuGuMultiInsertStatement extends XuGuStatementImpl {
     }
 
     public static interface Entry extends XuGuObject {
-
     }
 
     public static class ConditionalInsertClause extends XuGuObjectImpl implements Entry {
-
         private List<ConditionalInsertClauseItem> items = new ArrayList<ConditionalInsertClauseItem>();
         private InsertIntoClause elseItem;
 
@@ -125,7 +122,6 @@ public class XuGuMultiInsertStatement extends XuGuStatementImpl {
     }
 
     public static class ConditionalInsertClauseItem extends XuGuObjectImpl {
-
         private SQLExpr when;
         private InsertIntoClause then;
 
@@ -157,14 +153,12 @@ public class XuGuMultiInsertStatement extends XuGuStatementImpl {
     }
 
     public static class InsertIntoClause extends SQLInsertInto implements XuGuObject, Entry {
-
         private XuGuReturningClause returning;
         private SQLErrorLoggingClause errorLogging;
         private boolean xgSubPartition;
         private List<SQLName> xgPartitions;
 
         public InsertIntoClause() {
-
         }
 
         public XuGuReturningClause getReturning() {

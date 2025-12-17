@@ -18,7 +18,6 @@ package com.alibaba.druid.sql.dialect.xugu.ast.statement;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
 public class XuGuShowPluginsStatement extends XuGuStatementImpl implements XuGuShowStatement {
-
     public void accept0(XuGuASTVisitor visitor) {
         visitor.visit(this);
         visitor.endVisit(this);

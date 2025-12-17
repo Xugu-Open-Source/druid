@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class XuGuDeallocatePrepareStatement extends XuGuStatementImpl {
-
     private SQLName statementName;
 
     public SQLName getStatementName() {

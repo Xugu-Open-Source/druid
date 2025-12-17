@@ -22,7 +22,6 @@ import com.alibaba.druid.sql.dialect.xugu.ast.XuGuObjectImpl;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
 public class XuGuAlterTableOption extends XuGuObjectImpl implements SQLAlterTableItem {
-
     private String name;
     private SQLObject value;
 

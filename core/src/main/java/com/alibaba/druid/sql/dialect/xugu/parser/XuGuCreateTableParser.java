@@ -56,7 +56,6 @@ import com.alibaba.druid.sql.parser.Token;
 import com.alibaba.druid.util.FnvHash;
 
 public class XuGuCreateTableParser extends SQLCreateTableParser {
-
     public XuGuCreateTableParser(String sql) {
         super(new XuGuExprParser(sql));
     }
@@ -680,7 +679,6 @@ public class XuGuCreateTableParser extends SQLCreateTableParser {
         }
         return stmt;
     }
-
 
     protected SQLPartitionByRange partitionByRange() {
         acceptIdentifier("RANGE");

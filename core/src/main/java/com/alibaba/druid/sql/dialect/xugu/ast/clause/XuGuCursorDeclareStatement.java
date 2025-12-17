@@ -25,7 +25,6 @@ import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
  * @author zz [455910092@qq.com]
  */
 public class XuGuCursorDeclareStatement extends XuGuStatementImpl {
-
     // cursor name
     private SQLName cursorName;
     // select statement

@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuSubPartitionByKey extends SQLSubPartitionBy implements XuGuObject {
-
     private List<SQLName> columns = new ArrayList<SQLName>();
     private short algorithm = 2;
 

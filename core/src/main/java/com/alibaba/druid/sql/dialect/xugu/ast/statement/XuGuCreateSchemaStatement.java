@@ -20,7 +20,6 @@ import com.alibaba.druid.sql.ast.statement.SQLCreateStatement;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
 public class XuGuCreateSchemaStatement extends XuGuStatementImpl implements SQLCreateStatement {
-
     private SQLName schemaName;
     private SQLName userName;
 

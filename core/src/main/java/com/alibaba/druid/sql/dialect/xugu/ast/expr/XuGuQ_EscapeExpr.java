@@ -24,11 +24,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class XuGuQ_EscapeExpr extends XuGuObjectImpl implements SQLExpr {
-
     private String text;
 
     public XuGuQ_EscapeExpr() {
-
     }
 
     public XuGuQ_EscapeExpr(String text) {
@@ -46,7 +44,6 @@ public class XuGuQ_EscapeExpr extends XuGuObjectImpl implements SQLExpr {
     public List<SQLObject> getChildren() {
         return Collections.emptyList();
     }
-
 
     public String getText() {
         return text;

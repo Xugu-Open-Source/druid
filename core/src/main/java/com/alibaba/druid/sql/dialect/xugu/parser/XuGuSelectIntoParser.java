@@ -188,7 +188,6 @@ public class XuGuSelectIntoParser extends SQLSelectParser {
      * @return
      */
     protected List<SQLExpr> parseIntoArgs() {
-
         List<SQLExpr> args = new ArrayList<SQLExpr>();
         if (lexer.token() == (Token.INTO)) {
             accept(Token.INTO);
@@ -210,7 +209,6 @@ public class XuGuSelectIntoParser extends SQLSelectParser {
         }
         return args;
     }
-
 
     protected void parseInto(SQLSelectQueryBlock queryBlock) {
         if (lexer.token() == (Token.INTO)) {

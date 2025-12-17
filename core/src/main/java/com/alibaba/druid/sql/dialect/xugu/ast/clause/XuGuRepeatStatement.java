@@ -27,7 +27,6 @@ import java.util.List;
  * @author zz [455910092@qq.com]
  */
 public class XuGuRepeatStatement extends XuGuStatementImpl {
-
     private String labelName;
 
     private List<SQLStatement> statements = new ArrayList<SQLStatement>();

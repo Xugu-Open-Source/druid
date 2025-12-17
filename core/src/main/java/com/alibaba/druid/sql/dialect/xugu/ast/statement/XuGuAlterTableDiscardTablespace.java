@@ -22,7 +22,6 @@ import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 
 public class XuGuAlterTableDiscardTablespace extends XuGuObjectImpl implements SQLAlterTableItem, XuGuObject {
-
     @Override
     protected void accept0(SQLASTVisitor visitor) {
         if (visitor instanceof XuGuASTVisitor) {

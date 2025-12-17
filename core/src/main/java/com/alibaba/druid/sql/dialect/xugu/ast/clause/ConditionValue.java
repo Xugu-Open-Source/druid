@@ -15,7 +15,6 @@
  */
 package com.alibaba.druid.sql.dialect.xugu.ast.clause;
 
-
 /**
  * @author zhujun [455910092@qq.com]
  * 2016-04-16

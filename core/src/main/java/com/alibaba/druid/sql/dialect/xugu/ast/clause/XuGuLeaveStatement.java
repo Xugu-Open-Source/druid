@@ -26,11 +26,9 @@ import java.util.List;
  * @author zz [455910092@qq.com]
  */
 public class XuGuLeaveStatement extends XuGuStatementImpl {
-
     private String labelName;
 
     public XuGuLeaveStatement() {
-
     }
 
     public XuGuLeaveStatement(String labelName) {

@@ -19,7 +19,6 @@ import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
-
 public class XuGuBackupUserSchemaTableStatement extends XuGuStatementImpl {
     private boolean user;
     private boolean schema;

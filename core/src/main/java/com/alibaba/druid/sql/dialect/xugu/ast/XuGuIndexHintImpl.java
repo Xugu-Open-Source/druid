@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class XuGuIndexHintImpl extends XuGuObjectImpl implements XuGuIndexHint {
-
     private Option option;
 
     private List<SQLName> indexList = new ArrayList<SQLName>();

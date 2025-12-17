@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuDataTypeIntervalDayToSecond extends SQLDataTypeImpl implements XuGuObject {
-
     public XuGuDataTypeIntervalDayToSecond() {
         this.setName("INTERVAL DAY TO SECOND");
     }

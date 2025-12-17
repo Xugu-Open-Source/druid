@@ -26,7 +26,6 @@ import com.alibaba.druid.wall.WallProvider;
 import com.alibaba.druid.wall.WallVisitor;
 
 public class XuGuWallProvider extends WallProvider {
-
     public static final String DEFAULT_CONFIG_DIR = "META-INF/druid/wall/xugu";
 
     public XuGuWallProvider() {

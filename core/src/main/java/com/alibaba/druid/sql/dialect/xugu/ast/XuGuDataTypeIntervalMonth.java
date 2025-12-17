@@ -20,7 +20,6 @@ import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 
 public class XuGuDataTypeIntervalMonth extends SQLDataTypeImpl implements XuGuObject {
-
     public XuGuDataTypeIntervalMonth() {
         this.setName("INTERVAL MONTH");
     }

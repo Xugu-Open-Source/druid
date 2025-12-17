@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class XuGuOutFileExpr extends XuGuObjectImpl implements SQLExpr {
-
     private SQLExpr file;
     private String charset;
 

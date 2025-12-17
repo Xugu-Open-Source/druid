@@ -164,7 +164,6 @@ public class XuGuExprParser extends SQLExprParser {
         this.lexer.nextToken();
     }
 
-
     public XuGuExprParser(String sql, boolean skipComment, boolean keepComments) {
         this(new XuGuLexer(sql, skipComment, keepComments));
         this.lexer.nextToken();
@@ -183,7 +182,6 @@ public class XuGuExprParser extends SQLExprParser {
 
     @Override
     public SQLDataType parseDataType(boolean restrict) {
-
         if (lexer.token() == Token.CONSTRAINT || lexer.token() == Token.COMMA) {
             return null;
         }
@@ -488,7 +486,6 @@ public class XuGuExprParser extends SQLExprParser {
             }
         }
 
-
         SQLDataTypeImpl dataType = new SQLDataTypeImpl(typeName);
         dataType.setDbType(dbType);
         return parseDataTypeRest(dataType);
@@ -711,7 +708,6 @@ public class XuGuExprParser extends SQLExprParser {
             userName.setUserName(((SQLIdentifierExpr) expr).getName());
         }
 
-
         String strVal = lexer.stringVal();
         lexer.nextToken();
 
@@ -748,7 +744,6 @@ public class XuGuExprParser extends SQLExprParser {
     }
 
     protected SQLExpr parsePosition() {
-
         SQLExpr subStr = this.primary();
         accept(Token.IN);
         SQLExpr str = this.expr();
@@ -786,7 +781,6 @@ public class XuGuExprParser extends SQLExprParser {
     }
 
     protected SQLExpr parseMatch() {
-
         XuGuMatchAgainstExpr matchAgainstExpr = new XuGuMatchAgainstExpr();
 
         if (lexer.token() == Token.RPAREN) {
@@ -849,9 +843,7 @@ public class XuGuExprParser extends SQLExprParser {
 
             accept(Token.RPAREN);
 
-            // 
-
-            if (methodInvokeExpr.getParameters().size() == 1 // 
+            if (methodInvokeExpr.getParameters().size() == 1
                     && lexer.token() == Token.IDENTIFIER) {
                 SQLExpr value = methodInvokeExpr.getParameters().get(0);
                 String unit = lexer.stringVal();

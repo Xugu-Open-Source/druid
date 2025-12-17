@@ -24,7 +24,6 @@ import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 import java.util.List;
 
 public class XuGuShowIndexesStatement extends XuGuStatementImpl implements XuGuShowStatement {
-
     private SQLName table;
     private SQLName database;
     private List<SQLCommentHint> hints;

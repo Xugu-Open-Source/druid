@@ -20,7 +20,6 @@ import com.alibaba.druid.sql.ast.statement.SQLAlterStatement;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
 public class XuGuAlterSchemaStatement extends XuGuStatementImpl implements SQLAlterStatement {
-
     private SQLName schemaName;
     private SQLName newName;
     private SQLName userName;

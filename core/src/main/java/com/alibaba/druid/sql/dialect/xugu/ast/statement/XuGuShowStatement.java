@@ -16,5 +16,4 @@
 package com.alibaba.druid.sql.dialect.xugu.ast.statement;
 
 public interface XuGuShowStatement extends XuGuStatement {
-
 }

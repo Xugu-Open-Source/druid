@@ -21,7 +21,6 @@ import com.alibaba.druid.sql.ast.statement.SQLAlterStatement;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
 public class XuGuAlterTablespaceStatement extends XuGuStatementImpl implements SQLAlterStatement {
-
     private SQLName name;
     private SQLExpr addDataFile;
     private SQLExpr dropDataFile;

@@ -20,7 +20,6 @@ import com.alibaba.druid.sql.ast.statement.SQLPrimaryKey;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
 public class XuGuPrimaryKey extends XuGuKey implements SQLPrimaryKey {
-
     public XuGuPrimaryKey() {
         dbType = DbType.xugu;
     }

@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class XuGuKillStatement extends XuGuStatementImpl {
-
     private Type type;
     private List<SQLExpr> threadIds = new ArrayList<SQLExpr>();
 

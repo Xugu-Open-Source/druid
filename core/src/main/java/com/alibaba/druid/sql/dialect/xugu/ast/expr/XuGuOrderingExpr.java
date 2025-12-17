@@ -25,12 +25,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class XuGuOrderingExpr extends SQLExprImpl implements XuGuExpr {
-
     protected SQLExpr expr;
     protected SQLOrderingSpecification type;
 
     public XuGuOrderingExpr() {
-
     }
 
     public XuGuOrderingExpr(SQLExpr expr, SQLOrderingSpecification type) {

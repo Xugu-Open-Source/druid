@@ -24,7 +24,6 @@ import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 import java.util.List;
 
 public abstract class XuGuStatementImpl extends SQLStatementImpl implements XuGuStatement {
-
     public XuGuStatementImpl() {
         super(DbType.xugu);
     }

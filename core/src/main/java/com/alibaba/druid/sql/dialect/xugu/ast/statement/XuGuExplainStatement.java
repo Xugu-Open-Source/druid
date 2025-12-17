@@ -23,7 +23,6 @@ import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 
 public class XuGuExplainStatement extends SQLExplainStatement implements XuGuStatement {
-
     private boolean describe;
 
     private SQLName tableName;

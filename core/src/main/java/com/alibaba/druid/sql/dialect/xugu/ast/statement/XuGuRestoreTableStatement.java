@@ -20,7 +20,6 @@ import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
 public class XuGuRestoreTableStatement extends XuGuStatementImpl {
-
     private SQLName tableName;
     private boolean rename;
     private SQLName tableRename;

@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class XuGuSetTransactionStatement extends XuGuStatementImpl {
-
     private Boolean global;
 
     private String isolationLevel;
@@ -30,7 +29,6 @@ public class XuGuSetTransactionStatement extends XuGuStatementImpl {
     private String accessModel;
 
     private Boolean session;
-
 
     public Boolean getSession() {
         return session;

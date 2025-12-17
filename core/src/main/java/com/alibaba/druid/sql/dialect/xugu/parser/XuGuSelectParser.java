@@ -52,7 +52,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuSelectParser extends SQLSelectParser {
-
     protected boolean returningFlag;
     protected XuGuUpdateStatement updateStmt;
 
@@ -89,7 +88,6 @@ public class XuGuSelectParser extends SQLSelectParser {
 
         queryBlock.setFrom(parseTableSource());
     }
-
 
     @Override
     public SQLSelectQuery query(SQLObject parent, boolean acceptUnion) {
@@ -201,7 +199,6 @@ public class XuGuSelectParser extends SQLSelectParser {
         parseGroupBy(queryBlock);
 
         queryBlock.setOrderBy(this.exprParser.parseOrderBy());
-
 
         if (lexer.token() == Token.PROCEDURE) {
             lexer.nextToken();

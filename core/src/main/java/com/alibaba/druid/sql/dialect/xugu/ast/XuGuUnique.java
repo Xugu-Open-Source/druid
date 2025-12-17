@@ -18,9 +18,7 @@ package com.alibaba.druid.sql.dialect.xugu.ast;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
 public class XuGuUnique extends XuGuKey {
-
     public XuGuUnique() {
-
     }
 
     protected void accept0(XuGuASTVisitor visitor) {

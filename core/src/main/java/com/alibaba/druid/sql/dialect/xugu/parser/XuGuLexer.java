@@ -34,7 +34,6 @@ import static com.alibaba.druid.sql.parser.LayoutCharacters.EOI;
 public class XuGuLexer extends Lexer {
     public static SymbolTable quoteTable = new SymbolTable(8192);
 
-
     @Override
     protected Keywords loadKeywords() {
         Map<String, Token> map = new HashMap<String, Token>();
@@ -452,7 +451,6 @@ public class XuGuLexer extends Lexer {
         }
     }
 
-
     public void skipFirstHintsOrMultiCommentAndNextToken() {
         int starIndex = pos + 2;
 
@@ -493,7 +491,6 @@ public class XuGuLexer extends Lexer {
                         reset(pos_6, ' ', Token.UPDATE);
                         return;
                     }
-
 
                     if (c0 == 'd' && c1 == 'e' && c2 == 'l' && c3 == 'e' && c4 == 't' && c5 == 'e' && c6 == ' ') {
                         this.comments = null;

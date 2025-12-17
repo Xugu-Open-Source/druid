@@ -19,7 +19,6 @@ import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
 public class XuGuShowStatusStatement extends XuGuStatementImpl implements XuGuShowStatement {
-
     private boolean global;
     private boolean session;
 

@@ -18,7 +18,6 @@ package com.alibaba.druid.sql.dialect.xugu.ast;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
 public class XuGuForceIndexHint extends XuGuIndexHintImpl {
-
     @Override
     public void accept0(XuGuASTVisitor visitor) {
         if (visitor.visit(this)) {

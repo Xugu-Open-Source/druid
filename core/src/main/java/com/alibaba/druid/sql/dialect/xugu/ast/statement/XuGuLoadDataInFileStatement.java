@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuLoadDataInFileStatement extends XuGuStatementImpl {
-
     private boolean lowPriority;
     private boolean concurrent;
     private boolean local;
@@ -222,16 +221,13 @@ public class XuGuLoadDataInFileStatement extends XuGuStatementImpl {
         return children;
     }
 
-
     public List<SQLExpr> getColumns() {
         return columns;
     }
 
-
     public void setColumns(List<SQLExpr> columns) {
         this.columns = columns;
     }
-
 
     public void setSetList(List<SQLExpr> setList) {
         this.setList = setList;

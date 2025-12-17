@@ -20,7 +20,6 @@ import com.alibaba.druid.sql.ast.statement.SQLDropStatement;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
 public class XuGuDropSchemaStatement extends XuGuStatementImpl implements SQLDropStatement {
-
     private SQLName schemaName;
     private boolean cascade;
     private boolean restrict;

@@ -20,7 +20,6 @@ import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 
 public class XuGuDataTypeIntervalDayToMinute extends SQLDataTypeImpl implements XuGuObject {
-
     public XuGuDataTypeIntervalDayToMinute() {
         this.setName("INTERVAL DAY TO MINUTE");
     }

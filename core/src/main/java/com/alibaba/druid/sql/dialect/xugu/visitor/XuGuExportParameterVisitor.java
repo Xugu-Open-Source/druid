@@ -31,12 +31,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuExportParameterVisitor extends XuGuOutputVisitor implements ExportParameterVisitor {
-
     /**
      * true= if require parameterized sql output
      */
     private boolean requireParameterizedOutput;
-
 
     public XuGuExportParameterVisitor(List<Object> parameters, StringBuilder appender, boolean wantParameterizedOutput) {
         super(appender, true);
@@ -137,6 +135,5 @@ public class XuGuExportParameterVisitor extends XuGuOutputVisitor implements Exp
 
     @Override
     public void endVisit(XuGuFlushStatement x) {
-
     }
 }

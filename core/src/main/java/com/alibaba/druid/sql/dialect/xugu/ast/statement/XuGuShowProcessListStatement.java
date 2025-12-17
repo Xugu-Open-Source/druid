@@ -18,7 +18,6 @@ package com.alibaba.druid.sql.dialect.xugu.ast.statement;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
 public class XuGuShowProcessListStatement extends XuGuStatementImpl implements XuGuShowStatement {
-
     private boolean full;
 
     public void accept0(XuGuASTVisitor visitor) {

@@ -28,7 +28,6 @@ import java.util.List;
  **/
 
 public class XuguProdecureDataType extends SQLDataTypeImpl {
-
     private boolean isStatic;
     private final List<SQLParameter> parameters = new ArrayList<SQLParameter>();
 

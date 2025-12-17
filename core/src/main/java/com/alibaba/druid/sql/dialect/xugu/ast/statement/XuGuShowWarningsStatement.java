@@ -19,7 +19,6 @@ import com.alibaba.druid.sql.ast.SQLLimit;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
 public class XuGuShowWarningsStatement extends XuGuStatementImpl implements XuGuShowStatement {
-
     private boolean count;
     private SQLLimit limit;
 

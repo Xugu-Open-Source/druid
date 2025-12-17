@@ -18,5 +18,4 @@ package com.alibaba.druid.sql.dialect.xugu.ast.expr;
 import com.alibaba.druid.sql.ast.SQLExpr;
 
 public interface XuGuExpr extends SQLExpr {
-
 }

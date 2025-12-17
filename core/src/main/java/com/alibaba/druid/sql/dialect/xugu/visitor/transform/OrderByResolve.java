@@ -51,7 +51,6 @@ public class OrderByResolve extends OracleASTVisitorAdapter {
             return super.visit(x);
         }
 
-
         if (!queryBlock.selectItemHasAllColumn(false)) {
             List<SQLSelectOrderByItem> notContainsOrderBy = new ArrayList<SQLSelectOrderByItem>();
 
@@ -81,7 +80,6 @@ public class OrderByResolve extends OracleASTVisitorAdapter {
                 x.setQuery(queryBlock1);
             }
         }
-
 
         return super.visit(x);
     }

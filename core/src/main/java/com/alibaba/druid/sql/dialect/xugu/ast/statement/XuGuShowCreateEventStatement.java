@@ -19,7 +19,6 @@ import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
 public class XuGuShowCreateEventStatement extends XuGuStatementImpl implements XuGuShowStatement {
-
     private SQLExpr eventName;
 
     public void accept0(XuGuASTVisitor visitor) {

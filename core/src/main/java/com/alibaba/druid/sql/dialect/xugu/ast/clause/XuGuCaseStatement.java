@@ -30,7 +30,6 @@ import java.util.List;
  * @author zz [455910092@qq.com]
  */
 public class XuGuCaseStatement extends XuGuStatementImpl {
-
     // case expr
     private SQLExpr condition;
     // when statement list
@@ -95,7 +94,6 @@ public class XuGuCaseStatement extends XuGuStatementImpl {
      * @author zz
      */
     public static class XuGuWhenStatement extends XuGuObjectImpl {
-
         private SQLExpr condition;
         private List<SQLStatement> statements = new ArrayList<SQLStatement>();
 

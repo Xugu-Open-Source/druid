@@ -19,7 +19,6 @@ import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
 public class XuGuShowCreateTableStatement extends XuGuStatementImpl implements XuGuShowStatement {
-
     private SQLName name;
 
     public void accept0(XuGuASTVisitor visitor) {

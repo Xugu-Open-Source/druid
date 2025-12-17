@@ -70,7 +70,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuWallVisitor extends XuGuASTVisitorAdapter implements WallVisitor, XuGuASTVisitor {
-
     private final WallConfig config;
     private final WallProvider provider;
     private final List<Violation> violations = new ArrayList<Violation>();
@@ -316,7 +315,6 @@ public class XuGuWallVisitor extends XuGuASTVisitorAdapter implements WallVisito
         }
 
         if (varName.startsWith("@@") && !checkVar(x.getParent(), x.getName())) {
-
             final WallTopStatementContext topStatementContext = WallVisitorUtils.getWallTopStatementContext();
             if (topStatementContext != null
                 && (topStatementContext.fromSysSchema() || topStatementContext.fromSysTable())) {

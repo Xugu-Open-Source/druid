@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class XuGuShowCharacterSetStatement extends XuGuStatementImpl implements XuGuShowStatement {
-
     private SQLExpr where;
     private SQLExpr pattern;
 

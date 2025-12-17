@@ -27,7 +27,6 @@ import java.util.List;
  * @author zz [455910092@qq.com]
  */
 public class XuGuSelectIntoStatement extends XuGuStatementImpl {
-
     // select statement
     private SQLSelect select;
     // var list
@@ -48,7 +47,6 @@ public class XuGuSelectIntoStatement extends XuGuStatementImpl {
     public void setVarList(List<SQLExpr> varList) {
         this.varList = varList;
     }
-
 
     @Override
     public void accept0(XuGuASTVisitor visitor) {

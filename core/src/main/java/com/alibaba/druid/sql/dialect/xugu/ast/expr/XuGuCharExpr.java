@@ -20,12 +20,10 @@ import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 
 public class XuGuCharExpr extends SQLCharExpr implements XuGuExpr {
-
     private String charset;
     private String collate;
 
     public XuGuCharExpr() {
-
     }
 
     public XuGuCharExpr(String text) {

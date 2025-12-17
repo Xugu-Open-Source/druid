@@ -26,7 +26,6 @@ import static com.alibaba.druid.util.Utils.getInteger;
 import static com.alibaba.druid.wall.spi.WallVisitorUtils.loadResource;
 
 public class WallConfig implements WallConfigMBean {
-
     private boolean noneBaseStatementAllow;
     private boolean callAllow = true;
     private boolean selectAllow = true;

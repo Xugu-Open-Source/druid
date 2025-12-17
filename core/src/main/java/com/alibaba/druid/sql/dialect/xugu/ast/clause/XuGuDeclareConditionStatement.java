@@ -15,7 +15,6 @@
  */
 package com.alibaba.druid.sql.dialect.xugu.ast.clause;
 
-
 import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuStatementImpl;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
@@ -23,7 +22,6 @@ import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
  * @author zhujun [455910092@qq.com]
  */
 public class XuGuDeclareConditionStatement extends XuGuStatementImpl {
-
     // condition_name
     private String conditionName;
     // sp statement
@@ -54,4 +52,3 @@ public class XuGuDeclareConditionStatement extends XuGuStatementImpl {
     }
 
 }
-

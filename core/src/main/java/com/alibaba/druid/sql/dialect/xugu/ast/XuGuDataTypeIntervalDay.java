@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuDataTypeIntervalDay extends SQLDataTypeImpl implements XuGuObject {
-
     private boolean toSecond;
 
     protected final List<SQLExpr> fractionalSeconds = new ArrayList<SQLExpr>();

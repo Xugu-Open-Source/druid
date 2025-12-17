@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuResetStatement extends XuGuStatementImpl {
-
     private List<String> options = new ArrayList<String>();
 
     public List<String> getOptions() {

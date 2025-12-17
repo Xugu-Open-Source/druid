@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 
 public class XuGuEvalVisitorImpl extends XuGuASTVisitorAdapter implements SQLEvalVisitor {
-
     private Map<String, Function> functions = new HashMap<String, Function>();
     private List<Object> parameters = new ArrayList<Object>();
 

@@ -18,7 +18,6 @@ package com.alibaba.druid.sql.dialect.xugu.ast.statement;
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
-
 public class XuGuBackupSystemDatabaseStatement extends XuGuStatementImpl {
     private boolean system;
     private boolean database;

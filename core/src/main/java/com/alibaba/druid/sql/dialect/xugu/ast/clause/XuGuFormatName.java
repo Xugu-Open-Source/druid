@@ -16,7 +16,6 @@
 package com.alibaba.druid.sql.dialect.xugu.ast.clause;
 
 public enum XuGuFormatName {
-
     TRADITIONAL,
     JSON
 }

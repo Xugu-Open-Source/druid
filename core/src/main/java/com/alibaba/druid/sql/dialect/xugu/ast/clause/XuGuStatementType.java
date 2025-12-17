@@ -54,7 +54,6 @@ public enum XuGuStatementType {
 
     UNDEFINED;
 
-
     public final String name;
 
     XuGuStatementType() {

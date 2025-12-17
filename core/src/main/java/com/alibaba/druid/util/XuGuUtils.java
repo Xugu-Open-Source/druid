@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class XuGuUtils {
-
     private static Set<String> keywords;
 
     public static boolean isKeyword(String name) {

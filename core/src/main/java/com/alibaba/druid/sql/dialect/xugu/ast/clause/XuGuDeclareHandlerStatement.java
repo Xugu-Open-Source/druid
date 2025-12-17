@@ -26,7 +26,6 @@ import java.util.List;
  * @author zhujun [455910092@qq.com]
  */
 public class XuGuDeclareHandlerStatement extends XuGuStatementImpl {
-
     // DECLARE handler_type HANDLER FOR condition_value[,...] sp_statement
 
     // handler type
@@ -35,7 +34,6 @@ public class XuGuDeclareHandlerStatement extends XuGuStatementImpl {
     private SQLStatement spStatement;
 
     private List<ConditionValue> conditionValues;
-
 
     public XuGuDeclareHandlerStatement() {
         conditionValues = new ArrayList<ConditionValue>();
@@ -74,4 +72,3 @@ public class XuGuDeclareHandlerStatement extends XuGuStatementImpl {
     }
 
 }
-

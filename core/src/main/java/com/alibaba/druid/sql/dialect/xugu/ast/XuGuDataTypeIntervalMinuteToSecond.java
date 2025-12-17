@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuDataTypeIntervalMinuteToSecond extends SQLDataTypeImpl implements XuGuObject {
-
     public XuGuDataTypeIntervalMinuteToSecond() {
         this.setName("INTERVAL MINUTE TO SECOND");
     }

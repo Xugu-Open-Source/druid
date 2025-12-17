@@ -168,7 +168,6 @@ import com.alibaba.druid.sql.dialect.xugu.ast.statement.XuGuUpdateTableSource;
 import com.alibaba.druid.sql.visitor.SQLASTVisitorAdapter;
 
 public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuASTVisitor {
-
     @Override
     public boolean visit(XuGuTableIndex x) {
         return true;
@@ -176,7 +175,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuTableIndex x) {
-
     }
 
     @Override
@@ -186,18 +184,15 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuKey x) {
-
     }
 
     @Override
     public boolean visit(XuGuPrimaryKey x) {
-
         return true;
     }
 
     @Override
     public void endVisit(XuGuPrimaryKey x) {
-
     }
 
     @Override
@@ -211,51 +206,42 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuExtractExpr x) {
-
     }
 
     @Override
     public boolean visit(XuGuExtractExpr x) {
-
         return true;
     }
 
     @Override
     public void endVisit(XuGuMatchAgainstExpr x) {
-
     }
 
     @Override
     public boolean visit(XuGuMatchAgainstExpr x) {
-
         return true;
     }
 
     @Override
     public void endVisit(XuGuPrepareStatement x) {
-
     }
 
     @Override
     public boolean visit(XuGuPrepareStatement x) {
-
         return true;
     }
 
     @Override
     public void endVisit(XuGuExecuteStatement x) {
-
     }
 
     @Override
     public boolean visit(XuGuExecuteStatement x) {
-
         return true;
     }
 
     @Override
     public void endVisit(XuGuDeallocatePrepareStatement x) {
-
     }
 
     @Override
@@ -265,84 +251,69 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuDeleteStatement x) {
-
     }
 
     @Override
     public boolean visit(XuGuDeleteStatement x) {
-
         return true;
     }
 
     @Override
     public void endVisit(XuGuInsertStatement x) {
-
     }
 
     @Override
     public boolean visit(XuGuInsertStatement x) {
-
         return true;
     }
 
     @Override
     public void endVisit(XuGuLoadDataInFileStatement x) {
-
     }
 
     @Override
     public boolean visit(XuGuLoadDataInFileStatement x) {
-
         return true;
     }
 
     @Override
     public void endVisit(XuGuLoadXmlStatement x) {
-
     }
 
     @Override
     public boolean visit(XuGuLoadXmlStatement x) {
-
         return true;
     }
 
     @Override
     public void endVisit(XuGuShowDatabasesStatement x) {
-
     }
 
     @Override
     public boolean visit(XuGuShowDatabasesStatement x) {
-
         return true;
     }
 
     @Override
     public void endVisit(XuGuShowWarningsStatement x) {
-
     }
 
     @Override
     public boolean visit(XuGuShowWarningsStatement x) {
-
         return true;
     }
 
     @Override
     public void endVisit(XuGuShowStatusStatement x) {
-
     }
 
     @Override
     public boolean visit(XuGuShowStatusStatement x) {
-
         return true;
     }
 
     @Override
     public void endVisit(CobarShowStatus x) {
-
     }
 
     @Override
@@ -352,7 +323,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuKillStatement x) {
-
     }
 
     @Override
@@ -362,7 +332,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuBinlogStatement x) {
-
     }
 
     @Override
@@ -372,7 +341,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuResetStatement x) {
-
     }
 
     @Override
@@ -382,7 +350,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuCreateUserStatement x) {
-
     }
 
     @Override
@@ -392,7 +359,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(UserSpecification x) {
-
     }
 
     @Override
@@ -402,7 +368,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuPartitionByKey x) {
-
     }
 
     @Override
@@ -417,7 +382,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuSelectQueryBlock x) {
-
     }
 
     @Override
@@ -427,7 +391,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuOutFileExpr x) {
-
     }
 
     @Override
@@ -437,7 +400,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuExplainStatement x) {
-
     }
 
     @Override
@@ -447,7 +409,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuUpdateStatement x) {
-
     }
 
     @Override
@@ -457,7 +418,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuSetTransactionStatement x) {
-
     }
 
     @Override
@@ -467,7 +427,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowAuthorsStatement x) {
-
     }
 
     @Override
@@ -477,7 +436,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowBinaryLogsStatement x) {
-
     }
 
     @Override
@@ -487,7 +445,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowMasterLogsStatement x) {
-
     }
 
     @Override
@@ -497,7 +454,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowCollationStatement x) {
-
     }
 
     @Override
@@ -507,7 +463,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowBinLogEventsStatement x) {
-
     }
 
     @Override
@@ -517,7 +472,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowCharacterSetStatement x) {
-
     }
 
     @Override
@@ -527,7 +481,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowContributorsStatement x) {
-
     }
 
     @Override
@@ -537,7 +490,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowCreateDatabaseStatement x) {
-
     }
 
     @Override
@@ -547,7 +499,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowCreateEventStatement x) {
-
     }
 
     @Override
@@ -557,7 +508,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowCreateFunctionStatement x) {
-
     }
 
     @Override
@@ -567,7 +517,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowCreateProcedureStatement x) {
-
     }
 
     @Override
@@ -577,7 +526,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowCreateTableStatement x) {
-
     }
 
     @Override
@@ -587,7 +535,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowCreateTriggerStatement x) {
-
     }
 
     @Override
@@ -597,7 +544,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowCreateViewStatement x) {
-
     }
 
     @Override
@@ -607,7 +553,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowEngineStatement x) {
-
     }
 
     @Override
@@ -617,7 +562,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowEnginesStatement x) {
-
     }
 
     @Override
@@ -627,7 +571,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowErrorsStatement x) {
-
     }
 
     @Override
@@ -637,7 +580,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowEventsStatement x) {
-
     }
 
     @Override
@@ -647,7 +589,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowFunctionCodeStatement x) {
-
     }
 
     @Override
@@ -657,7 +598,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowFunctionStatusStatement x) {
-
     }
 
     @Override
@@ -676,7 +616,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuUserName x) {
-
     }
 
     @Override
@@ -686,7 +625,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowIndexesStatement x) {
-
     }
 
     @Override
@@ -696,7 +634,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowKeysStatement x) {
-
     }
 
     @Override
@@ -706,7 +643,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowMasterStatusStatement x) {
-
     }
 
     @Override
@@ -716,7 +652,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowOpenTablesStatement x) {
-
     }
 
     @Override
@@ -726,7 +661,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowPluginsStatement x) {
-
     }
 
     @Override
@@ -736,7 +670,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowPrivilegesStatement x) {
-
     }
 
     @Override
@@ -746,7 +679,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowProcedureCodeStatement x) {
-
     }
 
     @Override
@@ -756,7 +688,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowProcedureStatusStatement x) {
-
     }
 
     @Override
@@ -766,7 +697,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowProcessListStatement x) {
-
     }
 
     @Override
@@ -776,7 +706,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowProfileStatement x) {
-
     }
 
     @Override
@@ -786,7 +715,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowProfilesStatement x) {
-
     }
 
     @Override
@@ -796,7 +724,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowRelayLogEventsStatement x) {
-
     }
 
     @Override
@@ -806,7 +733,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowSlaveHostsStatement x) {
-
     }
 
     @Override
@@ -816,7 +742,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowSlaveStatusStatement x) {
-
     }
 
     @Override
@@ -826,7 +751,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowTableStatusStatement x) {
-
     }
 
     @Override
@@ -836,7 +760,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowTriggersStatement x) {
-
     }
 
     @Override
@@ -846,7 +769,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuRenameTableStatement.Item x) {
-
     }
 
     @Override
@@ -856,7 +778,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuRenameTableStatement x) {
-
     }
 
     @Override
@@ -866,7 +787,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuUseIndexHint x) {
-
     }
 
     @Override
@@ -876,7 +796,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuIgnoreIndexHint x) {
-
     }
 
     @Override
@@ -886,7 +805,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuLockTableStatement x) {
-
     }
 
     @Override
@@ -896,7 +814,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuUnlockTablesStatement x) {
-
     }
 
     @Override
@@ -906,7 +823,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuForceIndexHint x) {
-
     }
 
     @Override
@@ -916,7 +832,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuAlterTableChangeColumn x) {
-
     }
 
     @Override
@@ -926,7 +841,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(SQLAlterCharacter x) {
-
     }
 
     @Override
@@ -936,7 +850,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuAlterTableOption x) {
-
     }
 
     @Override
@@ -946,7 +859,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuCreateTableStatement x) {
-
     }
 
     @Override
@@ -956,7 +868,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuHelpStatement x) {
-
     }
 
     @Override
@@ -966,7 +877,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuCharExpr x) {
-
     }
 
     @Override
@@ -976,7 +886,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuUnique x) {
-
     }
 
     @Override
@@ -986,7 +895,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuForeignKey x) {
-
     }
 
     @Override
@@ -996,7 +904,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuAlterTableModifyColumn x) {
-
     }
 
     @Override
@@ -1006,7 +913,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuAlterTableDiscardTablespace x) {
-
     }
 
     @Override
@@ -1016,7 +922,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuAlterTableImportTablespace x) {
-
     }
 
     @Override
@@ -1026,7 +931,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(TableSpaceOption x) {
-
     }
 
     @Override
@@ -1036,7 +940,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuAnalyzeStatement x) {
-
     }
 
     @Override
@@ -1046,7 +949,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuAlterUserStatement x) {
-
     }
 
     @Override
@@ -1056,7 +958,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuOptimizeStatement x) {
-
     }
 
     @Override
@@ -1066,7 +967,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuHintStatement x) {
-
     }
 
     @Override
@@ -1076,7 +976,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuOrderingExpr x) {
-
     }
 
     @Override
@@ -1086,7 +985,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuCaseStatement x) {
-
     }
 
     @Override
@@ -1096,7 +994,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuDeclareStatement x) {
-
     }
 
     @Override
@@ -1106,7 +1003,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuSelectIntoStatement x) {
-
     }
 
     @Override
@@ -1116,7 +1012,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuWhenStatement x) {
-
     }
     // add:end
 
@@ -1127,7 +1022,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuLeaveStatement x) {
-
     }
 
     @Override
@@ -1137,7 +1031,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuIterateStatement x) {
-
     }
 
     @Override
@@ -1147,7 +1040,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuRepeatStatement x) {
-
     }
 
     @Override
@@ -1157,7 +1049,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuCursorDeclareStatement x) {
-
     }
 
     @Override
@@ -1167,7 +1058,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuUpdateTableSource x) {
-
     }
 
     @Override
@@ -1177,7 +1067,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuAlterTableAlterColumn x) {
-
     }
 
     @Override
@@ -1187,7 +1076,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuSubPartitionByKey x) {
-
     }
 
     @Override
@@ -1206,7 +1094,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuDeclareHandlerStatement x) {
-
     }
 
     @Override
@@ -1216,7 +1103,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuDeclareConditionStatement x) {
-
     }
 
     @Override
@@ -1226,7 +1112,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuFlushStatement x) {
-
     }
 
     @Override
@@ -1236,7 +1121,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuEventSchedule x) {
-
     }
 
     @Override
@@ -1246,7 +1130,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuCreateEventStatement x) {
-
     }
 
     @Override
@@ -1256,7 +1139,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuCreateAddLogFileGroupStatement x) {
-
     }
 
     @Override
@@ -1266,7 +1148,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuCreateServerStatement x) {
-
     }
 
     @Override
@@ -1276,7 +1157,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuCreateTableSpaceStatement x) {
-
     }
 
     @Override
@@ -1286,7 +1166,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuAlterEventStatement x) {
-
     }
 
     @Override
@@ -1296,7 +1175,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuAlterLogFileGroupStatement x) {
-
     }
 
     @Override
@@ -1306,7 +1184,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuAlterServerStatement x) {
-
     }
 
     @Override
@@ -1316,7 +1193,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuAlterTablespaceStatement x) {
-
     }
 
     @Override
@@ -1326,7 +1202,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuShowDatabasePartitionStatusStatement x) {
-
     }
 
     @Override
@@ -1336,7 +1211,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuChecksumTableStatement x) {
-
     }
 
     @Override
@@ -1346,7 +1220,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuBackupSystemDatabaseStatement x) {
-
     }
 
     @Override
@@ -1356,7 +1229,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuBackupUserSchemaTableStatement x) {
-
     }
 
     @Override
@@ -1366,7 +1238,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuRestoreSystemStatement x) {
-
     }
 
     @Override
@@ -1376,7 +1247,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuRestoreDatabaseStatement x) {
-
     }
 
     @Override
@@ -1386,7 +1256,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuRestoreUserStatement x) {
-
     }
 
     @Override
@@ -1396,7 +1265,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuRestoreSchemaStatement x) {
-
     }
 
     @Override
@@ -1406,7 +1274,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuRestoreTableStatement x) {
-
     }
 
     @Override
@@ -1416,7 +1283,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuAlterDatabaseStatement x) {
-
     }
 
     @Override
@@ -1426,7 +1292,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuCreateSchemaStatement x) {
-
     }
 
     @Override
@@ -1436,7 +1301,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuDropSchemaStatement x) {
-
     }
 
     @Override
@@ -1446,7 +1310,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuAlterSchemaStatement x) {
-
     }
 
     @Override
@@ -1456,7 +1319,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuCreateTypeStatement x) {
-
     }
 
     @Override
@@ -1466,7 +1328,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuForStatement x) {
-
     }
 
     @Override
@@ -1476,7 +1337,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuRangeExpr x) {
-
     }
 
     @Override
@@ -1486,7 +1346,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuDataTypeIntervalDay x) {
-
     }
 
     @Override
@@ -1496,7 +1355,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuDataTypeIntervalYearToMonth x) {
-
     }
 
     @Override
@@ -1506,7 +1364,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuDataTypeIntervalYear x) {
-
     }
 
     @Override
@@ -1516,7 +1373,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuDataTypeIntervalMonth x) {
-
     }
 
     @Override
@@ -1526,7 +1382,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuDataTypeIntervalDayToHour x) {
-
     }
 
     @Override
@@ -1536,7 +1391,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuDataTypeIntervalDayToMinute x) {
-
     }
 
     @Override
@@ -1546,7 +1400,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuDataTypeIntervalDayToSecond x) {
-
     }
 
     @Override
@@ -1556,7 +1409,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuDataTypeIntervalHour x) {
-
     }
 
     @Override
@@ -1566,7 +1418,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuDataTypeIntervalHourToMinute x) {
-
     }
 
     @Override
@@ -1576,7 +1427,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuDataTypeIntervalHourToSecond x) {
-
     }
 
     @Override
@@ -1586,7 +1436,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuDataTypeIntervalMinute x) {
-
     }
 
     @Override
@@ -1596,7 +1445,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuDataTypeIntervalMinuteToSecond x) {
-
     }
 
     @Override
@@ -1606,7 +1454,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuDataTypeIntervalSecond x) {
-
     }
 
     @Override
@@ -1616,7 +1463,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuReturningClause x) {
-
     }
 
     @Override
@@ -1626,7 +1472,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuExitStatement x) {
-
     }
 
     @Override
@@ -1636,7 +1481,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuMultiInsertStatement x) {
-
     }
 
     @Override
@@ -1646,7 +1490,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuMultiInsertStatement.ConditionalInsertClause x) {
-
     }
 
     @Override
@@ -1656,7 +1499,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuMultiInsertStatement.ConditionalInsertClauseItem x) {
-
     }
 
     @Override
@@ -1666,7 +1508,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuMultiInsertStatement.InsertIntoClause x) {
-
     }
 
     @Override
@@ -1676,7 +1517,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuTypeCastExpr x) {
-
     }
 
     @Override
@@ -1686,7 +1526,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuSelectGroupByClause x) {
-
     }
 
     @Override
@@ -1696,7 +1535,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuSelectGroupByClause.XgCompositeGroupItem x) {
-
     }
 
     @Override
@@ -1706,7 +1544,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuSelectGroupByClause.XgExprGroupItem x) {
-
     }
 
     @Override
@@ -1716,7 +1553,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuSelectGroupByClause.XgEmptyGroupItem x) {
-
     }
 
     @Override
@@ -1726,7 +1562,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuCreatePackageStatement x) {
-
     }
 
     @Override
@@ -1736,7 +1571,6 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuPipeRowStatement x) {
-
     }
 
     @Override
@@ -1746,6 +1580,5 @@ public class XuGuASTVisitorAdapter extends SQLASTVisitorAdapter implements XuGuA
 
     @Override
     public void endVisit(XuGuQ_EscapeExpr x) {
-
     }
 }

@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuSelectQueryBlock extends SQLSelectQueryBlock implements XuGuObject {
-
     private SQLTop top;
     private boolean bulk;
     private boolean hignPriority;

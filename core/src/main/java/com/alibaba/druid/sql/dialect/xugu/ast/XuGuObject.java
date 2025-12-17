@@ -18,7 +18,6 @@ package com.alibaba.druid.sql.dialect.xugu.ast;
 import com.alibaba.druid.sql.ast.SQLObject;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
-
 public interface XuGuObject extends SQLObject {
     void accept0(XuGuASTVisitor visitor);
 }

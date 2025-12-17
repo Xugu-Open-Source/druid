@@ -22,7 +22,6 @@ import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
  * @author zz [455910092@qq.com]
  */
 public class XuGuIterateStatement extends XuGuStatementImpl {
-
     private String labelName;
 
     @Override

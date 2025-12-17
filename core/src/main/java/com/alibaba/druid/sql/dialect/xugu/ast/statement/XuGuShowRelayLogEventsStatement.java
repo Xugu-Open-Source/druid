@@ -20,7 +20,6 @@ import com.alibaba.druid.sql.ast.SQLLimit;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
 public class XuGuShowRelayLogEventsStatement extends XuGuStatementImpl implements XuGuShowStatement {
-
     private SQLExpr logName;
     private SQLExpr from;
     private SQLLimit limit;

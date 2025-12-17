@@ -20,7 +20,6 @@ import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 
 public class XuGuDataTypeIntervalHourToMinute extends SQLDataTypeImpl implements XuGuObject {
-
     public XuGuDataTypeIntervalHourToMinute() {
         this.setName("INTERVAL HOUR TO MINUTE");
     }

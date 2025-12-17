@@ -232,7 +232,6 @@ import java.util.List;
 import java.util.Properties;
 
 public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVisitor {
-
     {
         this.dbType = DbType.xugu;
         this.shardingSupport = true;
@@ -600,7 +599,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuTableIndex x) {
-
     }
 
     @Override
@@ -653,7 +651,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
         printCreateTableFeatures(x);
 
         print0(ucase ? "TABLE " : "table ");
-
 
         if (x.isIfNotExists()) {
             print0(ucase ? "IF NOT EXISTS " : "if not exists ");
@@ -728,17 +725,14 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuKey x) {
-
     }
 
     @Override
     public void endVisit(XuGuPrimaryKey x) {
-
     }
 
     @Override
     public void endVisit(XuGuForeignKey x) {
-
     }
 
     @Override
@@ -820,7 +814,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
             int index = x.getIndex();
 
             if (inputParameters != null && index < inputParameters.size()) {
-
                 return super.visit(x);
             }
         }
@@ -870,12 +863,10 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuExtractExpr x) {
-
     }
 
     @Override
     public void endVisit(XuGuMatchAgainstExpr x) {
-
     }
 
     @Override
@@ -910,7 +901,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuExecuteStatement x) {
-
     }
 
     @Override
@@ -926,7 +916,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuDeallocatePrepareStatement x) {
-
     }
 
     public boolean visit(XuGuDeallocatePrepareStatement x) {
@@ -937,7 +926,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuDeleteStatement x) {
-
     }
 
     @Override
@@ -1000,7 +988,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
             this.indentCount--;
         }
 
-
         if (x.getOrderBy() != null) {
             println();
             x.getOrderBy().accept(this);
@@ -1021,7 +1008,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuInsertStatement x) {
-
     }
 
     @Override
@@ -1136,7 +1122,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
     }
 
     protected void printValuesList(List<SQLInsertStatement.ValuesClause> valuesList) {
-
         if (this.parameterized && valuesList.size() > 0) {
             print0(ucase ? "VALUES " : "values ");
             this.indentCount++;
@@ -1168,7 +1153,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuLoadDataInFileStatement x) {
-
     }
 
     @Override
@@ -1418,7 +1402,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowDatabasesStatement x) {
-
     }
 
     @Override
@@ -1440,7 +1423,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowWarningsStatement x) {
-
     }
 
     @Override
@@ -1460,7 +1442,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowStatusStatement x) {
-
     }
 
     @Override
@@ -1492,7 +1473,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuLoadXmlStatement x) {
-
     }
 
     @Override
@@ -1546,7 +1526,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(CobarShowStatus x) {
-
     }
 
     @Override
@@ -1557,7 +1536,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuKillStatement x) {
-
     }
 
     @Override
@@ -1576,7 +1554,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuBinlogStatement x) {
-
     }
 
     @Override
@@ -1588,7 +1565,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuResetStatement x) {
-
     }
 
     @Override
@@ -1605,7 +1581,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuCreateUserStatement x) {
-
     }
 
     @Override
@@ -1617,7 +1592,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(UserSpecification x) {
-
     }
 
     @Override
@@ -1641,7 +1615,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuPartitionByKey x) {
-
     }
 
     @Override
@@ -1658,12 +1631,8 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
         return false;
     }
 
-
-    //
-
     @Override
     public void endVisit(XuGuSelectQueryBlock x) {
-
     }
 
     @Override
@@ -1715,7 +1684,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuOutFileExpr x) {
-
     }
 
     @Override
@@ -1761,7 +1729,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuExplainStatement x) {
-
     }
 
     @Override
@@ -1862,7 +1829,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuUpdateStatement x) {
-
     }
 
     @Override
@@ -1890,7 +1856,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuSetTransactionStatement x) {
-
     }
 //
 //    @Override
@@ -1924,7 +1889,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowAuthorsStatement x) {
-
     }
 
     @Override
@@ -1935,7 +1899,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowBinaryLogsStatement x) {
-
     }
 
     @Override
@@ -1952,7 +1915,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowMasterLogsStatement x) {
-
     }
 
     @Override
@@ -1971,7 +1933,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowCollationStatement x) {
-
     }
 
     @Override
@@ -1994,7 +1955,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowBinLogEventsStatement x) {
-
     }
 
     @Override
@@ -2013,7 +1973,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowCharacterSetStatement x) {
-
     }
 
     @Override
@@ -2024,7 +1983,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowContributorsStatement x) {
-
     }
 
     @Override
@@ -2036,7 +1994,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowCreateDatabaseStatement x) {
-
     }
 
     @Override
@@ -2048,7 +2005,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowCreateEventStatement x) {
-
     }
 
     @Override
@@ -2060,7 +2016,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowCreateFunctionStatement x) {
-
     }
 
     @Override
@@ -2072,7 +2027,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowCreateProcedureStatement x) {
-
     }
 
     @Override
@@ -2084,7 +2038,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowCreateTableStatement x) {
-
     }
 
     @Override
@@ -2096,7 +2049,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowCreateTriggerStatement x) {
-
     }
 
     @Override
@@ -2108,7 +2060,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowCreateViewStatement x) {
-
     }
 
     @Override
@@ -2122,7 +2073,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowEngineStatement x) {
-
     }
 
     @Override
@@ -2148,7 +2098,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowEventsStatement x) {
-
     }
 
     @Override
@@ -2160,7 +2109,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowFunctionCodeStatement x) {
-
     }
 
     @Override
@@ -2181,7 +2129,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowFunctionStatusStatement x) {
-
     }
 
     @Override
@@ -2196,7 +2143,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowEnginesStatement x) {
-
     }
 
     @Override
@@ -2215,7 +2161,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowErrorsStatement x) {
-
     }
 
     @Override
@@ -2230,7 +2175,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowGrantsStatement x) {
-
     }
 
     @Override
@@ -2255,7 +2199,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuUserName x) {
-
     }
 
     @Override
@@ -2281,7 +2224,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowIndexesStatement x) {
-
     }
 
     @Override
@@ -2301,7 +2243,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowKeysStatement x) {
-
     }
 
     @Override
@@ -2312,7 +2253,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowMasterStatusStatement x) {
-
     }
 
     @Override
@@ -2339,7 +2279,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowOpenTablesStatement x) {
-
     }
 
     @Override
@@ -2350,7 +2289,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowPluginsStatement x) {
-
     }
 
     @Override
@@ -2361,7 +2299,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowPrivilegesStatement x) {
-
     }
 
     @Override
@@ -2373,7 +2310,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowProcedureCodeStatement x) {
-
     }
 
     @Override
@@ -2393,7 +2329,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowProcedureStatusStatement x) {
-
     }
 
     @Override
@@ -2408,7 +2343,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowProcessListStatement x) {
-
     }
 
     @Override
@@ -2437,7 +2371,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowProfileStatement x) {
-
     }
 
     @Override
@@ -2448,7 +2381,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowProfilesStatement x) {
-
     }
 
     @Override
@@ -2475,7 +2407,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowRelayLogEventsStatement x) {
-
     }
 
     @Override
@@ -2486,7 +2417,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowSlaveHostsStatement x) {
-
     }
 
     @Override
@@ -2497,7 +2427,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowSlaveStatusStatement x) {
-
     }
 
     @Override
@@ -2523,7 +2452,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowTableStatusStatement x) {
-
     }
 
     @Override
@@ -2550,7 +2478,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowTriggersStatement x) {
-
     }
 
     @Override
@@ -2668,7 +2595,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuRenameTableStatement.Item x) {
-
     }
 
     @Override
@@ -2680,7 +2606,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuRenameTableStatement x) {
-
     }
 
     @Override
@@ -2699,7 +2624,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuUseIndexHint x) {
-
     }
 
     @Override
@@ -2718,7 +2642,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuIgnoreIndexHint x) {
-
     }
 
     public boolean visit(SQLExprTableSource x) {
@@ -2766,7 +2689,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuLockTableStatement x) {
-
     }
 
     @Override
@@ -2777,7 +2699,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuUnlockTablesStatement x) {
-
     }
 
     @Override
@@ -2796,7 +2717,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuForceIndexHint x) {
-
     }
 
     @Override
@@ -2820,7 +2740,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuAlterTableChangeColumn x) {
-
     }
 
     @Override
@@ -2842,7 +2761,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuAlterTableModifyColumn x) {
-
     }
 
     @Override
@@ -2855,12 +2773,10 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuAlterTableOption x) {
-
     }
 
     @Override
     public void endVisit(XuGuCreateTableStatement x) {
-
     }
 
     @Override
@@ -2872,7 +2788,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuHelpStatement x) {
-
     }
 
     @Override
@@ -2892,7 +2807,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuCharExpr x) {
-
     }
 
     @Override
@@ -2985,7 +2899,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuUnique x) {
-
     }
 
     @Override
@@ -2996,7 +2909,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuAlterTableDiscardTablespace x) {
-
     }
 
     @Override
@@ -3007,13 +2919,10 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuAlterTableImportTablespace x) {
-
     }
 
     @Override
     public boolean visit(SQLAssignItem x) {
-
-
         String tagetString = x.getTarget().toString();
 
         boolean xgSpecial = false;
@@ -3048,7 +2957,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(TableSpaceOption x) {
-
     }
 
     protected void visitAggreateRest(SQLAggregateExpr aggregateExpr) {
@@ -3087,7 +2995,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuAnalyzeStatement x) {
-
     }
 
     @Override
@@ -3109,7 +3016,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuOptimizeStatement x) {
-
     }
 
     @Override
@@ -3125,7 +3031,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuAlterUserStatement x) {
-
     }
 
     @Override
@@ -3166,7 +3071,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuHintStatement x) {
-
     }
 
     @Override
@@ -3182,7 +3086,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuOrderingExpr x) {
-
     }
 
     @Override
@@ -3338,7 +3241,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuCaseStatement x) {
-
     }
 
     @Override
@@ -3350,7 +3252,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuDeclareStatement x) {
-
     }
 
     @Override
@@ -3368,7 +3269,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuSelectIntoStatement x) {
-
     }
 
     @Override
@@ -3389,7 +3289,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuWhenStatement x) {
-
     }
 
     @Override
@@ -3511,7 +3410,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuUpdateTableSource x) {
-
     }
 
     @Override
@@ -3529,7 +3427,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuAlterTableAlterColumn x) {
-
     }
 
     @Override
@@ -3551,7 +3448,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuSubPartitionByKey x) {
-
     }
 
     @Override
@@ -3583,9 +3479,7 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuSubPartitionByList x) {
-
     }
-
 
     @Override
     public boolean visit(XuGuDeclareHandlerStatement x) {
@@ -3621,7 +3515,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuDeclareHandlerStatement x) {
-
     }
 
     @Override
@@ -3643,12 +3536,10 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuDeclareConditionStatement x) {
-
     }
 
     @Override
     public boolean visit(SQLAlterTableDropColumnItem x) {
-
         for (int i = 0; i < x.getColumns().size(); ++i) {
             if (i != 0) {
                 print0(", ");
@@ -3832,7 +3723,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
             }
         }
 
-
         if (x.isDeterministic()) {
             print(ucase ? " DETERMINISTIC" : " deterministic");
         }
@@ -3982,7 +3872,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuFlushStatement x) {
-
     }
 
     @Override
@@ -4031,7 +3920,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuEventSchedule x) {
-
     }
 
     @Override
@@ -4086,7 +3974,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuCreateEventStatement x) {
-
     }
 
     @Override
@@ -4142,7 +4029,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuCreateAddLogFileGroupStatement x) {
-
     }
 
     @Override
@@ -4221,7 +4107,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuCreateServerStatement x) {
-
     }
 
     @Override
@@ -4298,7 +4183,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuCreateTableSpaceStatement x) {
-
     }
 
     @Override
@@ -4352,7 +4236,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuAlterEventStatement x) {
-
     }
 
     @Override
@@ -4384,7 +4267,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuAlterLogFileGroupStatement x) {
-
     }
 
     @Override
@@ -4406,7 +4288,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuAlterServerStatement x) {
-
     }
 
     @Override
@@ -4441,7 +4322,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuAlterTablespaceStatement x) {
-
     }
 
     @Override
@@ -4453,7 +4333,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuShowDatabasePartitionStatusStatement x) {
-
     }
 
     protected void printQuery(SQLSelectQuery x) {
@@ -4507,7 +4386,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuChecksumTableStatement x) {
-
     }
 
     @Override
@@ -4563,7 +4441,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuBackupSystemDatabaseStatement x) {
-
     }
 
     @Override
@@ -4605,7 +4482,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuBackupUserSchemaTableStatement x) {
-
     }
 
     @Override
@@ -4624,7 +4500,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuRestoreSystemStatement x) {
-
     }
 
     @Override
@@ -4650,7 +4525,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuRestoreDatabaseStatement x) {
-
     }
 
     @Override
@@ -4668,7 +4542,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuRestoreUserStatement x) {
-
     }
 
     @Override
@@ -4690,7 +4563,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuRestoreSchemaStatement x) {
-
     }
 
     @Override
@@ -4712,7 +4584,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuRestoreTableStatement x) {
-
     }
 
     @Override
@@ -4726,7 +4597,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuAlterDatabaseStatement x) {
-
     }
 
     @Override
@@ -4742,7 +4612,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuCreateSchemaStatement x) {
-
     }
 
     @Override
@@ -4759,7 +4628,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuDropSchemaStatement x) {
-
     }
 
     @Override
@@ -4778,12 +4646,10 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuAlterSchemaStatement x) {
-
     }
 
     @Override
     public boolean visit(XuGuCreateTypeStatement x) {
-
         if (x.isOrReplace()) {
             print0(ucase ? "CREATE OR REPLACE TYPE " : "create or replace type ");
         } else {
@@ -4895,7 +4761,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuCreateTypeStatement x) {
-
     }
 
     @Override
@@ -4957,7 +4822,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuForStatement x) {
-
     }
 
     @Override
@@ -4970,7 +4834,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuRangeExpr x) {
-
     }
 
     @Override
@@ -4986,7 +4849,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuDataTypeIntervalDay x) {
-
     }
 
     @Override
@@ -5002,7 +4864,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuDataTypeIntervalYearToMonth x) {
-
     }
 
     @Override
@@ -5018,7 +4879,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuDataTypeIntervalYear x) {
-
     }
 
     @Override
@@ -5034,7 +4894,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuDataTypeIntervalMonth x) {
-
     }
 
     @Override
@@ -5050,7 +4909,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuDataTypeIntervalDayToHour x) {
-
     }
 
     @Override
@@ -5066,7 +4924,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuDataTypeIntervalDayToMinute x) {
-
     }
 
     @Override
@@ -5089,7 +4946,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuDataTypeIntervalDayToSecond x) {
-
     }
 
     @Override
@@ -5106,7 +4962,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuDataTypeIntervalHour x) {
-
     }
 
     @Override
@@ -5122,7 +4977,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuDataTypeIntervalHourToMinute x) {
-
     }
 
     @Override
@@ -5144,7 +4998,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuDataTypeIntervalHourToSecond x) {
-
     }
 
     @Override
@@ -5160,7 +5013,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuDataTypeIntervalMinute x) {
-
     }
 
     @Override
@@ -5176,7 +5028,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuDataTypeIntervalMinuteToSecond x) {
-
     }
 
     @Override
@@ -5201,7 +5052,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuDataTypeIntervalSecond x) {
-
     }
 
     @Override
@@ -5218,7 +5068,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuReturningClause x) {
-
     }
 
     @Override
@@ -5239,7 +5088,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuExitStatement x) {
-
     }
 
     @Override
@@ -5269,7 +5117,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuMultiInsertStatement x) {
-
     }
 
     @Override
@@ -5298,7 +5145,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuMultiInsertStatement.ConditionalInsertClause x) {
-
     }
 
     @Override
@@ -5315,7 +5161,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuMultiInsertStatement.ConditionalInsertClauseItem x) {
-
     }
 
     @Override
@@ -5366,7 +5211,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuMultiInsertStatement.InsertIntoClause x) {
-
     }
 
     @Override
@@ -5403,7 +5247,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuTypeCastExpr x) {
-
     }
 
     @Override
@@ -5434,7 +5277,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuSelectGroupByClause x) {
-
     }
 
     @Override
@@ -5467,7 +5309,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuSelectGroupByClause.XgCompositeGroupItem x) {
-
     }
 
     @Override
@@ -5488,7 +5329,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuSelectGroupByClause.XgExprGroupItem x) {
-
     }
 
     @Override
@@ -5499,7 +5339,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuSelectGroupByClause.XgEmptyGroupItem x) {
-
     }
 
     @Override
@@ -5544,7 +5383,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuCreatePackageStatement x) {
-
     }
 
     @Override
@@ -5557,7 +5395,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuPipeRowStatement x) {
-
     }
 
     @Override
@@ -5570,7 +5407,6 @@ public class XuGuOutputVisitor extends SQLASTOutputVisitor implements XuGuASTVis
 
     @Override
     public void endVisit(XuGuQ_EscapeExpr x) {
-
     }
 
     @Override

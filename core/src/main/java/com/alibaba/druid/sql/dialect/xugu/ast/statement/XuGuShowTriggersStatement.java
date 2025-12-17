@@ -20,7 +20,6 @@ import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
 public class XuGuShowTriggersStatement extends XuGuStatementImpl implements XuGuShowStatement {
-
     private SQLName database;
     private SQLExpr like;
     private SQLExpr where;

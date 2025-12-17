@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuInsertStatement extends SQLInsertStatement implements XuGuStatement {
-
     private XuGuReturningClause returning;
     private boolean lowPriority;
     private boolean delayed;

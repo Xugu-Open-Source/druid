@@ -24,7 +24,6 @@ import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 
 public class XuGuKey extends SQLUnique implements SQLUniqueConstraint, SQLTableConstraint {
-
     private String indexType;
 
     private boolean hasConstaint;

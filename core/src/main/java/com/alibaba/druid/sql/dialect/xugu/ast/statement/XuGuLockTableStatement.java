@@ -23,7 +23,6 @@ import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 import java.util.List;
 
 public class XuGuLockTableStatement extends XuGuStatementImpl {
-
     private SQLExprTableSource tableSource;
 
     private LockType lockType;

@@ -24,12 +24,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class XuGuRangeExpr extends XuGuObjectImpl implements SQLExpr {
-
     private SQLExpr lowBound;
     private SQLExpr upBound;
 
     public XuGuRangeExpr() {
-
     }
 
     public XuGuRangeExpr(SQLExpr lowBound, SQLExpr upBound) {
@@ -71,7 +69,6 @@ public class XuGuRangeExpr extends XuGuObjectImpl implements SQLExpr {
         }
         this.upBound = upBound;
     }
-
 
     public XuGuRangeExpr clone() {
         XuGuRangeExpr x = new XuGuRangeExpr();

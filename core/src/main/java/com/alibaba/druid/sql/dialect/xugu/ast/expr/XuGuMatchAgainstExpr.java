@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuMatchAgainstExpr extends SQLExprImpl implements XuGuExpr {
-
     private List<SQLExpr> columns = new ArrayList<SQLExpr>();
 
     private SQLExpr against;
@@ -74,8 +73,8 @@ public class XuGuMatchAgainstExpr extends SQLExprImpl implements XuGuExpr {
     }
 
     public static enum SearchModifier {
-        IN_BOOLEAN_MODE("IN BOOLEAN MODE"), // 
-        IN_NATURAL_LANGUAGE_MODE("IN NATURAL LANGUAGE MODE"), //
+        IN_BOOLEAN_MODE("IN BOOLEAN MODE"),
+        IN_NATURAL_LANGUAGE_MODE("IN NATURAL LANGUAGE MODE"),
         IN_NATURAL_LANGUAGE_MODE_WITH_QUERY_EXPANSION("IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION"),
         WITH_QUERY_EXPANSION("WITH QUERY EXPANSION");
 

@@ -21,7 +21,6 @@ import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
 public class XuGuShowKeysStatement extends XuGuStatementImpl implements XuGuShowStatement {
-
     private SQLName table;
     private SQLName database;
 

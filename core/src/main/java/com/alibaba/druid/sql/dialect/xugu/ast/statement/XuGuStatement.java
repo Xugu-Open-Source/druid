@@ -19,5 +19,4 @@ import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.dialect.xugu.ast.XuGuObject;
 
 public interface XuGuStatement extends SQLStatement, XuGuObject {
-
 }

@@ -15,13 +15,11 @@
  */
 package com.alibaba.druid.sql.dialect.xugu.ast;
 
-
 import com.alibaba.druid.sql.ast.SQLDataTypeImpl;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 
 public class XuGuDataTypeIntervalYear extends SQLDataTypeImpl implements XuGuObject {
-
     public XuGuDataTypeIntervalYear() {
         this.setName("INTERVAL YEAR");
     }

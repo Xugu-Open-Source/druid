@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuExecuteStatement extends XuGuStatementImpl {
-
     private SQLName statementName;
     private final List<SQLExpr> parameters = new ArrayList<SQLExpr>();
 

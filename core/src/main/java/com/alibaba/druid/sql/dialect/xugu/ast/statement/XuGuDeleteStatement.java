@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuDeleteStatement extends SQLDeleteStatement {
-
     private boolean lowPriority;
     private boolean quick;
     private boolean ignore;

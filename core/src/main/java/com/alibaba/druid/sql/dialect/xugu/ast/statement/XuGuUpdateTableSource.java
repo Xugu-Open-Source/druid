@@ -21,7 +21,6 @@ import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 
 // just for alibaba mysql
 public class XuGuUpdateTableSource extends SQLTableSourceImpl {
-
     private XuGuUpdateStatement update;
 
     public XuGuUpdateTableSource(XuGuUpdateStatement update) {

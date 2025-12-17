@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuForStatement extends XuGuStatementImpl {
-
     private SQLName index;
 
     private SQLExpr range;

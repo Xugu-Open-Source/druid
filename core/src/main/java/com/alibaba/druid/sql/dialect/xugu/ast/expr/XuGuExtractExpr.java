@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class XuGuExtractExpr extends SQLExprImpl implements XuGuExpr {
-
     private SQLExpr value;
     private SQLIntervalUnit unit;
 

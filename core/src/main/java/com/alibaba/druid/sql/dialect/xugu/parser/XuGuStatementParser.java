@@ -208,7 +208,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XuGuStatementParser extends SQLStatementParser {
-
     private static final String AUTO_INCREMENT = "AUTO_INCREMENT";
     private static final String COLLATE2 = "COLLATE";
     private static final String CHAIN = "CHAIN";
@@ -996,7 +995,6 @@ public class XuGuStatementParser extends SQLStatementParser {
             return true;
         }
 
-
         if (lexer.identifierEquals(BINLOG)) {
             SQLStatement stmt = parseBinlog();
             statementList.add(stmt);
@@ -1152,7 +1150,6 @@ public class XuGuStatementParser extends SQLStatementParser {
             statementList.add(this.parseCreateFunction());
             return true;
         }
-
 
         if (lexer.token() == Token.IDENTIFIER) {
             String label = lexer.stringVal();
@@ -1439,9 +1436,7 @@ public class XuGuStatementParser extends SQLStatementParser {
         return parseExplain(explain);
     }
 
-
     private XuGuExplainStatement parseExplain(XuGuExplainStatement explain) {
-
         if (lexer.token() == Token.HINT) {
             List<SQLCommentHint> hints = this.exprParser.parseHints();
             explain.setHints(hints);
@@ -1742,7 +1737,6 @@ public class XuGuStatementParser extends SQLStatementParser {
     }
 
     private void parseBackupUserSchemaTable(XuGuBackupUserSchemaTableStatement stmt) {
-
         if (lexer.identifierEquals("APPEND")) {
             stmt.setAppend(true);
             lexer.nextToken();
@@ -1752,7 +1746,6 @@ public class XuGuStatementParser extends SQLStatementParser {
 
         SQLName filePath = exprParser.name();
         stmt.setFilePath(filePath);
-
 
         if (lexer.identifierEquals("ENCRYPTOR")) {
             stmt.setEncryptor(true);
@@ -2551,7 +2544,6 @@ public class XuGuStatementParser extends SQLStatementParser {
         return stmt;
     }
 
-
     public SQLStartTransactionStatement parseStart() {
         acceptIdentifier("START");
         acceptIdentifier("TRANSACTION");
@@ -2832,7 +2824,6 @@ public class XuGuStatementParser extends SQLStatementParser {
     }
 
     protected XuGuLoadDataInFileStatement parseLoadDataInFile() {
-
         acceptIdentifier("DATA");
 
         XuGuLoadDataInFileStatement stmt = new XuGuLoadDataInFileStatement();
@@ -3033,7 +3024,6 @@ public class XuGuStatementParser extends SQLStatementParser {
                         continue;
                     }
                 }
-
 
                 break;
             }
@@ -3572,7 +3562,6 @@ public class XuGuStatementParser extends SQLStatementParser {
             lexer.nextToken();
 
             for (; ; ) {
-
                 if (lexer.token() == Token.CONSTRAINT) {
                     SQLTableConstraint constraint = (SQLTableConstraint) this.exprParser.parseConstraint();
                     createView.addColumn(constraint);
@@ -4105,7 +4094,6 @@ public class XuGuStatementParser extends SQLStatementParser {
         return schedule;
     }
 
-
     private SQLAlterCharacter alterTableCharacter() {
         lexer.nextToken();
         accept(Token.SET);
@@ -4130,7 +4118,6 @@ public class XuGuStatementParser extends SQLStatementParser {
 
         SQLAlterTableAddColumn item = new SQLAlterTableAddColumn();
         for (; ; ) {
-
             SQLColumnDefinition columnDef = this.exprParser.parseColumn();
             item.addColumn(columnDef);
             if (lexer.identifierEquals("AFTER")) {
@@ -4304,7 +4291,6 @@ public class XuGuStatementParser extends SQLStatementParser {
                 break;
             }
 
-
         }
 
         return stmt;
@@ -4410,7 +4396,6 @@ public class XuGuStatementParser extends SQLStatementParser {
         return (XuGuExprParser) exprParser;
     }
 
-
     public SQLCreateFunctionStatement parseCreateFunction() {
         SQLCreateFunctionStatement stmt = new SQLCreateFunctionStatement();
         stmt.setDbType(dbType);
@@ -4467,7 +4452,6 @@ public class XuGuStatementParser extends SQLStatementParser {
                 stmt.setPipelined(true);
             }
         }
-
 
         for (; ; ) {
             if (lexer.identifierEquals("DETERMINISTIC")) {
@@ -4906,7 +4890,6 @@ public class XuGuStatementParser extends SQLStatementParser {
      * parse procedure statement block
      */
     private void parseProcedureStatementList(List<SQLStatement> statementList, int max) {
-
         for (; ; ) {
             if (max != -1) {
                 if (statementList.size() >= max) {
@@ -5119,7 +5102,6 @@ public class XuGuStatementParser extends SQLStatementParser {
 
     }
 
-
     public XuGuChecksumTableStatement parseChecksum() {
         XuGuChecksumTableStatement stmt = new XuGuChecksumTableStatement();
         if (lexer.identifierEquals(FnvHash.Constants.CHECKSUM)) {
@@ -5172,7 +5154,6 @@ public class XuGuStatementParser extends SQLStatementParser {
 
                 accept(Token.THEN);
                 this.parseStatementList(elseIf.getStatements(), -1, elseIf);
-
 
                 stmt.getElseIfList().add(elseIf);
             } else {
@@ -5261,7 +5242,6 @@ public class XuGuStatementParser extends SQLStatementParser {
         if (lexer.token() == Token.WHEN)// grammar 1
         {
             while (lexer.token() == Token.WHEN) {
-
                 XuGuWhenStatement when = new XuGuWhenStatement();
                 // when expr
                 when.setCondition(exprParser.expr());
@@ -5344,7 +5324,6 @@ public class XuGuStatementParser extends SQLStatementParser {
             }
             return this.parseCreateFunction();
         }
-
 
         // 可执行部分
         accept(Token.BEGIN);
@@ -5545,7 +5524,6 @@ public class XuGuStatementParser extends SQLStatementParser {
      * @return
      */
     public SQLStatement parseSpStatement() {
-
         // update
         if (lexer.token() == (Token.UPDATE)) {
             return parseUpdateStatement();
@@ -5673,7 +5651,6 @@ public class XuGuStatementParser extends SQLStatementParser {
         if (!(stmt.getSpStatement() instanceof SQLBlockStatement)) {
             accept(Token.SEMI);
         }
-
 
         return stmt;
     }

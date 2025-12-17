@@ -29,7 +29,6 @@ import java.util.List;
  **/
 
 public class XuguFunctionDataType extends SQLDataTypeImpl {
-
     private boolean isStatic;
     private final List<SQLParameter> parameters = new ArrayList<SQLParameter>();
 

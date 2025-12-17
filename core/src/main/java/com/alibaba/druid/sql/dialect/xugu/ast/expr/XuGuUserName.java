@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class XuGuUserName extends XuGuExprImpl implements SQLName, Cloneable {
-
     private String userName;
     private String host;
     private String identifiedBy;

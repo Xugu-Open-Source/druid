@@ -19,7 +19,6 @@ import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 
 public class XuGuShowDatabasePartitionStatusStatement extends XuGuStatementImpl implements XuGuShowStatement {
-
     private SQLName database;
 
     public SQLName getDatabase() {

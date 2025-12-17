@@ -20,7 +20,6 @@ import com.alibaba.druid.sql.dialect.xugu.visitor.XuGuASTVisitor;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 
 public class XuGuTypeCastExpr extends SQLCastExpr implements XuGuExpr {
-
     public void accept0(XuGuASTVisitor visitor) {
         if (visitor.visit(this)) {
             acceptChild(visitor, this.expr);
