@@ -448,10 +448,6 @@ public class XuGuExprParser extends SQLExprParser {
                 }
 
                 accept(Token.RPAREN);
-            } else if (lexer.token() == Token.COMMA) {
-                return parseCharTypeRest(charType);
-            } else if (restrict) {
-                accept(Token.LPAREN);
             }
 
             return parseCharTypeRest(charType);
